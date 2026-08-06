@@ -1,0 +1,43 @@
+{
+    "/proposal": {
+        "post": {
+            "summary": "",
+            "description": "",
+            "consumes": [],
+            "produces": [],
+            "parameters": [],
+            "responses": {},
+            "tags": [
+                "proposals"
+            ]
+        }
+    },
+    "/proposal/:proposalId/mu-action": {},
+    "/proposal/:proposalId": {
+        "get": {
+            "summary": "",
+            "description": "",
+            "consumes": [],
+            "produces": [],
+            "parameters": [],
+            "responses": {},
+            "tags": [
+                "proposals"
+            ]
+        }
+    },
+    "/proposal/:proposalId/manager-action": {},
+    "/reels/plans": {
+        "get": {
+            "summary": "",
+            "description": "",
+            "consumes": [],
+            "produces": [],
+            "parameters": [],
+            "responses": {},
+            "tags": [
+                "proposals"
+            ]
+        }
+    }
+}

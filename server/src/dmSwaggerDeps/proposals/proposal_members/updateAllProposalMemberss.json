@@ -1,0 +1,49 @@
+{
+    "/dm/proposals/proposal_members/update-all": {
+        "post": {
+            "consumes": [],
+            "produces": [],
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "body",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "filter": {
+                                "type": "object",
+                                "properties": {
+                                    "member_id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "member_id"
+                                ]
+                            },
+                            "proposal_members": {
+                                "$ref": "#/definitions/proposals ~ proposal_members",
+                                "required": []
+                            }
+                        },
+                        "required": []
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/proposals ~ proposal_members"
+                        }
+                    },
+                    "description": ""
+                }
+            },
+            "tags": [
+                "proposal_members"
+            ]
+        }
+    }
+}

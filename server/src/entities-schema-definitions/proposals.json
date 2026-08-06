@@ -1,0 +1,9 @@
+{
+    "_DM_zsothgb3r": {
+        "id": "_DM_zsothgb3r",
+        "name": "proposals",
+        "dbType": "dbModel",
+        "dbConfigId": "sd_99PeWpSvHx3jjW6m",
+        "dbName": "postgres"
+    }
+}

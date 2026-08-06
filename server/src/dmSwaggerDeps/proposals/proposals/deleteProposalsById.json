@@ -1,0 +1,46 @@
+{
+    "/dm/proposals/proposals/delete-by-id": {
+        "post": {
+            "consumes": [],
+            "produces": [],
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "body",
+                    "schema": {
+                        "properties": {
+                            "filter": {
+                                "type": "object",
+                                "properties": {
+                                    "proposal_id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "proposal_id"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "filter"
+                        ]
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/proposals ~ proposals"
+                        }
+                    },
+                    "description": ""
+                }
+            },
+            "tags": [
+                "proposals"
+            ]
+        }
+    }
+}

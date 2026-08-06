@@ -1,0 +1,3195 @@
+[
+    {
+        "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "type": "tab",
+        "createdDate": "2026-08-02T16:33:40.534Z",
+        "label": "proposals",
+        "disabled": false,
+        "info": "",
+        "functionSeq": 0,
+        "generateNext": true,
+        "serviceName": "proposals",
+        "relativeParentPath": "Proposals"
+    },
+    {
+        "id": "sd_kBCHgOa7baSSvprZ",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "Proposal_API HTTP In",
+        "path": "/proposal",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "post",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": true,
+        "uploadFileOptions": "",
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 180,
+        "y": 140,
+        "wires": [
+            [
+                "sd_y3vmXSKkuaNE8Mrw"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "proposals",
+        "functionName": "sd_kBCHgOa7baSSvprZ"
+    },
+    {
+        "id": "sd_4jI9etbqIE7dojyW",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Validate_Request",
+        "script": "const body = bh.input.body;\n\nconsole.log(\"Proposal Request\");\nconsole.log(JSON.stringify(body, null, 2));\n\n/*--------------------------------------\nMandatory Request\n--------------------------------------*/\n\nif (!body) {\n    throw new Error(\"Request Body is missing\");\n}\n\n/*--------------------------------------\nProposer Name\n--------------------------------------*/\n\nbody.proposer_name = (body.proposer_name || \"\").trim();\n\nif (!body.proposer_name) {\n    throw new Error(\"Proposer Name is required\");\n}\n\nif (body.proposer_name.length < 3 || body.proposer_name.length > 60) {\n    throw new Error(\"Proposer Name must be between 3 and 60 characters\");\n}\n\nif (!/^[A-Za-z ]+$/.test(body.proposer_name)) {\n    throw new Error(\"Only alphabets and spaces are allowed\");\n}\n\n/*--------------------------------------\nProposer DOB\n--------------------------------------*/\n\nif (!body.proposer_dob) {\n    throw new Error(\"Proposer DOB is required\");\n}\n\nif (isNaN(Date.parse(body.proposer_dob))) {\n    throw new Error(\"Invalid Proposer DOB\");\n}\n\n/*--------------------------------------\nMobile Number\n--------------------------------------*/\n\nbody.mobile_number = String(body.mobile_number || \"\").trim();\n\nif (!/^[6-9][0-9]{9}$/.test(body.mobile_number)) {\n    throw new Error(\"Invalid Mobile Number\");\n}\n\n/*--------------------------------------\nEmail\n--------------------------------------*/\n\nbody.email_id = (body.email_id || \"\").trim().toLowerCase();\n\nif (\n    !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$/.test(body.email_id)\n) {\n    throw new Error(\"Invalid Email\");\n}\n\n/*--------------------------------------\nPlan Variant\n--------------------------------------*/\n\nbody.plan_variant = (body.plan_variant || \"\").trim();\n\nif (!body.plan_variant) {\n    throw new Error(\"Plan Variant is required\");\n}\n\n/*--------------------------------------\nSum Insured\n--------------------------------------*/\n\nbody.sum_insured = Number(body.sum_insured);\n\nif (isNaN(body.sum_insured) || body.sum_insured <= 0) {\n    throw new Error(\"Invalid Sum Insured\");\n}\n\n/*--------------------------------------\nHeight\n--------------------------------------*/\n\nbody.height_cm = Number(body.height_cm);\n\nif (isNaN(body.height_cm)) {\n    throw new Error(\"Height is required\");\n}\n\nif (body.height_cm < 100 || body.height_cm > 220) {\n    throw new Error(\"Height must be between 100 and 220 cm\");\n}\n\n/*--------------------------------------\nWeight\n--------------------------------------*/\n\nbody.weight_kg = Number(body.weight_kg);\n\nif (isNaN(body.weight_kg)) {\n    throw new Error(\"Weight is required\");\n}\n\nif (body.weight_kg < 25 || body.weight_kg > 200) {\n    throw new Error(\"Weight must be between 25 and 200 kg\");\n}\n\n/*--------------------------------------\nBMI\n--------------------------------------*/\n\nbody.bmi = Number(body.bmi);\n\nif (isNaN(body.bmi)) {\n    throw new Error(\"BMI is required\");\n}\n\nif (body.bmi < 10 || body.bmi > 60) {\n    throw new Error(\"Invalid BMI\");\n}\n\n/*--------------------------------------\nBoolean Fields\n--------------------------------------*/\n\nif (typeof body.tobacco_use !== \"boolean\") {\n    throw new Error(\"Invalid Tobacco Use\");\n}\n\nif (typeof body.diabetes_declared !== \"boolean\") {\n    throw new Error(\"Invalid Diabetes Declared\");\n}\n\nif (typeof body.hypertension_declared !== \"boolean\") {\n    throw new Error(\"Invalid Hypertension Declared\");\n}\n\nif (typeof body.include_spouse !== \"boolean\") {\n    throw new Error(\"Invalid Include Spouse\");\n}\n\n/*--------------------------------------\nMembers\n--------------------------------------*/\n\nif (!Array.isArray(body.members) || body.members.length === 0) {\n    throw new Error(\"At least one member is required\");\n}\n\nbody.members.forEach((member, index) => {\n\n    member.member_name = (member.member_name || \"\").trim();\n\n    if (!member.member_name) {\n        throw new Error(`Member ${index + 1} Name is required`);\n    }\n\n    if (!member.member_dob) {\n        throw new Error(`Member ${index + 1} DOB is required`);\n    }\n\n    if (isNaN(Date.parse(member.member_dob))) {\n        throw new Error(`Invalid DOB for Member ${index + 1}`);\n    }\n\n    if (!member.relationship) {\n        throw new Error(`Relationship is required for Member ${index + 1}`);\n    }\n\n    if (member.relationship === \"Self\") {\n\n        member.height_cm = Number(member.height_cm);\n        member.weight_kg = Number(member.weight_kg);\n        member.bmi = Number(member.bmi);\n\n        if (isNaN(member.height_cm)) {\n            throw new Error(\"Self Height is required\");\n        }\n\n        if (isNaN(member.weight_kg)) {\n            throw new Error(\"Self Weight is required\");\n        }\n\n        if (isNaN(member.bmi)) {\n            throw new Error(\"Self BMI is required\");\n        }\n    }\n\n    if (member.relationship === \"Spouse\" && body.include_spouse) {\n\n        if (!member.member_name) {\n            throw new Error(\"Spouse Name is required\");\n        }\n\n        if (!member.member_dob) {\n            throw new Error(\"Spouse DOB is required\");\n        }\n\n    }\n\n});\n\nconsole.log(\"Validation Successful\");\n",
+        "functionName": "validateRequest",
+        "category": "Function",
+        "x": 465,
+        "y": 140,
+        "wires": [
+            [
+                "sd_VAvRMYhjL6Mqrd21"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_y3vmXSKkuaNE8Mrw",
+        "type": "ServiceVariables",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "client-server",
+        "nodeType": "flow",
+        "name": "Proposal_Service_Variables",
+        "inputs": 1,
+        "outputs": 1,
+        "operation": "set",
+        "globalVariables": [
+            {
+                "textIp": "proposalId",
+                "typedIpValue": {
+                    "type": "bh.local",
+                    "value": "proposalId"
+                }
+            },
+            {
+                "textIp": "proposerAge",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "spouseAge",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "bmi",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "ageBand",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "basePremium",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "loadingPremium",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "gstAmount",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "finalPremium",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "ratingTrace",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalStatus",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalEntity",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposerMember",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "spouseMember",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            }
+        ],
+        "functionName": "proposalServiceVariables",
+        "category": "Function",
+        "x": 325,
+        "y": 140,
+        "wires": [
+            [
+                "sd_4jI9etbqIE7dojyW"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_VAvRMYhjL6Mqrd21",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Generate_Proposal_ID",
+        "script": "const now = new Date();\n\nconst yyyy = now.getFullYear();\n\nconst mm = String(now.getMonth() + 1).padStart(2, \"0\");\n\nconst dd = String(now.getDate()).padStart(2, \"0\");\n\nconst random = Math.floor(Math.random() * 90000) + 10000;\n\nbh.local.proposalId =\n    `PRP-${yyyy}${mm}${dd}-${random}`;\n\nconsole.log(bh.local.proposalId);\n",
+        "functionName": "generateProposalId",
+        "category": "Function",
+        "x": 605,
+        "y": 140,
+        "wires": [
+            [
+                "sd_QATEFXczRrrfrIBT"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_QATEFXczRrrfrIBT",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Calculate_Age",
+        "script": "// function calculateAge(dob) {\n\n//     const birth = new Date(dob);\n\n//     const today = new Date();\n\n//     let age = today.getFullYear() - birth.getFullYear();\n\n//     const month =\n//         today.getMonth() - birth.getMonth();\n\n//     if (\n//         month < 0 ||\n//         (month === 0 && today.getDate() < birth.getDate())\n//     ) {\n//         age--;\n//     }\n\n//     return age;\n// }\n\n// bh.local.proposerAge =\n//     calculateAge(bh.input.body.proposer_dob);\n\n// if (bh.input.body.spouse_included) {\n\n//     bh.local.spouseAge =\n//         calculateAge(bh.input.body.spouse_dob);\n\n// }\n// else {\n\n//     bh.local.spouseAge = 0;\n\n// }\n\n// console.log(bh.local.proposerAge);\n// console.log(bh.local.spouseAge);\n\nfunction calculateAge(dob) {\n\n    if (!dob) {\n        return 0;\n    }\n\n    const birth = new Date(dob);\n    const today = new Date();\n\n    let age = today.getFullYear() - birth.getFullYear();\n\n    const monthDiff =\n        today.getMonth() - birth.getMonth();\n\n    if (\n        monthDiff < 0 ||\n        (monthDiff === 0 &&\n            today.getDate() < birth.getDate())\n    ) {\n        age--;\n    }\n\n    return age;\n}\n\n/*--------------------------------------\n Proposer Age\n--------------------------------------*/\n\nbh.local.proposerAge =\n    calculateAge(bh.input.body.proposer_dob);\n\n/*--------------------------------------\n Spouse Age\n--------------------------------------*/\n\nbh.local.spouseAge = 0;\n\nif (bh.input.body.include_spouse === true) {\n\n    const spouseMember =\n        (bh.input.body.members || []).find(\n            member => member.relationship === \"Spouse\"\n        );\n\n    if (spouseMember) {\n\n        bh.local.spouseAge =\n            calculateAge(spouseMember.member_dob);\n\n    }\n\n}\n\nconsole.log(\"Proposer Age :\", bh.local.proposerAge);\nconsole.log(\"Spouse Age :\", bh.local.spouseAge);\n/*--------------------------------------\n Rating Age\n--------------------------------------*/\n\nbh.local.ratingAge = Math.max(\n    bh.local.proposerAge,\n    bh.local.spouseAge\n);\n\nconsole.log(\"Rating Age :\", bh.local.ratingAge);",
+        "functionName": "calculateAge",
+        "category": "Function",
+        "x": 720,
+        "y": 140,
+        "wires": [
+            [
+                "sd_j29ciUzzFSKPMVzN"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_0WzZ2IABKHcik2RA",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Prepare_Proposal_Entity",
+        "script": "// const body = bh.input.body;\n\n// bh.local.proposalEntity = {\n\n//     proposal_id: bh.local.proposalId,\n\n//     plan_code: body.plan_code,\n\n//     sum_insured: body.sum_insured,\n\n//     mobile_no: body.mobile_no,\n\n//     email: body.email,\n\n//     rating_age: bh.local.proposerAge,\n\n//     age_band: bh.local.ageBand || \"\",\n\n//     spouse_included: body.spouse_included,\n\n//     base_premium: bh.local.basePremium || 0,\n\n//     loaded_premium: bh.local.loadedPremium || 0,\n\n//     gst_amount: bh.local.gstAmount || 0,\n\n//     final_premium: bh.local.finalPremium || 0,\n\n//     additional_loading_pct: 0,\n\n//     rating_trace: bh.local.ratingTrace || \"\",\n\n//     mu_remarks: null,\n\n//     manager_remarks: null,\n\n//     policy_no: null,\n\n//     status: bh.local.proposalStatus || \"SUBMITTED\",\n\n//     created_at: new Date(),\n\n//     updated_at: new Date()\n\n// };\n\n// console.log(bh.local.proposalEntity);\nconst body = bh.input.body;\n\nbh.local.proposalEntity = {\n\n    proposal_id: bh.local.proposalId,\n\n    plan_code: body.plan_variant,\n\n    sum_insured: body.sum_insured,\n\n    mobile_no: body.mobile_number,\n\n    email: body.email_id,\n\n    rating_age: bh.local.ratingAge,\n\n    age_band: bh.local.ageBand || \"\",\n\n    spouse_included: body.include_spouse,\n\n    base_premium: bh.local.basePremium || 0,\n\n    loaded_premium: bh.local.loadedPremium || 0,\n\n    gst_amount: bh.local.gstAmount || 0,\n\n    final_premium: bh.local.finalPremium || 0,\n\n    additional_loading_pct:\n        bh.local.additionalLoadingPct || 0,\n\n    rating_trace: bh.local.ratingTrace || \"\",\n\n    mu_remarks: null,\n\n    manager_remarks: null,\n\n    policy_no: null,\n\n    status:\n        bh.local.proposalStatus || \"SUBMITTED\",\n\n    created_at: new Date(),\n\n    updated_at: new Date()\n\n};\n\nconsole.log(\"Proposal Entity\");\nconsole.log(JSON.stringify(bh.local.proposalEntity, null, 2));\n/*--------------------------------------\n Prepare Proposal Members Entity\n--------------------------------------*/\n\nbh.local.proposalMembersEntity = [];\n\nconst members = body.members || [];\n\nmembers.forEach((member, index) => {\n\n    bh.local.proposalMembersEntity.push({\n\n        member_id: crypto.randomUUID(),\n\n        proposal_id: bh.local.proposalId,\n\n        relation:\n            member.relationship === \"Self\"\n                ? \"PROPOSER\"\n                : \"SPOUSE\",\n\n        full_name: member.member_name,\n\n        dob: member.member_dob,\n\n        age:\n            member.relationship === \"Self\"\n                ? bh.local.proposerAge\n                : bh.local.spouseAge,\n\n        height_cm:\n            member.relationship === \"Self\"\n                ? member.height_cm\n                : null,\n\n        weight_kg:\n            member.relationship === \"Self\"\n                ? member.weight_kg\n                : null,\n\n        bmi:\n            member.relationship === \"Self\"\n                ? member.bmi\n                : null,\n\n        tobacco_use: body.tobacco_use,\n\n        diabetes_declared:\n            body.diabetes_declared,\n\n        hypertension_declared:\n            body.hypertension_declared\n\n    });\n\n});\n\nconsole.log(\"Proposal Members Entity\");\nconsole.log(\n    JSON.stringify(\n        bh.local.proposalMembersEntity,\n        null,\n        2\n    )\n);",
+        "functionName": "prepareProposalEntity",
+        "category": "Function",
+        "x": 860,
+        "y": 140,
+        "wires": [
+            [
+                "sd_7O9DN8YwiI6L6lcL"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_7O9DN8YwiI6L6lcL",
+        "type": "insert",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "insert Proposals",
+        "erd": "_DM_zsothgb3r",
+        "entityId": "_EN_hll0abjopf",
+        "_UI_entityName": "proposals",
+        "dbConfigId": "sd_99PeWpSvHx3jjW6m",
+        "insertObject": "bh.local.proposalEntity",
+        "resultMapping": "bh.local.insertProposalResponse",
+        "functionName": "insertProposals",
+        "category": "Data Model",
+        "x": 1005,
+        "y": 140,
+        "wires": [
+            [
+                "sd_SnONJRHwFbCr9yMV",
+                "sd_7e7qZCXF4qjgK10P"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "insertObject": {
+                "type": "bh.local",
+                "value": "proposalEntity",
+                "constant": false
+            },
+            "resultMapping": {
+                "type": "bh.local",
+                "value": "insertProposalResponse",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_lHtlRt9Svq79qj0D",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Validate_Insert",
+        "script": "console.log(\"Insert Response\");\n\nconsole.log(JSON.stringify(bh.local.insertProposalResponse, null, 2));\n\nif (!bh.local.insertProposalResponse) {\n\n    throw new Error(\"Proposal insert failed\");\n\n}\n\nconsole.log(\"Proposal inserted successfully\");\n\n/*--------------------------------------\n Prepare Success Response\n--------------------------------------*/\n\nbh.local.response = {\n\n    success: true,\n\n    message: \"Proposal created successfully\",\n\n    data: {\n\n        proposal_id: bh.local.proposalId,\n\n        status: \"SUBMITTED\"\n\n    }\n\n};\n\nconsole.log(\"Success Response\");\n\nconsole.log(JSON.stringify(bh.local.response, null, 2));",
+        "functionName": "validateInsert",
+        "category": "Function",
+        "x": 1285,
+        "y": 140,
+        "wires": [
+            [
+                "sd_EKz6MLSbDrq0rT5y"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_EKz6MLSbDrq0rT5y",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "proposal HTTP Out",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "proposalHttpOut",
+        "category": "HTTP",
+        "x": 1425,
+        "y": 140,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_SnONJRHwFbCr9yMV",
+        "type": "ServerLog",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "savedProposal Log",
+        "outputs": 0,
+        "logObject": "bh.local.insertProposalResponse",
+        "logLevel": "info",
+        "functionName": "savedProposalLog",
+        "category": "General",
+        "x": 1145,
+        "y": 40,
+        "wires": [],
+        "__ssdTypeInputs__": {
+            "logObject": {
+                "type": "bh.local",
+                "value": "insertProposalResponse",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_7e7qZCXF4qjgK10P",
+        "type": "insert",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "insert Proposal Members",
+        "erd": "_DM_zsothgb3r",
+        "entityId": "_EN_0xcbgpnumf",
+        "_UI_entityName": "proposal_members",
+        "dbConfigId": "sd_99PeWpSvHx3jjW6m",
+        "insertObject": "bh.local.proposalMembersEntity",
+        "resultMapping": "bh.local.insertProposalMembersResponse",
+        "functionName": "insertProposalMembers",
+        "category": "Data Model",
+        "x": 1145,
+        "y": 140,
+        "wires": [
+            [
+                "sd_ygKKzT8rNw8Iv81H",
+                "sd_lHtlRt9Svq79qj0D"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "insertObject": {
+                "type": "bh.local",
+                "value": "proposalMembersEntity",
+                "constant": false
+            },
+            "resultMapping": {
+                "type": "bh.local",
+                "value": "insertProposalMembersResponse",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_ygKKzT8rNw8Iv81H",
+        "type": "ServerLog",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "savedProposalMembers Log",
+        "outputs": 0,
+        "logObject": "bh.local.insertProposalMembersResponse",
+        "logLevel": "info",
+        "functionName": "savedProposalMembersLog",
+        "category": "General",
+        "x": 1285,
+        "y": 40,
+        "wires": [],
+        "__ssdTypeInputs__": {
+            "logObject": {
+                "type": "bh.local",
+                "value": "insertProposalMembersResponse",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_flhSdl4KcK5o9i0u",
+        "type": "ServiceVariables",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "client-server",
+        "nodeType": "flow",
+        "name": "getProposalServiceVariables",
+        "inputs": 1,
+        "outputs": 1,
+        "operation": "set",
+        "globalVariables": [
+            {
+                "textIp": "proposalId",
+                "typedIpValue": {
+                    "type": "bh.local",
+                    "value": "proposalId"
+                }
+            },
+            {
+                "textIp": "proposal",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalMembers",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalMemberFilter",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalData",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalResponse",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalMembersResponse",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            }
+        ],
+        "functionName": "getProposalServiceVariables",
+        "category": "Function",
+        "x": 325,
+        "y": 380,
+        "wires": [
+            [
+                "sd_VvluZgWL8kqnXUfp"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_VvluZgWL8kqnXUfp",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "getProposalbyIdValidate_Request",
+        "script": "bh.local.proposalId =\n    bh.input.proposalId;\n\nif (!bh.local.proposalId) {\n\n    throw new Error(\n        \"Proposal Id is required\"\n    );\n\n}\n\n// console.log(\n//     \"Proposal Id :\",\n//     bh.local.proposalId\n// );\n// console.log(\"Route Params\");\n// console.log(bh.input.params);\n\n// bh.local.proposalMemberFilter = {\n//     proposal_id: bh.local.proposalId\n// };\n\n// console.log(\"Proposal Member Filter\");\n// console.log(JSON.stringify(bh.local.proposalMemberFilter, null, 2));\n/*--------------------------------------\nProposal Id\n--------------------------------------*/\n\nbh.local.proposalId = (bh.input.proposalId || \"\").trim();\n\nif (!bh.local.proposalId) {\n    throw new Error(\"Proposal Id is required\");\n}\n\nconsole.log(\"Proposal Id :\", bh.local.proposalId);\n\n/*--------------------------------------\nProposal Member Filter\n--------------------------------------*/\n\nbh.local.proposalMemberFilter = {\n    proposal_id: bh.local.proposalId\n};\n\nconsole.log(\"Proposal Member Filter\");\nconsole.log(JSON.stringify(bh.local.proposalMemberFilter, null, 2));",
+        "functionName": "getProposalbyIdValidateRequest",
+        "category": "Function",
+        "x": 505,
+        "y": 380,
+        "wires": [
+            [
+                "sd_cMrAx7KIkc0Udl1b"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_cMrAx7KIkc0Udl1b",
+        "type": "find",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "getProposalByIdFind",
+        "erd": "_DM_zsothgb3r",
+        "entityId": "_EN_hll0abjopf",
+        "_UI_entityName": "proposals",
+        "dbConfigId": "sd_99PeWpSvHx3jjW6m",
+        "primayKey": "proposal_id",
+        "operationType": "findByID",
+        "_ID": "bh.local.proposalId",
+        "filterBy": "bh.local",
+        "offSet": "bh",
+        "orderBy": "bh",
+        "pageSize": "bh",
+        "resultMapping": "bh.local.proposalResponse",
+        "functionName": "getProposalByIdFind",
+        "category": "Data Model",
+        "x": 665,
+        "y": 380,
+        "wires": [
+            [
+                "sd_Gv1yfVsAlSymYt4t"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "_ID": {
+                "type": "bh.local",
+                "value": "proposalId",
+                "constant": false
+            },
+            "filterBy": {
+                "type": "bh.local",
+                "value": "",
+                "constant": false
+            },
+            "offSet": {
+                "type": "bh",
+                "value": "",
+                "constant": false
+            },
+            "orderBy": {
+                "type": "bh",
+                "value": "",
+                "constant": false
+            },
+            "pageSize": {
+                "type": "bh",
+                "value": "",
+                "constant": false
+            },
+            "resultMapping": {
+                "type": "bh.local",
+                "value": "proposalResponse",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {
+            "filterBy": true,
+            "offSet": true,
+            "orderBy": true,
+            "pageSize": true
+        },
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_BQAIOQ9BNeOWYg03",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "getProposalByIdPrepareRes",
+        "script": "console.log(\"Proposal Response\");\nconsole.log(JSON.stringify(bh.local.proposalResponse, null, 2));\n\nconsole.log(\"Proposal Members Response\");\nconsole.log(JSON.stringify(bh.local.proposalMembersResponse, null, 2));\n\nif (!bh.local.proposalResponse || bh.local.proposalResponse.length === 0) {\n    throw new Error(\"Proposal not found\");\n}\n\n/*--------------------------------------\nPrepare Proposal Data\n--------------------------------------*/\n\nbh.local.proposal = bh.local.proposalResponse[0];\n\nbh.local.proposalMembers =\n    bh.local.proposalMembersResponse || [];\n\nbh.local.proposalData = {\n\n    proposal: bh.local.proposal,\n\n    members: bh.local.proposalMembers\n\n};\n\nconsole.log(\"Proposal Data\");\nconsole.log(JSON.stringify(bh.local.proposalData, null, 2));\nbh.input.proposalData = bh.local.proposalData;",
+        "functionName": "getProposalByIdPrepareRes",
+        "category": "Function",
+        "x": 985,
+        "y": 380,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_Gv1yfVsAlSymYt4t",
+        "type": "find",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "getProposalMembersByIdFind",
+        "erd": "_DM_zsothgb3r",
+        "entityId": "_EN_0xcbgpnumf",
+        "_UI_entityName": "proposal_members",
+        "dbConfigId": "sd_99PeWpSvHx3jjW6m",
+        "primayKey": "member_id",
+        "operationType": "find",
+        "_ID": "bh.local.proposalId",
+        "filterBy": "bh.local.proposalMemberFilter",
+        "offSet": "bh",
+        "orderBy": "bh",
+        "pageSize": "bh",
+        "resultMapping": "bh.local.proposalMembersResponse",
+        "functionName": "getProposalMembersByIdFind",
+        "category": "Data Model",
+        "x": 805,
+        "y": 380,
+        "wires": [
+            [
+                "sd_BQAIOQ9BNeOWYg03"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "_ID": {
+                "type": "bh.local",
+                "value": "proposalId",
+                "constant": false
+            },
+            "filterBy": {
+                "type": "bh.local",
+                "value": "proposalMemberFilter",
+                "constant": false
+            },
+            "offSet": {
+                "type": "bh",
+                "value": "",
+                "constant": false
+            },
+            "orderBy": {
+                "type": "bh",
+                "value": "",
+                "constant": false
+            },
+            "pageSize": {
+                "type": "bh",
+                "value": "",
+                "constant": false
+            },
+            "resultMapping": {
+                "type": "bh.local",
+                "value": "proposalMembersResponse",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {
+            "_ID": true
+        },
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_0c6aFuyfeYE2Orsv",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "MUAction HTTP In",
+        "path": "/proposal/:proposalId/mu-action",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "post",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "uploadFileOptions": "",
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 185,
+        "y": 700,
+        "wires": [
+            [
+                "sd_OWKeArsKZCMyECLT"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "proposals",
+        "functionName": "sd_0c6aFuyfeYE2Orsv"
+    },
+    {
+        "id": "sd_OWKeArsKZCMyECLT",
+        "type": "ServiceVariables",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "client-server",
+        "nodeType": "flow",
+        "name": "MU action service variables",
+        "inputs": 1,
+        "outputs": 1,
+        "operation": "set",
+        "globalVariables": [
+            {
+                "textIp": "proposalId",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "action",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "remark",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "loadingPct",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalData",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "updateProposal",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalUpdateFilter",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            }
+        ],
+        "functionName": "muActionServiceVariables",
+        "category": "Function",
+        "x": 325,
+        "y": 700,
+        "wires": [
+            [
+                "sd_K7MloS3IqY5ccd2j"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_KXxrRmck1xjdjtLd",
+        "type": "Start",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "client-server",
+        "nodeType": "start",
+        "name": "loadProposalData",
+        "outputs": 1,
+        "inputVariables": [
+            {
+                "key": "proposalId",
+                "defaultValue": {
+                    "type": "any",
+                    "value": ""
+                },
+                "output": false
+            },
+            {
+                "key": "proposalData",
+                "defaultValue": {
+                    "type": "any",
+                    "value": ""
+                },
+                "output": true
+            }
+        ],
+        "localVariables": [],
+        "accept_bh": false,
+        "functionName": "loadProposalData",
+        "category": "General",
+        "x": 185,
+        "y": 380,
+        "wires": [
+            [
+                "sd_flhSdl4KcK5o9i0u"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "proposals"
+    },
+    {
+        "id": "sd_VTNX1IOAPZ44wnxe",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "getProposalById",
+        "path": "/proposal/:proposalId",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "get",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "uploadFileOptions": "",
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 185,
+        "y": 520,
+        "wires": [
+            [
+                "sd_3Lbsx25cgWMH44Y1"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "proposals",
+        "functionName": "sd_VTNX1IOAPZ44wnxe"
+    },
+    {
+        "id": "sd_3Lbsx25cgWMH44Y1",
+        "type": "ServiceVariables",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "client-server",
+        "nodeType": "flow",
+        "name": "ProposalVariables",
+        "inputs": 1,
+        "outputs": 1,
+        "operation": "set",
+        "globalVariables": [
+            {
+                "textIp": "proposalId",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalData",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            }
+        ],
+        "functionName": "proposalVariables",
+        "category": "Function",
+        "x": 325,
+        "y": 520,
+        "wires": [
+            [
+                "sd_2UlMLijvbagtQAoT"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_2UlMLijvbagtQAoT",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "ProposalbyIdValidate_Request",
+        "script": "bh.local.proposalId =\n    (bh.input.params.proposalId || \"\").trim();\n\nif (!bh.local.proposalId) {\n\n    throw new Error(\n        \"Proposal Id is required\"\n    );\n\n}\n\nconsole.log(\n    \"Proposal Id :\",\n    bh.local.proposalId\n);",
+        "functionName": "proposalbyIdValidateRequest",
+        "category": "Function",
+        "x": 485,
+        "y": 520,
+        "wires": [
+            [
+                "sd_PEuizGWflJ5rLQfH"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_PEuizGWflJ5rLQfH",
+        "type": "CallService",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "callProposalService",
+        "outputs": 1,
+        "isValidNode": true,
+        "noerr": 0,
+        "service": {
+            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+            "type": "tab",
+            "createdDate": "2026-08-02T16:33:40.534Z",
+            "label": "proposals",
+            "disabled": false,
+            "info": "",
+            "functionSeq": 0
+        },
+        "flow": {
+            "flowId": "sd_KXxrRmck1xjdjtLd",
+            "flowName": "loadProposalData"
+        },
+        "inputVariables": [
+            {
+                "key": "proposalId",
+                "map": true,
+                "valueType": "bh.local",
+                "value": "proposalId"
+            },
+            {
+                "key": "proposalData",
+                "map": true,
+                "valueType": "bh.input",
+                "value": ""
+            }
+        ],
+        "bhVariables": [],
+        "outputMapping": [
+            {
+                "mapVarType": "input",
+                "key": "proposalData",
+                "valueType": "bh.local",
+                "value": "proposalData",
+                "mapVarName": "proposalData",
+                "localVar": "bh.local.proposalData"
+            }
+        ],
+        "callService": "./proposals",
+        "startName": "loadProposalData",
+        "inputParams": [
+            "bh.local.proposalId",
+            null
+        ],
+        "accept_bh": false,
+        "functionName": "callProposalService",
+        "category": "General",
+        "x": 645,
+        "y": 520,
+        "wires": [
+            [
+                "sd_SpFvEzvdlne7Nblf"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_L5N6N9YC9TCmoBE3",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "sd_L5N6N9YC9TCmoBE3",
+        "category": "HTTP",
+        "x": 865,
+        "y": 520,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_SpFvEzvdlne7Nblf",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "",
+        "script": "console.log(\"Proposal Data Final\");\n\nconsole.log(\n    JSON.stringify(\n        bh.local.proposalData,\n        null,\n        2\n    )\n);\n\nif (!bh.local.proposalData) {\n\n    throw new Error(\n        \"Proposal not found\"\n    );\n\n}\n\n/*--------------------------------------\n Prepare Success Response\n--------------------------------------*/\n\nbh.local.response = {\n\n    success: true,\n\n    message: \"Proposal fetched successfully\",\n\n    data: bh.local.proposalData\n\n};\n\nconsole.log(\"Success Response\");\n\nconsole.log(\n    JSON.stringify(\n        bh.local.response,\n        null,\n        2\n    )\n);",
+        "functionName": "sd_SpFvEzvdlne7Nblf",
+        "category": "Function",
+        "x": 765,
+        "y": 520,
+        "wires": [
+            [
+                "sd_L5N6N9YC9TCmoBE3"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_K7MloS3IqY5ccd2j",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "MU action validate request",
+        "script": "console.log(\"bh.input\", bh.input);\nbh.local.proposalId =\n    bh.input.params.proposalId;\n\nbh.local.action =\n    bh.input.body.action;\n\nbh.local.loadingPct =\n    bh.input.body.additional_loading_pct || 0;\n\nbh.local.remark =\n    bh.input.body.remark;\n\nif (!bh.local.proposalId)\n    throw new Error(\"Proposal Id required\");\n\nif (!bh.local.action)\n    throw new Error(\"Action required\");\n\nconst actions =\n[\n    \"ACCEPT\",\n    \"LOAD\",\n    \"DECLINE\"\n];\n\nif (!actions.includes(bh.local.action))\n{\n    throw new Error(\"Invalid action\");\n}",
+        "functionName": "muActionValidateRequest",
+        "category": "Function",
+        "x": 465,
+        "y": 700,
+        "wires": [
+            [
+                "sd_0qMG9aNhbPBfRb4a"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_0qMG9aNhbPBfRb4a",
+        "type": "CallService",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "MU action Proposal call service",
+        "outputs": 1,
+        "isValidNode": true,
+        "noerr": 0,
+        "service": {
+            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+            "type": "tab",
+            "createdDate": "2026-08-02T16:33:40.534Z",
+            "label": "proposals",
+            "disabled": false,
+            "info": "",
+            "functionSeq": 0
+        },
+        "flow": {
+            "flowId": "sd_KXxrRmck1xjdjtLd",
+            "flowName": "loadProposalData"
+        },
+        "inputVariables": [
+            {
+                "key": "proposalId",
+                "map": true,
+                "valueType": "bh.local",
+                "value": "proposalId"
+            },
+            {
+                "key": "proposalData",
+                "map": true,
+                "valueType": "bh.input",
+                "value": ""
+            }
+        ],
+        "bhVariables": [],
+        "outputMapping": [
+            {
+                "mapVarType": "input",
+                "key": "proposalData",
+                "valueType": "bh.local",
+                "value": "proposalData",
+                "mapVarName": "proposalData",
+                "localVar": "bh.local.proposalData"
+            }
+        ],
+        "callService": "./proposals",
+        "startName": "loadProposalData",
+        "inputParams": [
+            "bh.local.proposalId",
+            null
+        ],
+        "accept_bh": false,
+        "functionName": "muActionProposalCallService",
+        "category": "General",
+        "x": 625,
+        "y": 700,
+        "wires": [
+            [
+                "sd_lm6tgpUrOFJ4D506"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_lm6tgpUrOFJ4D506",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "MU action validate proposal",
+        "script": "console.log(\"Proposal Data Final\");\nconsole.log(JSON.stringify(bh.local.proposalData, null, 2));\n\nif (!bh.local.proposalData) {\n    throw new Error(\"Proposal not found\");\n}\n\nbh.local.proposal = bh.local.proposalData.proposal;\nbh.local.members = bh.local.proposalData.members;\n\nif (bh.local.proposal.status !== \"SUBMITTED\") {\n    throw new Error(\"Proposal already processed\");\n}",
+        "functionName": "muActionValidateProposal",
+        "category": "Function",
+        "x": 805,
+        "y": 700,
+        "wires": [
+            [
+                "sd_nlWUyqM3tdg3eMr0"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_nlWUyqM3tdg3eMr0",
+        "type": "Switch",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "MU action switch by decision",
+        "property": "action",
+        "propertyType": "bh.local",
+        "propertyGv": "bh.local.action",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "ACCEPT",
+                "vt": "str",
+                "gv": "\"ACCEPT\""
+            },
+            {
+                "t": "eq",
+                "v": "LOAD",
+                "vt": "str",
+                "gv": "\"LOAD\""
+            },
+            {
+                "t": "eq",
+                "v": "DECLINE",
+                "vt": "str",
+                "gv": "\"DECLINE\""
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 3,
+        "functionName": "muActionSwitchByDecision",
+        "category": "Function",
+        "x": 960,
+        "y": 700,
+        "wires": [
+            [
+                "sd_ncAi6K6LzcfdAXgw"
+            ],
+            [
+                "sd_xK6qEaw7zrWx5umh"
+            ],
+            [
+                "sd_J96epXAU9b54vj9v"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_ncAi6K6LzcfdAXgw",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "MU action Accept",
+        "script": "bh.local.additionalLoadingPct = 0;\n\nbh.local.loadedPremium =\n    bh.local.proposal.base_premium;\n\nbh.local.gstAmount =\n    bh.local.proposal.gst_amount;\n\nbh.local.finalPremium =\n    bh.local.proposal.final_premium;\n\nbh.local.ratingTrace =\n    bh.local.proposal.rating_trace;",
+        "functionName": "muActionAccept",
+        "category": "Function",
+        "x": 1125,
+        "y": 600,
+        "wires": [
+            [
+                "sd_YgDDq1fX1Wu2dB7o"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_J96epXAU9b54vj9v",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "MU action Decline",
+        "script": "// Nothing required\n\nconsole.log(\"Reject Flow\");",
+        "functionName": "muActionDecline",
+        "category": "Function",
+        "x": 1125,
+        "y": 800,
+        "wires": [
+            [
+                "sd_YgDDq1fX1Wu2dB7o"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_qYoxlnmP4VvfWLjo",
+        "type": "Start",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "client-server",
+        "nodeType": "start",
+        "name": "calculatePremium",
+        "outputs": 1,
+        "inputVariables": [
+            {
+                "key": "proposal",
+                "defaultValue": {
+                    "type": "any",
+                    "value": ""
+                },
+                "output": false
+            },
+            {
+                "key": "loadingPct",
+                "defaultValue": {
+                    "type": "any",
+                    "value": ""
+                },
+                "output": false
+            },
+            {
+                "key": "premiumData",
+                "defaultValue": {
+                    "type": "any",
+                    "value": ""
+                },
+                "output": true
+            }
+        ],
+        "localVariables": [],
+        "accept_bh": false,
+        "functionName": "calculatePremium",
+        "category": "General",
+        "x": 180,
+        "y": 920,
+        "wires": [
+            [
+                "sd_iWxGKeMMJ1cxQYmn"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "proposals"
+    },
+    {
+        "id": "sd_iWxGKeMMJ1cxQYmn",
+        "type": "ServiceVariables",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "client-server",
+        "nodeType": "flow",
+        "name": "Calculate Premium Service Variable",
+        "inputs": 1,
+        "outputs": 1,
+        "operation": "set",
+        "globalVariables": [
+            {
+                "textIp": "proposal",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "loadingPct",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "premiumData",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "ratingAge",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "ageBand",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "basePremium",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "loadedPremium",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "gstAmount",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "finalPremium",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "ratingTrace",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            }
+        ],
+        "functionName": "calculatePremiumServiceVariable",
+        "category": "Function",
+        "x": 325,
+        "y": 920,
+        "wires": [
+            [
+                "sd_s5SFkNXt4kfA98Fe"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_s5SFkNXt4kfA98Fe",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "ValidateInput",
+        "script": "if (!bh.input.proposal) {\n\n    throw new Error(\n        \"Proposal data required\"\n    );\n\n}\nbh.local.proposal =\n    bh.input.proposal;\n\nbh.local.loadingPct =\n    bh.input.loadingPct || 0;\n\nbh.local.planCode =\n    bh.local.proposal.plan_code;\n\nbh.local.sumInsured =\n    Number(\n        bh.local.proposal.sum_insured\n    );",
+        "functionName": "validateInput",
+        "category": "Function",
+        "x": 485,
+        "y": 920,
+        "wires": [
+            [
+                "sd_AkCMoL4pmr9mUkcE"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_AkCMoL4pmr9mUkcE",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "CalculateRatingAge",
+        "script": "bh.local.ratingAge =\n    Number(\n        bh.local.proposal.rating_age\n    );",
+        "functionName": "calculateRatingAge",
+        "category": "Function",
+        "x": 605,
+        "y": 920,
+        "wires": [
+            [
+                "sd_NIT1CF1fzTxMN79c"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_o5MkkZsr4StQKcSe",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "CalculateBasePremium",
+        "script": "console.log(\"Plans Response\");\nconsole.log(JSON.stringify(bh.local.plansResponse, null, 2));\n\nconst plans = bh.local.plansResponse.plans;\n\n// Find matching Reels record using rating age\nbh.local.selectedPlan = plans.find(plan => {\n\n    if (plan.plan_code !== bh.local.planCode) {\n\n        return false;\n\n    }\n\n    if (Number(plan.max_si_allowed) !== Number(bh.local.sumInsured)) {\n\n        return false;\n\n    }\n\n    const [minAge, maxAge] =\n        plan.age_band\n            .split(\"-\")\n            .map(Number);\n\n    return (\n        bh.local.ratingAge >= minAge &&\n        bh.local.ratingAge <= maxAge\n    );\n\n});\n\nif (!bh.local.selectedPlan) {\n\n    throw new Error(\"Matching Reels plan not found\");\n\n}\n\n// Resolve age band from Reels\nbh.local.ageBand =\n    bh.local.selectedPlan.age_band;\n\nconsole.log(\"Resolved Age Band :\", bh.local.ageBand);\n\nconsole.log(\"Selected Reels Plan\");\nconsole.log(JSON.stringify(bh.local.selectedPlan, null, 2));\n\n// Calculate Base Premium\nconst rate =\n    Number(\n        bh.local.selectedPlan.base_rate_per_lakh\n    );\n\nbh.local.basePremium =\n    (\n        Number(bh.local.sumInsured) / 100000\n    ) * rate;\n\nconsole.log(\"Base Premium :\", bh.local.basePremium);",
+        "functionName": "calculateBasePremium",
+        "category": "Function",
+        "x": 1305,
+        "y": 920,
+        "wires": [
+            [
+                "sd_SigDlqdu1oy1I7G3"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_SigDlqdu1oy1I7G3",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "ApplyLoading",
+        "script": "const pct =\n    Number(\n        bh.local.loadingPct\n    );\n\nbh.local.loadedPremium =\n    bh.local.basePremium +\n    (\n        bh.local.basePremium *\n        pct / 100\n    );",
+        "functionName": "applyLoading",
+        "category": "Function",
+        "x": 1485,
+        "y": 920,
+        "wires": [
+            [
+                "sd_ZOW3jTDoY75MtPFU"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_ZOW3jTDoY75MtPFU",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "CalculateGST",
+        "script": "bh.local.gstAmount =\n    bh.local.loadedPremium *\n    0.18;\n\nbh.local.finalPremium =\n    bh.local.loadedPremium +\n    bh.local.gstAmount;",
+        "functionName": "calculateGst",
+        "category": "Function",
+        "x": 1645,
+        "y": 920,
+        "wires": [
+            [
+                "sd_liN49rzu0S7cnAWf"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_liN49rzu0S7cnAWf",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "PreparePremiumResponse",
+        "script": "bh.local.premiumData = {\n\n    ratingAge:\n        bh.local.ratingAge,\n\n    ageBand:\n        bh.local.ageBand,\n\n    basePremium:\n        bh.local.basePremium,\n\n    loadedPremium:\n        bh.local.loadedPremium,\n\n    gstAmount:\n        bh.local.gstAmount,\n\n    finalPremium:\n        bh.local.finalPremium,\n\n    ratingTrace:\n        `Plan:${bh.local.selectedPlan.plan_name}, Rate:${bh.local.selectedPlan.base_rate_per_lakh}/Lakh, Loading:${bh.local.loadingPct}%`\n\n};\nbh.input.premiumData = bh.local.premiumData",
+        "functionName": "preparePremiumResponse",
+        "category": "Function",
+        "x": 1805,
+        "y": 920,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_xK6qEaw7zrWx5umh",
+        "type": "CallService",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Calculate Premium MU Action",
+        "outputs": 1,
+        "isValidNode": true,
+        "noerr": 0,
+        "service": {
+            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+            "type": "tab",
+            "createdDate": "2026-08-02T16:33:40.534Z",
+            "label": "proposals",
+            "disabled": false,
+            "info": "",
+            "functionSeq": 0
+        },
+        "flow": {
+            "flowId": "sd_qYoxlnmP4VvfWLjo",
+            "flowName": "calculatePremium"
+        },
+        "inputVariables": [
+            {
+                "key": "proposal",
+                "map": true,
+                "valueType": "bh.local",
+                "value": "proposal"
+            },
+            {
+                "key": "loadingPct",
+                "map": true,
+                "valueType": "bh.local",
+                "value": "loadingPct"
+            },
+            {
+                "key": "premiumData",
+                "map": true,
+                "valueType": "bh.input",
+                "value": ""
+            }
+        ],
+        "bhVariables": [],
+        "outputMapping": [
+            {
+                "mapVarType": "input",
+                "key": "premiumData",
+                "valueType": "bh.local",
+                "value": "premiumData",
+                "mapVarName": "premiumData",
+                "localVar": "bh.local.premiumData"
+            }
+        ],
+        "callService": "./proposals",
+        "startName": "calculatePremium",
+        "inputParams": [
+            "bh.local.proposal",
+            "bh.local.loadingPct",
+            null
+        ],
+        "accept_bh": false,
+        "functionName": "calculatePremiumMuAction",
+        "category": "General",
+        "x": 1125,
+        "y": 700,
+        "wires": [
+            [
+                "sd_YgDDq1fX1Wu2dB7o"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_YgDDq1fX1Wu2dB7o",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "PrepareProposalUpdate",
+        "script": "const action = bh.input.body.action.toUpperCase();\nconsole.log(\"premium data =====\",bh.local.premiumData)\nbh.local.proposalUpdateFilter = {\n    proposal_id: bh.local.proposalId\n};\n\nbh.local.proposalUpdate = {};\n\nswitch(action){\n\ncase \"ACCEPT\":\nconsole.log(\"accept\");\n    bh.local.proposalUpdate.status = \"MU_APPROVED\";\n\n    bh.local.proposalUpdate.additional_loading_pct = 0;\n\n    bh.local.proposalUpdate.loaded_premium =\n        bh.local.premiumData.loadedPremium;\n\n    bh.local.proposalUpdate.gst_amount =\n        bh.local.premiumData.gstAmount;\n\n    bh.local.proposalUpdate.final_premium =\n        bh.local.premiumData.finalPremium;\n\n    bh.local.proposalUpdate.rating_trace =\n        bh.local.premiumData.ratingTrace;\n\n    bh.local.proposalUpdate.mu_remarks =\n        bh.input.body.remark || \"\";\n\nbreak;\n\n\ncase \"LOAD\":\n\n    bh.local.proposalUpdate.status = \"MU_APPROVED\";\n\n    bh.local.proposalUpdate.additional_loading_pct =\n        bh.local.loadingPct;\n\n    bh.local.proposalUpdate.loaded_premium =\n        bh.local.premiumData.loadedPremium;\n\n    bh.local.proposalUpdate.gst_amount =\n        bh.local.premiumData.gstAmount;\n\n    bh.local.proposalUpdate.final_premium =\n        bh.local.premiumData.finalPremium;\n\n    bh.local.proposalUpdate.rating_trace =\n        bh.local.premiumData.ratingTrace;\n\n    bh.local.proposalUpdate.mu_remarks =\n        bh.input.body.remark || \"\";\n\nbreak;\n\n\ncase \"DECLINE\":\n\n    bh.local.proposalUpdate.status = \"DECLINED\";\n\n    bh.local.proposalUpdate.mu_remarks =\n        bh.input.body.remark || \"\";\n\nbreak;\n\ndefault:\n\n    throw new Error(\"Invalid Action\");\n\n}",
+        "functionName": "prepareProposalUpdate",
+        "category": "Function",
+        "x": 1305,
+        "y": 700,
+        "wires": [
+            [
+                "sd_PO502ZISmvxOjN0g"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_PO502ZISmvxOjN0g",
+        "type": "update",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "MU action UpdateProposal",
+        "erd": "_DM_zsothgb3r",
+        "entityId": "_EN_hll0abjopf",
+        "_UI_entityName": "proposals",
+        "dbConfigId": "sd_99PeWpSvHx3jjW6m",
+        "operationType": "update",
+        "filterBy": "bh.local.proposalUpdateFilter",
+        "updateObject": "bh.local.proposalUpdate",
+        "resultMapping": "bh.local.updateProposalResponse",
+        "functionName": "muActionUpdateProposal",
+        "category": "Data Model",
+        "x": 1485,
+        "y": 700,
+        "wires": [
+            [
+                "sd_5Em44RbQDMAtmQqr"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "filterBy": {
+                "type": "bh.local",
+                "value": "proposalUpdateFilter",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            },
+            "updateObject": {
+                "type": "bh.local",
+                "value": "proposalUpdate",
+                "constant": false
+            },
+            "resultMapping": {
+                "type": "bh.local",
+                "value": "updateProposalResponse",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_5Em44RbQDMAtmQqr",
+        "type": "CallService",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "ReloadProposal",
+        "outputs": 1,
+        "isValidNode": true,
+        "noerr": 0,
+        "service": {
+            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+            "type": "tab",
+            "createdDate": "2026-08-02T16:33:40.534Z",
+            "label": "proposals",
+            "disabled": false,
+            "info": "",
+            "functionSeq": 0
+        },
+        "flow": {
+            "flowId": "sd_KXxrRmck1xjdjtLd",
+            "flowName": "loadProposalData"
+        },
+        "inputVariables": [
+            {
+                "key": "proposalId",
+                "map": true,
+                "valueType": "bh.local",
+                "value": "proposalId"
+            },
+            {
+                "key": "proposalData",
+                "map": true,
+                "valueType": "bh",
+                "value": ""
+            }
+        ],
+        "bhVariables": [],
+        "outputMapping": [
+            {
+                "mapVarType": "input",
+                "key": "proposalData",
+                "valueType": "bh.local",
+                "value": "proposalData",
+                "mapVarName": "proposalData",
+                "localVar": "bh.local.proposalData"
+            }
+        ],
+        "callService": "./proposals",
+        "startName": "loadProposalData",
+        "inputParams": [
+            "bh.local.proposalId",
+            null
+        ],
+        "accept_bh": false,
+        "functionName": "reloadProposal",
+        "category": "General",
+        "x": 1645,
+        "y": 700,
+        "wires": [
+            [
+                "sd_8rVABf1J467apQnU"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_mcqcTkYnl1WGzgtp",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "MU action Http Out",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "muActionHttpOut",
+        "category": "HTTP",
+        "x": 1885,
+        "y": 700,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_YsJfOH8B9CZ28XSW",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "ManagerAction HTTP In",
+        "path": "/proposal/:proposalId/manager-action",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "post",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "uploadFileOptions": "",
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 165,
+        "y": 1140,
+        "wires": [
+            [
+                "sd_Atys6zQkVzlXgpYi"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "proposals",
+        "functionName": "sd_YsJfOH8B9CZ28XSW"
+    },
+    {
+        "id": "sd_Atys6zQkVzlXgpYi",
+        "type": "ServiceVariables",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "client-server",
+        "nodeType": "flow",
+        "name": "Manager action service variables",
+        "inputs": 1,
+        "outputs": 1,
+        "operation": "set",
+        "globalVariables": [
+            {
+                "textIp": "proposalId",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "action",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "remark",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalData",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalUpdate",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalUpdateFilter",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "members",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposal",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "updateProposalResponse",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            }
+        ],
+        "functionName": "managerActionServiceVariables",
+        "category": "Function",
+        "x": 305,
+        "y": 1100,
+        "wires": [
+            [
+                "sd_LSCBkK6SsCEHsXEL"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_LSCBkK6SsCEHsXEL",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Manager action validate request",
+        "script": "bh.local.proposalId =\n    bh.input.params.proposalId;\n\nbh.local.action =\n    bh.input.body.action.toUpperCase();\n\nbh.local.remark =\n    bh.input.body.remark || \"\";\n    \nif (!bh.local.proposalId)\n    throw new Error(\"Proposal Id required\");\n\nif (!bh.local.action)\n    throw new Error(\"Action required\");\nif(\n    bh.local.action!=\"APPROVE\" &&\n    bh.local.action!=\"DECLINE\"\n){\n    throw new Error(\"Invalid Action\");\n}",
+        "functionName": "managerActionValidateRequest",
+        "category": "Function",
+        "x": 445,
+        "y": 1140,
+        "wires": [
+            [
+                "sd_DAJ2Ioav0DFdPUWR"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_DAJ2Ioav0DFdPUWR",
+        "type": "CallService",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Manager action Proposal call service",
+        "outputs": 1,
+        "isValidNode": true,
+        "noerr": 0,
+        "service": {
+            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+            "type": "tab",
+            "createdDate": "2026-08-02T16:33:40.534Z",
+            "label": "proposals",
+            "disabled": false,
+            "info": "",
+            "functionSeq": 0
+        },
+        "flow": {
+            "flowId": "sd_KXxrRmck1xjdjtLd",
+            "flowName": "loadProposalData"
+        },
+        "inputVariables": [
+            {
+                "key": "proposalId",
+                "map": true,
+                "valueType": "bh.local",
+                "value": "proposalId"
+            },
+            {
+                "key": "proposalData",
+                "map": true,
+                "valueType": "bh.input",
+                "value": ""
+            }
+        ],
+        "bhVariables": [],
+        "outputMapping": [
+            {
+                "mapVarType": "input",
+                "key": "proposalData",
+                "valueType": "bh.local",
+                "value": "proposalData",
+                "mapVarName": "proposalData",
+                "localVar": "bh.local.proposalData"
+            }
+        ],
+        "callService": "./proposals",
+        "startName": "loadProposalData",
+        "inputParams": [
+            "bh.local.proposalId",
+            null
+        ],
+        "accept_bh": false,
+        "functionName": "managerActionProposalCallService",
+        "category": "General",
+        "x": 605,
+        "y": 1100,
+        "wires": [
+            [
+                "sd_IDraELSUHGUBcEem"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_IDraELSUHGUBcEem",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Manager action validate proposal",
+        "script": "console.log(\nJSON.stringify(\nbh.local.proposalData,\nnull,\n2\n));\n\nif(!bh.local.proposalData){\n    throw new Error(\"Proposal not found\");\n}\n\nbh.local.proposal =\n    bh.local.proposalData.proposal;\n\nbh.local.members =\n    bh.local.proposalData.members;\n\nif(\n    bh.local.proposal.status !=\n    \"MU_APPROVED\"\n){\n    throw new Error(\n        \"Proposal is not ready for Manager Review\"\n    );\n}",
+        "functionName": "managerActionValidateProposal",
+        "category": "Function",
+        "x": 785,
+        "y": 1140,
+        "wires": [
+            [
+                "sd_oZblh9H6Mm0fbwC0"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_oZblh9H6Mm0fbwC0",
+        "type": "Switch",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Manager action switch by decision",
+        "property": "action",
+        "propertyType": "bh.local",
+        "propertyGv": "bh.local.action",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "APPROVE",
+                "vt": "str",
+                "gv": "\"APPROVE\""
+            },
+            {
+                "t": "eq",
+                "v": "DECLINE",
+                "vt": "str",
+                "gv": "\"DECLINE\""
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "functionName": "managerActionSwitchByDecision",
+        "category": "Function",
+        "x": 965,
+        "y": 1140,
+        "wires": [
+            [
+                "sd_cpO2M1sM0cK82AVu"
+            ],
+            [
+                "sd_eqwNArBs0bvkOO45"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_eqwNArBs0bvkOO45",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Manager action Decline",
+        "script": "console.log(\n\"Manager Declined\"\n);",
+        "functionName": "managerActionDecline",
+        "category": "Function",
+        "x": 1125,
+        "y": 1240,
+        "wires": [
+            [
+                "sd_oX5njHbToYTcV1dR"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_oX5njHbToYTcV1dR",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "PrepareProposalUpdate Manager",
+        "script": "bh.local.proposalUpdateFilter = {\n\nproposal_id:\nbh.local.proposalId\n\n};\n\nbh.local.proposalUpdate = {};\n\nswitch(\nbh.local.action\n){\n\ncase \"APPROVE\":\n\n    bh.local.proposalUpdate.status =\n        \"MANAGER_APPROVED\";\n\n    bh.local.proposalUpdate.manager_remarks =\n        bh.local.remark;\n\nbreak;\n\n\ncase \"DECLINE\":\n\n    bh.local.proposalUpdate.status =\n        \"DECLINED\";\n\n    bh.local.proposalUpdate.manager_remarks =\n        bh.local.remark;\n\nbreak;\n\ndefault:\n\nthrow new Error(\n\"Invalid Action\"\n);\n\n}",
+        "functionName": "prepareProposalUpdateManager",
+        "category": "Function",
+        "x": 1305,
+        "y": 1140,
+        "wires": [
+            [
+                "sd_LLqY0DwE1DMgsouC"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_LLqY0DwE1DMgsouC",
+        "type": "update",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "Manager action UpdateProposal",
+        "erd": "_DM_zsothgb3r",
+        "entityId": "_EN_hll0abjopf",
+        "_UI_entityName": "proposals",
+        "dbConfigId": "sd_99PeWpSvHx3jjW6m",
+        "operationType": "update",
+        "filterBy": "bh.local.proposalUpdateFilter",
+        "updateObject": "bh.local.proposalUpdate",
+        "resultMapping": "bh.local.updateProposalResponse",
+        "functionName": "managerActionUpdateProposal",
+        "category": "Data Model",
+        "x": 1485,
+        "y": 1140,
+        "wires": [
+            [
+                "sd_0DfEoGsErqD6oUwV"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "filterBy": {
+                "type": "bh.local",
+                "value": "proposalUpdateFilter",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            },
+            "updateObject": {
+                "type": "bh.local",
+                "value": "proposalUpdate",
+                "constant": false
+            },
+            "resultMapping": {
+                "type": "bh.local",
+                "value": "updateProposalResponse",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_0DfEoGsErqD6oUwV",
+        "type": "CallService",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "ReloadProposal Manager",
+        "outputs": 1,
+        "isValidNode": true,
+        "noerr": 0,
+        "service": {
+            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+            "type": "tab",
+            "createdDate": "2026-08-02T16:33:40.534Z",
+            "label": "proposals",
+            "disabled": false,
+            "info": "",
+            "functionSeq": 0
+        },
+        "flow": {
+            "flowId": "sd_KXxrRmck1xjdjtLd",
+            "flowName": "loadProposalData"
+        },
+        "inputVariables": [
+            {
+                "key": "proposalId",
+                "map": true,
+                "valueType": "bh.local",
+                "value": "proposalId"
+            },
+            {
+                "key": "proposalData",
+                "map": true,
+                "valueType": "bh",
+                "value": ""
+            }
+        ],
+        "bhVariables": [],
+        "outputMapping": [
+            {
+                "mapVarType": "input",
+                "key": "proposalData",
+                "valueType": "bh.local",
+                "value": "proposalData",
+                "mapVarName": "proposalData",
+                "localVar": "bh.local.proposalData"
+            }
+        ],
+        "callService": "./proposals",
+        "startName": "loadProposalData",
+        "inputParams": [
+            "bh.local.proposalId",
+            null
+        ],
+        "accept_bh": false,
+        "functionName": "reloadProposalManager",
+        "category": "General",
+        "x": 1645,
+        "y": 1140,
+        "wires": [
+            [
+                "sd_aEpOyJf1DOnVYB5D"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_xFFpg3HVB2OPxJKS",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "Manager action Http Out",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "managerActionHttpOut",
+        "category": "HTTP",
+        "x": 1965,
+        "y": 1140,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_cpO2M1sM0cK82AVu",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Manager action Accept",
+        "script": "console.log(\n\"Manager Approved\"\n);",
+        "functionName": "managerActionAccept",
+        "category": "Function",
+        "x": 1125,
+        "y": 1040,
+        "wires": [
+            [
+                "sd_oX5njHbToYTcV1dR"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_hv0h0PVDxgygZof3",
+        "type": "Start",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "client-server",
+        "nodeType": "start",
+        "name": "getPlansInternal",
+        "outputs": 1,
+        "inputVariables": [
+            {
+                "key": "plansResponse",
+                "defaultValue": {
+                    "type": "any",
+                    "value": ""
+                },
+                "output": true
+            }
+        ],
+        "localVariables": [],
+        "accept_bh": false,
+        "functionName": "getPlansInternal",
+        "category": "General",
+        "x": 185,
+        "y": 1540,
+        "wires": [
+            [
+                "sd_FgDz1E8sD8rZBe5a"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "proposals"
+    },
+    {
+        "id": "sd_FgDz1E8sD8rZBe5a",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "PrepareReelsPlanRequest",
+        "script": "const BASE_URL =\n    bh.system.environment.REELS_BASE_URL;\n\nconst TOKEN =\n    bh.system.environment.REELS_TOKEN;\n\nconst DATASET_ID =\n    \"72b58c39-817f-4204-95dc-4f5eec8fd929\";\n\nconst MDM_ID =\n    \"bde0d7f4-e63e-41dd-88e4-92a195bbb88d\";\n\nconst ENTITY_ID =\n    \"76dad198-6eac-4dad-9e8c-b726fef944fb\";\n\nbh.local.reelsUrl =\n`${BASE_URL}/integration/api/records/filter/${DATASET_ID}/${MDM_ID}/${ENTITY_ID}`;\n\nbh.local.headers = {\n\n    token: TOKEN,\n\n    \"Content-Type\": \"application/json\"\n\n};\n\nbh.local.requestBody = {\n\n    pageNumber: 0,\n\n    pageSize: 100,\n\n    filter: {},\n\n    multiplicity: \"multiple\",\n\n    totalCount: true\n\n};\n\nconsole.log(\"Reels URL\");\nconsole.log(bh.local.reelsUrl);\n\nconsole.log(\"Reels Request\");\nconsole.log(JSON.stringify(bh.local.requestBody, null, 2));",
+        "functionName": "prepareReelsPlanRequest",
+        "category": "Function",
+        "x": 365,
+        "y": 1540,
+        "wires": [
+            [
+                "sd_ShSQQVt0HP3PKufA"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_ShSQQVt0HP3PKufA",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "CallReelsPlanMasterData",
+        "method": "post",
+        "methodMapping": "",
+        "methodMappingObj": {},
+        "urlMapping": "bh.local.reelsUrl",
+        "urlMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "reelsUrl"
+        },
+        "ret": "json",
+        "retMapping": "",
+        "retMappingObj": {},
+        "reqBody": "bh.local.requestBody",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "requestBody"
+        },
+        "resultMapping": "bh.local.reelsResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "reelsResponse"
+        },
+        "headers": [],
+        "headersObj": {},
+        "headerMapping": "bh.local.headers",
+        "headerMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "headers"
+        },
+        "params": {},
+        "paramsObj": [],
+        "paramMapping": "",
+        "paramMappingObj": {},
+        "authType": "",
+        "useAuthTypeMappingObj": {},
+        "useAuthTypeMap": {},
+        "useAuthType": "",
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": "",
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": "",
+        "useAuthToken": "",
+        "useAuthTokenMappingObj": "",
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookies": [],
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "callReelsPlanMasterData",
+        "category": "HTTP",
+        "x": 550,
+        "y": 1540,
+        "wires": [
+            [
+                "sd_PXejJwrK8ad1A8Ir"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_PXejJwrK8ad1A8Ir",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "ValidateAndPrepareReelResponse",
+        "script": "console.log(\"Reels Response\");\n\nconsole.log(\n    JSON.stringify(\n        bh.local.reelsResponse,\n        null,\n        2\n    )\n);\n\nif (!bh.local.reelsResponse) {\n\n    throw new Error(\n        \"Reels API did not return response\"\n    );\n\n}\n\nif (\n    !bh.local.reelsResponse.payload ||\n    !bh.local.reelsResponse.payload.records\n) {\n\n    throw new Error(\n        \"Reels Master records not found\"\n    );\n\n}\n\nbh.local.plansResponse = {\n\n    plans:\n        bh.local.reelsResponse.payload.records\n\n};\n\nconsole.log(\"Plans Response\");\n\nconsole.log(\n    JSON.stringify(\n        bh.local.plansResponse,\n        null,\n        2\n    )\n);\nbh.input.plansResponse = bh.local.plansResponse;",
+        "functionName": "validateAndPrepareReelResponse",
+        "category": "Function",
+        "x": 725,
+        "y": 1540,
+        "wires": [
+            []
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_CjkyOsBUpaqy7Vhc",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "getPlans",
+        "path": "/reels/plans",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "get",
+        "sequenceId": "",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": false,
+        "uploadFileOptions": "",
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 180,
+        "y": 1320,
+        "wires": [
+            [
+                "sd_Ful1nB7vPWZPudgb"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "proposals",
+        "functionName": "sd_CjkyOsBUpaqy7Vhc"
+    },
+    {
+        "id": "sd_Ful1nB7vPWZPudgb",
+        "type": "CallService",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "getReelsPlansCallService",
+        "outputs": 1,
+        "isValidNode": true,
+        "noerr": 0,
+        "service": {
+            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+            "type": "tab",
+            "createdDate": "2026-08-02T16:33:40.534Z",
+            "label": "proposals",
+            "disabled": false,
+            "info": "",
+            "functionSeq": 0
+        },
+        "flow": {
+            "flowId": "sd_hv0h0PVDxgygZof3",
+            "flowName": "getPlansInternal"
+        },
+        "inputVariables": [
+            {
+                "key": "plansResponse",
+                "map": true,
+                "valueType": "bh.input",
+                "value": ""
+            }
+        ],
+        "bhVariables": [],
+        "outputMapping": [
+            {
+                "mapVarType": "input",
+                "key": "plansResponse",
+                "valueType": "bh.local",
+                "value": "plansResponse",
+                "mapVarName": "plansResponse",
+                "localVar": "bh.local.plansResponse"
+            }
+        ],
+        "callService": "./proposals",
+        "startName": "getPlansInternal",
+        "inputParams": [
+            null
+        ],
+        "accept_bh": false,
+        "functionName": "getReelsPlansCallService",
+        "category": "General",
+        "x": 360,
+        "y": 1320,
+        "wires": [
+            [
+                "sd_lw53J1KeoqBofdty"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_HCCBukDSHldJjFhg",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "reels plan Master Data Http out",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "reelsPlanMasterDataHttpOut",
+        "category": "HTTP",
+        "x": 725,
+        "y": 1320,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_lw53J1KeoqBofdty",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "ReelResponse",
+        "script": "console.log(\"Plans Response\");\n\nconsole.log(\n    JSON.stringify(\n        bh.local.plansResponse,\n        null,\n        2\n    )\n);\n\nif (\n    !bh.local.plansResponse ||\n    !bh.local.plansResponse.plans\n) {\n\n    throw new Error(\n        \"Plans not found\"\n    );\n\n}\n\n/*--------------------------------------\n Prepare Success Response\n--------------------------------------*/\n\nbh.local.response = {\n\n    success: true,\n\n    message:\n        \"Plans fetched successfully\",\n\n    data:\n        bh.local.plansResponse\n\n};\n\nconsole.log(\"Success Response\");\n\nconsole.log(\n    JSON.stringify(\n        bh.local.response,\n        null,\n        2\n    )\n);",
+        "functionName": "reelResponse",
+        "category": "Function",
+        "x": 545,
+        "y": 1320,
+        "wires": [
+            [
+                "sd_HCCBukDSHldJjFhg"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_FcCgYbyh9RE5pxiQ",
+        "type": "CallService",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Calculate premium get Plan CallService",
+        "outputs": 1,
+        "isValidNode": true,
+        "noerr": 0,
+        "service": {
+            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+            "type": "tab",
+            "createdDate": "2026-08-02T16:33:40.534Z",
+            "label": "proposals",
+            "disabled": false,
+            "info": "",
+            "functionSeq": 0
+        },
+        "flow": {
+            "flowId": "sd_hv0h0PVDxgygZof3",
+            "flowName": "getPlansInternal"
+        },
+        "inputVariables": [
+            {
+                "key": "plansResponse",
+                "map": true,
+                "valueType": "bh.input",
+                "value": ""
+            }
+        ],
+        "bhVariables": [],
+        "outputMapping": [
+            {
+                "mapVarType": "input",
+                "key": "plansResponse",
+                "valueType": "bh.local",
+                "value": "plansResponse",
+                "mapVarName": "plansResponse",
+                "localVar": "bh.local.plansResponse"
+            }
+        ],
+        "callService": "./proposals",
+        "startName": "getPlansInternal",
+        "inputParams": [
+            null
+        ],
+        "accept_bh": false,
+        "functionName": "calculatePremiumGetPlanCallService",
+        "category": "General",
+        "x": 1125,
+        "y": 920,
+        "wires": [
+            [
+                "sd_o5MkkZsr4StQKcSe"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_j29ciUzzFSKPMVzN",
+        "type": "CallService",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "loadRateCard",
+        "outputs": 1,
+        "isValidNode": true,
+        "noerr": 0,
+        "service": {
+            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+            "type": "tab",
+            "createdDate": "2026-08-02T16:33:40.534Z",
+            "label": "proposals",
+            "disabled": false,
+            "info": "",
+            "functionSeq": 0
+        },
+        "flow": {
+            "flowId": "sd_hv0h0PVDxgygZof3",
+            "flowName": "getPlansInternal"
+        },
+        "inputVariables": [
+            {
+                "key": "plansResponse",
+                "map": true,
+                "valueType": "bh.input",
+                "value": ""
+            }
+        ],
+        "bhVariables": [],
+        "outputMapping": [
+            {
+                "mapVarType": "input",
+                "key": "plansResponse",
+                "valueType": "bh.local",
+                "value": "plansResponse",
+                "mapVarName": "plansResponse",
+                "localVar": "bh.local.plansResponse"
+            }
+        ],
+        "callService": "./proposals",
+        "startName": "getPlansInternal",
+        "inputParams": [
+            null
+        ],
+        "accept_bh": false,
+        "functionName": "loadRateCard",
+        "category": "General",
+        "x": 785,
+        "y": 40,
+        "wires": [
+            [
+                "sd_kUFEZepCdW8roykz"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_kUFEZepCdW8roykz",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "ResolveAgeBand",
+        "script": "const plans = bh.local.plansResponse.plans;\n\nbh.local.selectedPlan = plans.find(plan => {\n\n    if (plan.plan_code !== bh.input.body.plan_variant) {\n\n        return false;\n\n    }\n\n    const [minAge, maxAge] =\n        plan.age_band\n            .split(\"-\")\n            .map(Number);\n\n    return (\n        bh.local.ratingAge >= minAge &&\n        bh.local.ratingAge <= maxAge\n    );\n\n});\n\nif (!bh.local.selectedPlan) {\n\n    throw new Error(\"Age Band not found in Reels\");\n\n}\n\nbh.local.ageBand =\n    bh.local.selectedPlan.age_band;\n\nconsole.log(\"Selected Reels Plan\");\nconsole.log(JSON.stringify(bh.local.selectedPlan, null, 2));\n\nconsole.log(\"Resolved Age Band :\", bh.local.ageBand);",
+        "functionName": "resolveAgeBand",
+        "category": "Function",
+        "x": 780,
+        "y": 260,
+        "wires": [
+            [
+                "sd_0WzZ2IABKHcik2RA"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_NIT1CF1fzTxMN79c",
+        "type": "CallService",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "calculateRateCard",
+        "outputs": 1,
+        "isValidNode": true,
+        "noerr": 0,
+        "service": {
+            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+            "type": "tab",
+            "createdDate": "2026-08-02T16:33:40.534Z",
+            "label": "proposals",
+            "disabled": false,
+            "info": "",
+            "functionSeq": 0
+        },
+        "flow": {
+            "flowId": "sd_hv0h0PVDxgygZof3",
+            "flowName": "getPlansInternal"
+        },
+        "inputVariables": [
+            {
+                "key": "plansResponse",
+                "map": true,
+                "valueType": "bh.input",
+                "value": ""
+            }
+        ],
+        "bhVariables": [],
+        "outputMapping": [
+            {
+                "mapVarType": "input",
+                "key": "plansResponse",
+                "valueType": "bh.local",
+                "value": "plansResponse",
+                "mapVarName": "plansResponse",
+                "localVar": "bh.local.plansResponse"
+            }
+        ],
+        "callService": "./proposals",
+        "startName": "getPlansInternal",
+        "inputParams": [
+            null
+        ],
+        "accept_bh": false,
+        "functionName": "calculateRateCard",
+        "category": "General",
+        "x": 805,
+        "y": 920,
+        "wires": [
+            [
+                "sd_l8ZGvDpqL198qWJN"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_l8ZGvDpqL198qWJN",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "ResolveAgeBandFromReels",
+        "script": "const plans =\n    bh.local.plansResponse.plans;\n\nconst ratingAge =\n    bh.local.ratingAge;\n\nconst planCode =\n    bh.local.planCode;\n\nconst matched =\n    plans.find(plan => {\n\n        const [minAge, maxAge] =\n            plan.age_band\n                .split(\"-\")\n                .map(Number);\n\n        return (\n\n            plan.plan_code === planCode &&\n\n            ratingAge >= minAge &&\n\n            ratingAge <= maxAge\n\n        );\n\n    });\n\nif (!matched) {\n\n    throw new Error(\n        \"Unable to resolve age band from Reels\"\n    );\n\n}\n\nbh.local.selectedPlan = matched;\n\nbh.local.ageBand =\n    matched.age_band;\n\nconsole.log(\"Resolved Age Band :\", bh.local.ageBand);",
+        "functionName": "resolveAgeBandFromReels",
+        "category": "Function",
+        "x": 965,
+        "y": 920,
+        "wires": [
+            [
+                "sd_FcCgYbyh9RE5pxiQ"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_VWgoWLnTdStKMBhl",
+        "type": "Catch",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "start",
+        "name": "health proposal catch",
+        "selectedNodes": "all-nodes",
+        "selectCatchType": "allnodes",
+        "masternodeList": "",
+        "ignoreList": [
+            "sd_35waBhdJvYXDzquo",
+            "sd_wrfIL6MCEcJTBZ13"
+        ],
+        "functionName": "healthProposalCatch",
+        "category": "General",
+        "x": 1145,
+        "y": 380,
+        "wires": [
+            [
+                "sd_35waBhdJvYXDzquo"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "proposals"
+    },
+    {
+        "id": "sd_35waBhdJvYXDzquo",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "health proposal catch node script",
+        "script": "console.log(\"******** CATCH NODE EXECUTED ********\");\n\nconsole.error(bh.error);\n\nlet statusCode = 500;\n\nlet message =\n    \"Internal Server Error\";\n\nif (bh.error?.sqlMessage) {\n\n    message = bh.error.sqlMessage;\n    statusCode = 500;\n\n}\nelse if (bh.error?.message) {\n\n    message = bh.error.message;\n    statusCode = 400;\n\n}\n\nbh.web.res.statusCode = statusCode;\n\nbh.web.res.body = {\n\n    success: false,\n\n    statusCode: statusCode,\n\n    message: message,\n\n    timestamp: new Date().toISOString()\n\n};\n\nreturn bh;",
+        "functionName": "healthProposalCatchNodeScript",
+        "category": "Function",
+        "x": 1325,
+        "y": 380,
+        "wires": [
+            [
+                "sd_wrfIL6MCEcJTBZ13"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_wrfIL6MCEcJTBZ13",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "Health proposal catch Http out",
+        "headers": {},
+        "responseBody": {
+            "type": "bh",
+            "value": "web.res.body",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "bh",
+            "value": "web.res.statusCode",
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": "bh.web.res.statusCode",
+            "obj": "bh.web.res.body",
+            "send": "bh.web.res.body"
+        },
+        "dataModelIsArray": false,
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "healthProposalCatchHttpOut",
+        "category": "HTTP",
+        "x": 1525,
+        "y": 380,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_8rVABf1J467apQnU",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "prepareMUActionResponse",
+        "script": "console.log(\"Proposal Data\");\n\nconsole.log(\n    JSON.stringify(\n        bh.local.proposalData,\n        null,\n        2\n    )\n);\n\nif (!bh.local.proposalData) {\n\n    throw new Error(\n        \"Proposal not found\"\n    );\n\n}\n\n/*--------------------------------------\n Prepare Success Response\n--------------------------------------*/\n\nbh.local.response = {\n\n    success: true,\n\n    message:\n        \"Medical Underwriter action completed successfully\",\n\n    data:\n        bh.local.proposalData\n\n};\n\nconsole.log(\"Response\");\n\nconsole.log(\n    JSON.stringify(\n        bh.local.response,\n        null,\n        2\n    )\n);",
+        "functionName": "prepareMuActionResponse",
+        "category": "Function",
+        "x": 1765,
+        "y": 700,
+        "wires": [
+            [
+                "sd_mcqcTkYnl1WGzgtp"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_aEpOyJf1DOnVYB5D",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "prepareManagerActionResponse",
+        "script": "console.log(\"Proposal Data\");\n\nconsole.log(\n    JSON.stringify(\n        bh.local.proposalData,\n        null,\n        2\n    )\n);\n\nif (!bh.local.proposalData) {\n\n    throw new Error(\n        \"Proposal not found\"\n    );\n\n}\n\n/*--------------------------------------\n Prepare Success Response\n--------------------------------------*/\n\nbh.local.response = {\n\n    success: true,\n\n    message:\n        \"Manager action completed successfully\",\n\n    data:\n        bh.local.proposalData\n\n};\n\nconsole.log(\"Response\");\n\nconsole.log(\n    JSON.stringify(\n        bh.local.response,\n        null,\n        2\n    )\n);",
+        "functionName": "prepareManagerActionResponse",
+        "category": "Function",
+        "x": 1805,
+        "y": 1140,
+        "wires": [
+            [
+                "sd_xFFpg3HVB2OPxJKS"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    }
+]
