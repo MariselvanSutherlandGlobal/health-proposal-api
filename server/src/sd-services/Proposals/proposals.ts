@@ -121,7 +121,7 @@ export class proposals {
       `${this.serviceBasePath}/proposal`,
       cookieParser(),
       this.sdService.getMiddlesWaresBySequenceId(
-        null,
+        'IDSAuthroizedAPIs',
         'pre',
         this.generatedMiddlewares
       ),
@@ -143,7 +143,7 @@ export class proposals {
         }
       },
       this.sdService.getMiddlesWaresBySequenceId(
-        null,
+        'IDSAuthroizedAPIs',
         'post',
         this.generatedMiddlewares
       )
@@ -153,7 +153,7 @@ export class proposals {
       `${this.serviceBasePath}/proposal/:proposalId/mu-action`,
       cookieParser(),
       this.sdService.getMiddlesWaresBySequenceId(
-        null,
+        'IDSAuthroizedAPIs',
         'pre',
         this.generatedMiddlewares
       ),
@@ -175,7 +175,7 @@ export class proposals {
         }
       },
       this.sdService.getMiddlesWaresBySequenceId(
-        null,
+        'IDSAuthroizedAPIs',
         'post',
         this.generatedMiddlewares
       )
@@ -185,7 +185,7 @@ export class proposals {
       `${this.serviceBasePath}/proposal/:proposalId`,
       cookieParser(),
       this.sdService.getMiddlesWaresBySequenceId(
-        null,
+        'IDSAuthroizedAPIs',
         'pre',
         this.generatedMiddlewares
       ),
@@ -207,7 +207,7 @@ export class proposals {
         }
       },
       this.sdService.getMiddlesWaresBySequenceId(
-        null,
+        'IDSAuthroizedAPIs',
         'post',
         this.generatedMiddlewares
       )
@@ -217,7 +217,7 @@ export class proposals {
       `${this.serviceBasePath}/proposal/:proposalId/manager-action`,
       cookieParser(),
       this.sdService.getMiddlesWaresBySequenceId(
-        null,
+        'IDSAuthroizedAPIs',
         'pre',
         this.generatedMiddlewares
       ),
@@ -239,7 +239,7 @@ export class proposals {
         }
       },
       this.sdService.getMiddlesWaresBySequenceId(
-        null,
+        'IDSAuthroizedAPIs',
         'post',
         this.generatedMiddlewares
       )
@@ -249,7 +249,7 @@ export class proposals {
       `${this.serviceBasePath}/reels/plans`,
       cookieParser(),
       this.sdService.getMiddlesWaresBySequenceId(
-        null,
+        'IDSAuthroizedAPIs',
         'pre',
         this.generatedMiddlewares
       ),
@@ -271,7 +271,7 @@ export class proposals {
         }
       },
       this.sdService.getMiddlesWaresBySequenceId(
-        null,
+        'IDSAuthroizedAPIs',
         'post',
         this.generatedMiddlewares
       )

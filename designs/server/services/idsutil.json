@@ -1,6 +1,6 @@
 [
     {
-        "id": "sd_YMDbx0Q56bGgQO8H",
+        "id": "sd_SvGRmmGVRPROW9vh",
         "type": "tab",
         "createdDate": "2019-12-04T13:37:05.418Z",
         "label": "idsutil",
@@ -8,16 +8,18 @@
         "info": "",
         "generateNext": true,
         "serviceName": "idsutil",
+        "viewType": "server",
         "relativeParentPath": ""
     },
     {
-        "id": "sd_QXQ7H1WYm01AZDhV",
+        "id": "sd_UXNmCrDaOWJLBwJk",
         "type": "Start",
-        "z": "sd_YMDbx0Q56bGgQO8H",
-        "viewType": "client-server",
+        "z": "sd_SvGRmmGVRPROW9vh",
+        "viewType": "common",
         "nodeType": "start",
         "name": "getIDSClientInstance",
         "outputs": 1,
+        "noerr": 0,
         "inputVariables": [
             {
                 "key": "clientInstance",
@@ -29,47 +31,42 @@
             }
         ],
         "localVariables": [],
-        "accept_bh": "",
         "functionName": "getIDSClientInstance",
-        "category": "General",
         "x": 241,
         "y": 252.78125,
         "wires": [
             [
-                "sd_JlUPHsgsnjPVeax9"
+                "sd_tFk8r1aYwqZHlKma"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": true,
         "serviceName": "idsutil"
     },
     {
-        "id": "sd_tGxbX9uXvYDpacfr",
+        "id": "sd_5HpohlSOF9OGFSNf",
         "type": "Script",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "",
         "script": "\nconst DEFAULT_HTTP_OPTIONS = {\n    timeout: 60000,\n};\n\ncustom.setHttpOptionsDefaults({\n    timeout: DEFAULT_HTTP_OPTIONS.timeout,\n});\nlog.info(`Identity server default HTTP options : ${DEFAULT_HTTP_OPTIONS}`);\nconst issuer = await Issuer.discover(settings.default['ids']['issuerURL']);\nlog.info(`Identity server discovered at : ${issuer.issuer}`);\nconst client = new issuer.Client({\n    client_id: settings.default['ids']['client_id'],\n    client_secret: settings.default['ids']['client_secret']\n});\nclient[custom.clock_tolerance] = parseInt((process.env.CLOCK_TOLERANCE).toString());\nlog.info('Client connected...');\nbh.input.clientInstance = client;",
-        "functionName": "sd_J9L3oEbqPtl8tfbi",
-        "category": "Function",
         "x": 742.890625,
         "y": 144.78125,
         "wires": [
             [
-                "sd_C5YNH8FEiF3ErOpV"
+                "sd_e3eLjE3uuog5fpIR"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
+        "generated": true,
         "serviceName": "idsutil",
-        "generated": true
+        "functionName": "sd_J9L3oEbqPtl8tfbi"
     },
     {
-        "id": "sd_C5YNH8FEiF3ErOpV",
+        "id": "sd_e3eLjE3uuog5fpIR",
         "type": "ServiceVariables",
-        "z": "sd_YMDbx0Q56bGgQO8H",
-        "viewType": "client-server",
+        "z": "sd_SvGRmmGVRPROW9vh",
+        "viewType": "common",
         "nodeType": "flow",
         "name": "",
         "inputs": 1,
@@ -84,22 +81,20 @@
                 }
             }
         ],
-        "functionName": "sd_C5YNH8FEiF3ErOpV",
-        "category": "Function",
+        "functionName": "sd_e3eLjE3uuog5fpIR",
         "x": 926,
         "y": 144.75,
         "wires": [
             []
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_JYUUiOJKoY9G3MUY",
+        "id": "sd_Iev8rexvD4Ynra04",
         "type": "Switch",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "Check if client exists",
@@ -120,28 +115,26 @@
         "checkall": "false",
         "repair": false,
         "outputs": 2,
-        "functionName": "sd_NDvR3YN7qjsaaO0E",
-        "category": "Function",
         "x": 566,
         "y": 252.765625,
         "wires": [
             [
-                "sd_tGxbX9uXvYDpacfr"
+                "sd_5HpohlSOF9OGFSNf"
             ],
             [
-                "sd_EF1KDcJC4492IJ77"
+                "sd_QYxEvN3evWIC5qFE"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "functionName": "sd_NDvR3YN7qjsaaO0E",
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_JlUPHsgsnjPVeax9",
+        "id": "sd_tFk8r1aYwqZHlKma",
         "type": "ServiceVariables",
-        "z": "sd_YMDbx0Q56bGgQO8H",
-        "viewType": "client-server",
+        "z": "sd_SvGRmmGVRPROW9vh",
+        "viewType": "common",
         "nodeType": "flow",
         "name": "Get client instance ",
         "inputs": 1,
@@ -156,25 +149,23 @@
                 }
             }
         ],
-        "functionName": "sd_JlUPHsgsnjPVeax9",
-        "category": "Function",
+        "functionName": "sd_tFk8r1aYwqZHlKma",
         "x": 404,
         "y": 253.75,
         "wires": [
             [
-                "sd_JYUUiOJKoY9G3MUY"
+                "sd_Iev8rexvD4Ynra04"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_EF1KDcJC4492IJ77",
+        "id": "sd_QYxEvN3evWIC5qFE",
         "type": "ServiceVariables",
-        "z": "sd_YMDbx0Q56bGgQO8H",
-        "viewType": "client-server",
+        "z": "sd_SvGRmmGVRPROW9vh",
+        "viewType": "common",
         "nodeType": "flow",
         "name": "Get client if exists",
         "inputs": 1,
@@ -189,26 +180,25 @@
                 }
             }
         ],
-        "functionName": "sd_EF1KDcJC4492IJ77",
-        "category": "Function",
+        "functionName": "sd_QYxEvN3evWIC5qFE",
         "x": 755,
         "y": 378.75,
         "wires": [
             []
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_fcHHxdEPmsJ2xlPH",
+        "id": "sd_Nj69Sn0t4K0JzwvR",
         "type": "Start",
-        "z": "sd_YMDbx0Q56bGgQO8H",
-        "viewType": "client-server",
+        "z": "sd_SvGRmmGVRPROW9vh",
+        "viewType": "common",
         "nodeType": "start",
         "name": "Get Authorization Params",
         "outputs": 1,
+        "noerr": 0,
         "inputVariables": [
             {
                 "key": "authParams",
@@ -220,48 +210,44 @@
             }
         ],
         "localVariables": [],
-        "accept_bh": "",
         "functionName": "getAuthorizationParams",
-        "category": "General",
         "x": 244,
         "y": 562.8125,
         "wires": [
             [
-                "sd_gLV2Rpz55oeKKRY1"
+                "sd_K4yF8hEKsj7VxF55"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": true,
         "serviceName": "idsutil"
     },
     {
-        "id": "sd_gLV2Rpz55oeKKRY1",
+        "id": "sd_K4yF8hEKsj7VxF55",
         "type": "Script",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "Auth Params (Scope and consent)",
         "script": "bh.input.authParams = {\n    scope: 'openid profile email address phone offline_access user',\n    prompt: 'consent',\n};",
-        "functionName": "sd_7YL6DXa7u6TVTwOf",
-        "category": "Function",
         "x": 434,
         "y": 562.8125,
         "wires": [
             []
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "functionName": "sd_7YL6DXa7u6TVTwOf",
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_TFGrXLDzvFPkRAtN",
+        "id": "sd_UFFhtbBG1Vr2Gqsw",
         "type": "Start",
-        "z": "sd_YMDbx0Q56bGgQO8H",
-        "viewType": "client-server",
+        "z": "sd_SvGRmmGVRPROW9vh",
+        "viewType": "common",
         "nodeType": "start",
         "name": "handleTokenExpiry",
         "outputs": 1,
+        "noerr": 0,
         "inputVariables": [
             {
                 "key": "existingSession",
@@ -281,46 +267,41 @@
             }
         ],
         "localVariables": [],
-        "accept_bh": false,
         "functionName": "handleTokenExpiry",
-        "category": "General",
         "x": 179.25000953674316,
         "y": 950.0312614440918,
         "wires": [
             [
-                "sd_psAJW6NJ0Gzevlho"
+                "sd_NMHUCR70qzYbYPBP"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": true,
         "serviceName": "idsutil"
     },
     {
-        "id": "sd_psAJW6NJ0Gzevlho",
+        "id": "sd_NMHUCR70qzYbYPBP",
         "type": "Script",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "",
         "script": "const tokenset = bh.input.existingSession.data.tokenset;\nbh.local.expires_at = tokenset['expires_at'] * 1000;\nbh.local.refreshTime = (((new Date()).valueOf()) + 300000); // 5min before",
-        "functionName": "sd_Td7SEkoGS5kQ5exT",
-        "category": "Function",
         "x": 349.14063453674316,
         "y": 948.0312614440918,
         "wires": [
             [
-                "sd_oEuM3nAynmeFEaJW"
+                "sd_9GInrwPa9n42pa88"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "functionName": "sd_Td7SEkoGS5kQ5exT",
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_oEuM3nAynmeFEaJW",
+        "id": "sd_9GInrwPa9n42pa88",
         "type": "Switch",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "Is Access token valid",
@@ -341,61 +322,56 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "functionName": "sd_k3DExrGQArMQa22b",
-        "category": "Function",
         "x": 503.25000953674316,
         "y": 949.0312614440918,
         "wires": [
             [
-                "sd_TRf45rBK8WC5G7yz"
+                "sd_fmClxi5BWMGrMLUG"
             ],
             [
-                "sd_Oqosd9an8FiEnlHy"
+                "sd_s5YkzPSJCJaA4ShO"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "functionName": "sd_k3DExrGQArMQa22b",
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_TRf45rBK8WC5G7yz",
+        "id": "sd_fmClxi5BWMGrMLUG",
         "type": "Script",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "",
         "script": "bh.input.newSession = bh.input.existingSession.data;",
-        "functionName": "sd_5nD65FpeyZEpXupm",
-        "category": "Function",
         "x": 723.2500095367432,
         "y": 839.0312614440918,
         "wires": [
             []
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "functionName": "sd_5nD65FpeyZEpXupm",
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_Oqosd9an8FiEnlHy",
+        "id": "sd_s5YkzPSJCJaA4ShO",
         "type": "CallService",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "",
         "outputs": 1,
-        "isValidNode": true,
         "noerr": 0,
         "service": {
-            "serviceId": "sd_YMDbx0Q56bGgQO8H",
+            "serviceId": "sd_SvGRmmGVRPROW9vh",
             "serviceName": "idsutil",
-            "id": "sd_YMDbx0Q56bGgQO8H",
+            "id": "sd_SvGRmmGVRPROW9vh",
             "label": "idsutil"
         },
         "flow": {
-            "flowId": "sd_QXQ7H1WYm01AZDhV",
+            "flowId": "sd_UXNmCrDaOWJLBwJk",
             "flowName": "getIDSClientInstance"
         },
         "inputVariables": [
@@ -421,47 +397,42 @@
         "inputParams": [
             null
         ],
-        "accept_bh": false,
-        "functionName": "sd_nBCUXYI1J1IjPR1x",
-        "category": "General",
         "x": 717.2500095367432,
         "y": 1044.0312614440918,
         "wires": [
             [
-                "sd_dO4qFWfnwS2tJjbB"
+                "sd_QhWUHofcB0mADU33"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "functionName": "sd_nBCUXYI1J1IjPR1x",
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_dO4qFWfnwS2tJjbB",
+        "id": "sd_QhWUHofcB0mADU33",
         "type": "Script",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "Get new Tokenset with refresh token",
         "script": "bh.local.refresh_token = await bh.input.client.introspect(bh.input.existingSession.data.tokenset.refresh_token, 'refresh_token');",
-        "functionName": "sd_qL9Mviy7F4sc2t67",
-        "category": "Function",
         "x": 888.2500095367432,
         "y": 1041.0312614440918,
         "wires": [
             [
-                "sd_4lq1U5RzBaZycXCC"
+                "sd_DoE6Z06SdgD4iT5u"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "functionName": "sd_qL9Mviy7F4sc2t67",
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_9zaJEsC5I7uw1Ajp",
+        "id": "sd_vJl2QtgemC21keXe",
         "type": "Catch",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "start",
         "name": "",
@@ -470,24 +441,21 @@
         ],
         "selectCatchType": "selectednodes",
         "masternodeList": "",
-        "ignoreList": "",
-        "functionName": "sd_9zaJEsC5I7uw1Ajp",
-        "category": "General",
         "x": 852.1406345367432,
         "y": 1191.0312614440918,
         "wires": [
             [
-                "sd_zxkYgQXZyACf5smC"
+                "sd_1gkn5QBbwovVhamJ"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": true,
-        "serviceName": "idsutil"
+        "serviceName": "idsutil",
+        "functionName": "sd_vJl2QtgemC21keXe"
     },
     {
-        "id": "sd_4lq1U5RzBaZycXCC",
+        "id": "sd_DoE6Z06SdgD4iT5u",
         "type": "Switch",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "Is refresh token active",
@@ -505,112 +473,100 @@
         "checkall": "false",
         "repair": false,
         "outputs": 2,
-        "functionName": "sd_ASHgsZiMGqDcx0SB",
-        "category": "Function",
         "x": 1081.2500095367432,
         "y": 1032.0312614440918,
         "wires": [
             [
-                "sd_63XrXynoqz27aSVU"
+                "sd_4ADow2qWkFTKlkLB"
             ],
             [
-                "sd_zxkYgQXZyACf5smC"
+                "sd_1gkn5QBbwovVhamJ"
             ]
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "functionName": "sd_ASHgsZiMGqDcx0SB",
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_63XrXynoqz27aSVU",
+        "id": "sd_4ADow2qWkFTKlkLB",
         "type": "Script",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "Rotate tokenset",
         "script": "bh.input.newSession = { rotated: true };\nbh.input.newSession['tokenset'] = await bh.input.client.refresh(bh.input.existingSession.data.tokenset.refresh_token);\nbh.input.newSession['userInfo'] = await bh.input.client.userinfo(bh.input.newSession['tokenset']['access_token']);\nbh.input.newSession['tokenset']['claims'] = Object.assign({}, bh.input.newSession['tokenset'].claims());",
-        "functionName": "sd_J6XKRgByHasFBSp8",
-        "category": "Function",
         "x": 1277.2500095367432,
         "y": 911.0312614440918,
         "wires": [
             []
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "functionName": "sd_J6XKRgByHasFBSp8",
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_zxkYgQXZyACf5smC",
+        "id": "sd_1gkn5QBbwovVhamJ",
         "type": "Script",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "",
         "script": "bh.input.newSession = false;",
-        "functionName": "sd_EgUC5B8p6Vp4y70s",
-        "category": "Function",
         "x": 1434.2500095367432,
         "y": 1182.0312614440918,
         "wires": [
             []
         ],
-        "__n_excludedFromValidation__": {},
         "generateNext": false,
-        "serviceName": "idsutil",
-        "generated": true
+        "generated": true,
+        "functionName": "sd_EgUC5B8p6Vp4y70s",
+        "serviceName": "idsutil"
     },
     {
-        "id": "sd_8nt4MVsSpnjtnogr",
+        "id": "sd_SaxWBoMrszYa6Kx0",
         "type": "Comments",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "Get IDS client instance",
         "comments": "<p>Returns IDS client instance to perform IDS authentication</p>",
-        "category": "General",
         "x": 553.890625,
         "y": 75.75,
         "wires": [],
-        "__n_excludedFromValidation__": {},
         "generateNext": true,
         "serviceName": "idsutil",
-        "functionName": "sd_8nt4MVsSpnjtnogr"
+        "functionName": "sd_SaxWBoMrszYa6Kx0"
     },
     {
-        "id": "sd_XyxHIf03tcfnW4h4",
+        "id": "sd_levfDXqPLlHacH7e",
         "type": "Comments",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "Get Authorization Scopes",
         "comments": "",
-        "category": "General",
         "x": 339.86328506469727,
         "y": 462.1875066757202,
         "wires": [],
-        "__n_excludedFromValidation__": {},
         "generateNext": true,
         "serviceName": "idsutil",
-        "functionName": "sd_XyxHIf03tcfnW4h4"
+        "functionName": "sd_levfDXqPLlHacH7e"
     },
     {
-        "id": "sd_7chcEWN8nLuNifGf",
+        "id": "sd_RqTek9yQ4KELxd2M",
         "type": "Comments",
-        "z": "sd_YMDbx0Q56bGgQO8H",
+        "z": "sd_SvGRmmGVRPROW9vh",
         "viewType": "common",
         "nodeType": "flow",
         "name": "Handle Token expiry",
         "comments": "<p>If the access token is expired, this flow gets new tokens and updates the session.</p>",
-        "category": "General",
         "x": 349.86328887939453,
         "y": 815.9375114440918,
         "wires": [],
-        "__n_excludedFromValidation__": {},
         "generateNext": true,
         "serviceName": "idsutil",
-        "functionName": "sd_7chcEWN8nLuNifGf"
+        "functionName": "sd_RqTek9yQ4KELxd2M"
     }
 ]
