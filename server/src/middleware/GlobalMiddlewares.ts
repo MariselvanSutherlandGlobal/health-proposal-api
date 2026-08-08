@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
 export let Middlewares = {
   cors: () => {
     let corsOptions = {
-      origin: ['http://localhost:4200'],
+      origin: ['https://health-poc.neutrinos-apps.com'],
 
       credentials: true,
 
