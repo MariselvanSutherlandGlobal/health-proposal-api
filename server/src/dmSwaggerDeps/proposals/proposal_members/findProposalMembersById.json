@@ -1,0 +1,46 @@
+{
+    "/dm/proposals/proposal_members/find-by-id": {
+        "post": {
+            "consumes": [],
+            "produces": [],
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "body",
+                    "schema": {
+                        "properties": {
+                            "filter": {
+                                "type": "object",
+                                "properties": {
+                                    "member_id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "member_id"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "filter"
+                        ]
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/proposals ~ proposal_members"
+                        }
+                    },
+                    "description": ""
+                }
+            },
+            "tags": [
+                "proposal_members"
+            ]
+        }
+    }
+}

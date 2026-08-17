@@ -1,0 +1,424 @@
+{
+    "name": "proposals",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "",
+    "type": "object",
+    "id": "_EN_hll0abjopf",
+    "y": 10,
+    "properties": {
+        "proposal_id": {
+            "name": "proposal_id",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_uofxnpp87q",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "varchar",
+                "primary": true,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {
+                    "uuid": false
+                }
+            },
+            "maxLength": 40,
+            "minLength": 1
+        },
+        "plan_code": {
+            "name": "plan_code",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_8z9ptksepy",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "varchar",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            },
+            "maxLength": 20,
+            "minLength": 1
+        },
+        "sum_insured": {
+            "name": "sum_insured",
+            "format": "",
+            "type": "number",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_xt4ulbf2kp",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "numeric",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "mobile_no": {
+            "name": "mobile_no",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_9l46dhyixh",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "varchar",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "email": {
+            "name": "email",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_te10tu8hoq",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "varchar",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "rating_age": {
+            "name": "rating_age",
+            "format": "",
+            "type": "number",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_tzrr6ld3q2",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "numeric",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "age_band": {
+            "name": "age_band",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_wqmet7pny6",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "varchar",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "spouse_included": {
+            "name": "spouse_included",
+            "format": "",
+            "type": "boolean",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_am8175i7uu",
+                "nullable": false,
+                "dbType": "boolean",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "base_premium": {
+            "name": "base_premium",
+            "format": "",
+            "type": "number",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_ysqr8hzfa1",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "numeric",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "loaded_premium": {
+            "name": "loaded_premium",
+            "format": "",
+            "type": "number",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_zvm48q6dhr",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "numeric",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "gst_amount": {
+            "name": "gst_amount",
+            "format": "",
+            "type": "number",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_ic5lh4tga4",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "numeric",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "final_premium": {
+            "name": "final_premium",
+            "format": "",
+            "type": "number",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_tep6nz1pad",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "numeric",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "additional_loading_pct": {
+            "name": "additional_loading_pct",
+            "format": "",
+            "type": "number",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_25x6klttmc",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "numeric",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "rating_trace": {
+            "name": "rating_trace",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_exbgjyhzu9",
+                "nullable": false,
+                "dbType": "text",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "mu_remarks": {
+            "name": "mu_remarks",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_gg5is4h3w2",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "text",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "manager_remarks": {
+            "name": "manager_remarks",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_ohol4alnfh",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "text",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "policy_no": {
+            "name": "policy_no",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_p23bhuino3",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "varchar",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "status": {
+            "name": "status",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_hktfc31u6j",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "varchar",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "created_at": {
+            "name": "created_at",
+            "format": "date-time",
+            "type": "string",
+            "description": "",
+            "default": "current",
+            "__n__metadata__": {
+                "id": "_Att_buq2gh61dq",
+                "subCategoryType": "date",
+                "nullable": false,
+                "dbType": "timestamp with time zone",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {
+                    "specialDateColumnType": "create"
+                }
+            }
+        },
+        "updated_at": {
+            "name": "updated_at",
+            "format": "date-time",
+            "type": "string",
+            "description": "",
+            "default": "current",
+            "__n__metadata__": {
+                "id": "_Att_2i7hi4ur7a",
+                "subCategoryType": "date",
+                "nullable": false,
+                "dbType": "timestamp with time zone",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {
+                    "specialDateColumnType": "update"
+                }
+            }
+        }
+    },
+    "required": [
+        "plan_code",
+        "sum_insured",
+        "mobile_no",
+        "email",
+        "rating_age",
+        "age_band",
+        "spouse_included",
+        "base_premium",
+        "loaded_premium",
+        "gst_amount",
+        "final_premium",
+        "additional_loading_pct",
+        "status",
+        "created_at"
+    ],
+    "value": "",
+    "__attributeExpansion__": true,
+    "__operationExpansion__": true,
+    "x": 20,
+    "__n__metadata__": {
+        "operations": [
+            {
+                "name": "create",
+                "pre": {
+                    "service": null,
+                    "flow": {},
+                    "callService": null
+                },
+                "post": {
+                    "service": null,
+                    "flow": {},
+                    "callService": null
+                }
+            },
+            {
+                "name": "create-all"
+            },
+            {
+                "name": "delete-all"
+            },
+            {
+                "name": "delete-by-id"
+            },
+            {
+                "name": "find-all"
+            },
+            {
+                "name": "find-by-id"
+            },
+            {
+                "name": "update-all"
+            },
+            {
+                "name": "update-by-id"
+            }
+        ]
+    },
+    "userList": {
+        "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU": [
+            "sd_7O9DN8YwiI6L6lcL",
+            "sd_cMrAx7KIkc0Udl1b",
+            "sd_PO502ZISmvxOjN0g",
+            "sd_LLqY0DwE1DMgsouC"
+        ]
+    }
+}

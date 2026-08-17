@@ -1,0 +1,257 @@
+{
+    "name": "proposal_members",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "",
+    "type": "object",
+    "id": "_EN_0xcbgpnumf",
+    "y": 10,
+    "properties": {
+        "member_id": {
+            "name": "member_id",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_zqeynf8wto",
+                "nullable": false,
+                "dbType": "uuid",
+                "primary": true,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {
+                    "uuid": false
+                }
+            },
+            "maxLength": 36
+        },
+        "proposal_id": {
+            "name": "proposal_id",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_4jmzyqn91g",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "varchar",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "relation": {
+            "name": "relation",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_4ggyx0lnhu",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "varchar",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "full_name": {
+            "name": "full_name",
+            "format": "",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_md5efpji72",
+                "subCategoryType": null,
+                "nullable": false,
+                "dbType": "varchar",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "dob": {
+            "name": "dob",
+            "format": "date",
+            "type": "string",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_bjfebd104y",
+                "subCategoryType": "date",
+                "nullable": false,
+                "dbType": "date",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {
+                    "specialDateColumnType": "none"
+                }
+            }
+        },
+        "age": {
+            "name": "age",
+            "format": "",
+            "type": "number",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_ct1u1udi6x",
+                "nullable": false,
+                "dbType": "numeric",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "height_cm": {
+            "name": "height_cm",
+            "format": "",
+            "type": "number",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_zrer1bfrjp",
+                "nullable": false,
+                "dbType": "numeric",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "weight_kg": {
+            "name": "weight_kg",
+            "format": "",
+            "type": "number",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_ikdcehl2di",
+                "nullable": false,
+                "dbType": "numeric",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "bmi": {
+            "name": "bmi",
+            "format": "",
+            "type": "number",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_x41pk9ubak",
+                "nullable": false,
+                "dbType": "numeric",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "tobacco_use": {
+            "name": "tobacco_use",
+            "format": "",
+            "type": "boolean",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_ze6d0ldfyc",
+                "nullable": false,
+                "dbType": "boolean",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "diabetes_declared": {
+            "name": "diabetes_declared",
+            "format": "",
+            "type": "boolean",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_umo15o67er",
+                "nullable": false,
+                "dbType": "boolean",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        },
+        "hypertension_declared": {
+            "name": "hypertension_declared",
+            "format": "",
+            "type": "boolean",
+            "description": "",
+            "default": "",
+            "__n__metadata__": {
+                "id": "_Att_wg9gu4lois",
+                "nullable": false,
+                "dbType": "boolean",
+                "primary": false,
+                "placeholder": "",
+                "dbColName": "",
+                "constraints": {}
+            }
+        }
+    },
+    "required": [
+        "member_id",
+        "proposal_id",
+        "relation",
+        "full_name",
+        "dob",
+        "age"
+    ],
+    "value": "",
+    "__attributeExpansion__": true,
+    "__operationExpansion__": true,
+    "x": 440,
+    "__n__metadata__": {
+        "operations": [
+            {
+                "name": "create"
+            },
+            {
+                "name": "create-all"
+            },
+            {
+                "name": "delete-all"
+            },
+            {
+                "name": "delete-by-id"
+            },
+            {
+                "name": "find-all"
+            },
+            {
+                "name": "find-by-id"
+            },
+            {
+                "name": "update-all"
+            },
+            {
+                "name": "update-by-id"
+            }
+        ]
+    },
+    "userList": {
+        "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU": [
+            "sd_7e7qZCXF4qjgK10P",
+            "sd_Gv1yfVsAlSymYt4t"
+        ]
+    }
+}

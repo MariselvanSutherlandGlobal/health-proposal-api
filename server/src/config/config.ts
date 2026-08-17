@@ -1,0 +1,24 @@
+export default {
+  logger: {
+    level: 'debug',
+    transport: ['file', 'console'],
+    exceptionFile: 'logs/exception.log',
+    logFile: 'logs/console.log',
+  },
+  middlewares: {
+    pre: [
+      { ids: 'hrefstart' },
+      { __ssdGlobalMiddlewares__: 'sd_7EmxxOk703exD5hF' },
+      { __ssdGlobalMiddlewares__: 'cors' },
+    ],
+    post: [],
+    sequences: { IDSAuthroizedAPIs: { pre: [{ ids: 'Authorize' }], post: [] } },
+  },
+  ids: {
+    client_id: '8ewHAArsRs8VEtZpOG5wx',
+    client_secret:
+      '9K5SHNms4hl1wccSmL8OLTvfGKOk3rXHLvXPuSP9Xi9uI7gDVxlnA4yDNzuY3pUUI2eOFYuOAvLjGHDhTcSozg',
+    issuerURL: 'https://ids.neutrinos.co',
+    enabled: true,
+  },
+};

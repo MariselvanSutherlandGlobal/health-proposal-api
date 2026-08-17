@@ -1,0 +1,13 @@
+{
+    "displayName": "health-proposal-api",
+    "appName": "health-proposal-api",
+    "description": "API for Proposals POC Assignment",
+    "lastModified": "2026-08-02T14:16:06.598Z",
+    "imgSourcePath": "",
+    "version": "1.0.0",
+    "appType": "apiOnly",
+    "templateName": "blank",
+    "createDate": "2026-08-02T14:16:04.567Z",
+    "analyticsId": "72e8f55b-fdc2-5e62-fb64-eb05735a2561",
+    "createdStudioVersion": "9.3.0"
+}
