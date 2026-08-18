@@ -3826,7 +3826,7 @@
         "viewType": "common",
         "nodeType": "flow",
         "name": "validate and prepare Response",
-        "script": "bh.local.response = {\n\n    success: true,\n\n    message:\n        \"Proposal created and workflow started successfully\",\n\n    data: {\n\n        proposal_id:\n            bh.local.proposalId,\n\n        status:\n            \"SUBMITTED\",\n        case_payload:\n        bh.local.casePayload,\n        case_creation_token:\n            bh.local.tokenResponse.payload,\n            case_response: bh.local.caseResponse\n\n    }\n\n};\n\nconsole.log(\n    \"Final Proposal Response\"\n);\n\nconsole.log(\n    JSON.stringify(\n        bh.local.response,\n        null,\n        2\n    )\n);",
+        "script": "bh.local.response = {\n\n    success: true,\n\n    message:\n        \"Proposal created and workflow started successfully\",\n\n    data: {\n\n        proposal_id:\n            bh.local.proposalId,\n\n        status:\n            \"SUBMITTED\",\n            \n        case_payload:\n        bh.local.casePayload,\n\n        case_creation_token:\n            bh.local.tokenResponse.payload,\n\n        case_response: \n        bh.local.caseResponse\n\n    }\n\n};\n\nconsole.log(\n    \"Final Proposal Response\"\n);\n\nconsole.log(\n    JSON.stringify(\n        bh.local.response,\n        null,\n        2\n    )\n);",
         "functionName": "validateAndPrepareResponse",
         "category": "Function",
         "x": 2030,

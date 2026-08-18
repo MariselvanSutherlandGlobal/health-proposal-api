@@ -3904,8 +3904,11 @@ Members
           proposal_id: bh.local.proposalId,
 
           status: 'SUBMITTED',
+
           case_payload: bh.local.casePayload,
+
           case_creation_token: bh.local.tokenResponse.payload,
+
           case_response: bh.local.caseResponse,
         },
       };
