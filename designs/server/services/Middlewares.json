@@ -89,6 +89,18 @@
                     "rowId": "sd_EYxruOQp89kxinrO",
                     "valid": true,
                     "type": "str"
+                },
+                {
+                    "key": "https://health-proposal.neutrinos-apps.com/api",
+                    "rowId": "sd_Ii9CLeklXDqzRXYD",
+                    "valid": true,
+                    "type": "str"
+                },
+                {
+                    "key": "https://alpha-pt.neutrinos-apps.com",
+                    "rowId": "sd_xc9N0jMhrJEFZis9",
+                    "valid": true,
+                    "type": "str"
                 }
             ]
         },

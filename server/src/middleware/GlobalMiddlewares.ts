@@ -15,6 +15,8 @@ export let Middlewares = {
       origin: [
         'http://localhost:4200',
         'https://health-poc.neutrinos-apps.com',
+        'https://health-proposal.neutrinos-apps.com/api',
+        'https://alpha-pt.neutrinos-apps.com',
       ],
 
       credentials: true,
