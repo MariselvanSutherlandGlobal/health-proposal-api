@@ -1,17 +1,4 @@
 {
-    "/proposal": {
-        "post": {
-            "summary": "",
-            "description": "",
-            "consumes": [],
-            "produces": [],
-            "parameters": [],
-            "responses": {},
-            "tags": [
-                "proposals"
-            ]
-        }
-    },
     "/proposal/:proposalId/mu-action": {},
     "/proposal/:proposalId": {
         "get": {
@@ -54,6 +41,19 @@
         }
     },
     "/caseCreateTests": {
+        "post": {
+            "summary": "",
+            "description": "",
+            "consumes": [],
+            "produces": [],
+            "parameters": [],
+            "responses": {},
+            "tags": [
+                "proposals"
+            ]
+        }
+    },
+    "/proposal": {
         "post": {
             "summary": "",
             "description": "",

@@ -12,337 +12,6 @@
         "relativeParentPath": "Proposals"
     },
     {
-        "id": "sd_kBCHgOa7baSSvprZ",
-        "type": "HttpIn",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "server",
-        "nodeType": "start",
-        "name": "Proposal_API HTTP In",
-        "path": "/proposal",
-        "uploadpath": "",
-        "summary": "",
-        "description": "",
-        "method": "post",
-        "sequenceId": "IDSAuthroizedAPIs",
-        "consumes": "",
-        "produces": "",
-        "filetype": "path",
-        "acceptFileUpload": false,
-        "useDataModel": false,
-        "dataModelIsArray": true,
-        "erd": "",
-        "erdName": "",
-        "entity": "",
-        "entityId": "",
-        "ref": "",
-        "editableListData": {
-            "responses": [],
-            "params": [],
-            "produces": [],
-            "consumes": []
-        },
-        "inputs": 0,
-        "outputs": 1,
-        "validateRequestUsingSwaggerDocs": false,
-        "category": "HTTP",
-        "x": 180,
-        "y": 140,
-        "wires": [
-            [
-                "sd_y3vmXSKkuaNE8Mrw"
-            ]
-        ],
-        "__ssdTypeInputs__": {
-            "uploadpath": {
-                "type": "str",
-                "value": "",
-                "nullable": "true",
-                "nullableValue": "",
-                "constant": false
-            }
-        },
-        "__n_excludedFromValidation__": {},
-        "generateNext": true,
-        "serviceName": "proposals",
-        "functionName": "sd_kBCHgOa7baSSvprZ"
-    },
-    {
-        "id": "sd_4jI9etbqIE7dojyW",
-        "type": "Script",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "common",
-        "nodeType": "flow",
-        "name": "Validate_Request",
-        "script": "const body = bh.input.body;\n\nconsole.log(\"Proposal Request\");\nconsole.log(JSON.stringify(body, null, 2));\n\n/*--------------------------------------\nMandatory Request\n--------------------------------------*/\n\nif (!body) {\n    throw new Error(\"Request Body is missing\");\n}\n\n/*--------------------------------------\nProposer Name\n--------------------------------------*/\n\nbody.proposer_name = (body.proposer_name || \"\").trim();\n\nif (!body.proposer_name) {\n    throw new Error(\"Proposer Name is required\");\n}\n\nif (body.proposer_name.length < 3 || body.proposer_name.length > 60) {\n    throw new Error(\"Proposer Name must be between 3 and 60 characters\");\n}\n\nif (!/^[A-Za-z ]+$/.test(body.proposer_name)) {\n    throw new Error(\"Only alphabets and spaces are allowed\");\n}\n\n/*--------------------------------------\nProposer DOB\n--------------------------------------*/\n\nif (!body.proposer_dob) {\n    throw new Error(\"Proposer DOB is required\");\n}\n\nif (isNaN(Date.parse(body.proposer_dob))) {\n    throw new Error(\"Invalid Proposer DOB\");\n}\n\n/*--------------------------------------\nMobile Number\n--------------------------------------*/\n\nbody.mobile_number = String(body.mobile_number || \"\").trim();\n\nif (!/^[6-9][0-9]{9}$/.test(body.mobile_number)) {\n    throw new Error(\"Invalid Mobile Number\");\n}\n\n/*--------------------------------------\nEmail\n--------------------------------------*/\n\nbody.email_id = (body.email_id || \"\").trim().toLowerCase();\n\nif (\n    !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$/.test(body.email_id)\n) {\n    throw new Error(\"Invalid Email\");\n}\n\n/*--------------------------------------\nPlan Variant\n--------------------------------------*/\n\nbody.plan_variant = (body.plan_variant || \"\").trim();\n\nif (!body.plan_variant) {\n    throw new Error(\"Plan Variant is required\");\n}\n\n/*--------------------------------------\nSum Insured\n--------------------------------------*/\n\nbody.sum_insured = Number(body.sum_insured);\n\nif (isNaN(body.sum_insured) || body.sum_insured <= 0) {\n    throw new Error(\"Invalid Sum Insured\");\n}\n\n/*--------------------------------------\nHeight\n--------------------------------------*/\n\nbody.height_cm = Number(body.height_cm);\n\nif (isNaN(body.height_cm)) {\n    throw new Error(\"Height is required\");\n}\n\nif (body.height_cm < 100 || body.height_cm > 220) {\n    throw new Error(\"Height must be between 100 and 220 cm\");\n}\n\n/*--------------------------------------\nWeight\n--------------------------------------*/\n\nbody.weight_kg = Number(body.weight_kg);\n\nif (isNaN(body.weight_kg)) {\n    throw new Error(\"Weight is required\");\n}\n\nif (body.weight_kg < 25 || body.weight_kg > 200) {\n    throw new Error(\"Weight must be between 25 and 200 kg\");\n}\n\n/*--------------------------------------\nBMI\n--------------------------------------*/\n\nbody.bmi = Number(body.bmi);\n\nif (isNaN(body.bmi)) {\n    throw new Error(\"BMI is required\");\n}\n\nif (body.bmi < 10 || body.bmi > 60) {\n    throw new Error(\"Invalid BMI\");\n}\n\n/*--------------------------------------\nBoolean Fields\n--------------------------------------*/\n\nif (typeof body.tobacco_use !== \"boolean\") {\n    throw new Error(\"Invalid Tobacco Use\");\n}\n\nif (typeof body.diabetes_declared !== \"boolean\") {\n    throw new Error(\"Invalid Diabetes Declared\");\n}\n\nif (typeof body.hypertension_declared !== \"boolean\") {\n    throw new Error(\"Invalid Hypertension Declared\");\n}\n\nif (typeof body.include_spouse !== \"boolean\") {\n    throw new Error(\"Invalid Include Spouse\");\n}\n\n/*--------------------------------------\nMembers\n--------------------------------------*/\n\nif (!Array.isArray(body.members) || body.members.length === 0) {\n    throw new Error(\"At least one member is required\");\n}\n\nbody.members.forEach((member, index) => {\n\n    member.member_name = (member.member_name || \"\").trim();\n\n    if (!member.member_name) {\n        throw new Error(`Member ${index + 1} Name is required`);\n    }\n\n    if (!member.member_dob) {\n        throw new Error(`Member ${index + 1} DOB is required`);\n    }\n\n    if (isNaN(Date.parse(member.member_dob))) {\n        throw new Error(`Invalid DOB for Member ${index + 1}`);\n    }\n\n    if (!member.relationship) {\n        throw new Error(`Relationship is required for Member ${index + 1}`);\n    }\n\n    if (member.relationship === \"Self\") {\n\n        member.height_cm = Number(member.height_cm);\n        member.weight_kg = Number(member.weight_kg);\n        member.bmi = Number(member.bmi);\n\n        if (isNaN(member.height_cm)) {\n            throw new Error(\"Self Height is required\");\n        }\n\n        if (isNaN(member.weight_kg)) {\n            throw new Error(\"Self Weight is required\");\n        }\n\n        if (isNaN(member.bmi)) {\n            throw new Error(\"Self BMI is required\");\n        }\n    }\n\n    if (member.relationship === \"Spouse\" && body.include_spouse) {\n\n        if (!member.member_name) {\n            throw new Error(\"Spouse Name is required\");\n        }\n\n        if (!member.member_dob) {\n            throw new Error(\"Spouse DOB is required\");\n        }\n\n    }\n\n});\n\nconsole.log(\"Validation Successful\");\n",
-        "functionName": "validateRequest",
-        "category": "Function",
-        "x": 465,
-        "y": 140,
-        "wires": [
-            [
-                "sd_VAvRMYhjL6Mqrd21"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_y3vmXSKkuaNE8Mrw",
-        "type": "ServiceVariables",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "client-server",
-        "nodeType": "flow",
-        "name": "Proposal_Service_Variables",
-        "inputs": 1,
-        "outputs": 1,
-        "operation": "set",
-        "globalVariables": [
-            {
-                "textIp": "proposalId",
-                "typedIpValue": {
-                    "type": "bh.local",
-                    "value": "proposalId"
-                }
-            },
-            {
-                "textIp": "proposerAge",
-                "typedIpValue": {
-                    "type": "literal",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "spouseAge",
-                "typedIpValue": {
-                    "type": "literal",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "bmi",
-                "typedIpValue": {
-                    "type": "literal",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "ageBand",
-                "typedIpValue": {
-                    "type": "str",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "basePremium",
-                "typedIpValue": {
-                    "type": "literal",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "loadingPremium",
-                "typedIpValue": {
-                    "type": "literal",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "gstAmount",
-                "typedIpValue": {
-                    "type": "literal",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "finalPremium",
-                "typedIpValue": {
-                    "type": "literal",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "ratingTrace",
-                "typedIpValue": {
-                    "type": "str",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "proposalStatus",
-                "typedIpValue": {
-                    "type": "str",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "proposalEntity",
-                "typedIpValue": {
-                    "type": "literal",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "proposerMember",
-                "typedIpValue": {
-                    "type": "literal",
-                    "value": ""
-                }
-            },
-            {
-                "textIp": "spouseMember",
-                "typedIpValue": {
-                    "type": "literal",
-                    "value": ""
-                }
-            }
-        ],
-        "functionName": "proposalServiceVariables",
-        "category": "Function",
-        "x": 325,
-        "y": 140,
-        "wires": [
-            [
-                "sd_4jI9etbqIE7dojyW"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_VAvRMYhjL6Mqrd21",
-        "type": "Script",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "common",
-        "nodeType": "flow",
-        "name": "Generate_Proposal_ID",
-        "script": "const now = new Date();\n\nconst yyyy = now.getFullYear();\n\nconst mm = String(now.getMonth() + 1).padStart(2, \"0\");\n\nconst dd = String(now.getDate()).padStart(2, \"0\");\n\nconst random = Math.floor(Math.random() * 90000) + 10000;\n\nbh.local.proposalId =\n    `PRP-${yyyy}${mm}${dd}-${random}`;\n\nconsole.log(bh.local.proposalId);\n",
-        "functionName": "generateProposalId",
-        "category": "Function",
-        "x": 605,
-        "y": 140,
-        "wires": [
-            [
-                "sd_QATEFXczRrrfrIBT"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_QATEFXczRrrfrIBT",
-        "type": "Script",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "common",
-        "nodeType": "flow",
-        "name": "Calculate_Age",
-        "script": "// function calculateAge(dob) {\n\n//     const birth = new Date(dob);\n\n//     const today = new Date();\n\n//     let age = today.getFullYear() - birth.getFullYear();\n\n//     const month =\n//         today.getMonth() - birth.getMonth();\n\n//     if (\n//         month < 0 ||\n//         (month === 0 && today.getDate() < birth.getDate())\n//     ) {\n//         age--;\n//     }\n\n//     return age;\n// }\n\n// bh.local.proposerAge =\n//     calculateAge(bh.input.body.proposer_dob);\n\n// if (bh.input.body.spouse_included) {\n\n//     bh.local.spouseAge =\n//         calculateAge(bh.input.body.spouse_dob);\n\n// }\n// else {\n\n//     bh.local.spouseAge = 0;\n\n// }\n\n// console.log(bh.local.proposerAge);\n// console.log(bh.local.spouseAge);\n\nfunction calculateAge(dob) {\n\n    if (!dob) {\n        return 0;\n    }\n\n    const birth = new Date(dob);\n    const today = new Date();\n\n    let age = today.getFullYear() - birth.getFullYear();\n\n    const monthDiff =\n        today.getMonth() - birth.getMonth();\n\n    if (\n        monthDiff < 0 ||\n        (monthDiff === 0 &&\n            today.getDate() < birth.getDate())\n    ) {\n        age--;\n    }\n\n    return age;\n}\n\n/*--------------------------------------\n Proposer Age\n--------------------------------------*/\n\nbh.local.proposerAge =\n    calculateAge(bh.input.body.proposer_dob);\n\n/*--------------------------------------\n Spouse Age\n--------------------------------------*/\n\nbh.local.spouseAge = 0;\n\nif (bh.input.body.include_spouse === true) {\n\n    const spouseMember =\n        (bh.input.body.members || []).find(\n            member => member.relationship === \"Spouse\"\n        );\n\n    if (spouseMember) {\n\n        bh.local.spouseAge =\n            calculateAge(spouseMember.member_dob);\n\n    }\n\n}\n\nconsole.log(\"Proposer Age :\", bh.local.proposerAge);\nconsole.log(\"Spouse Age :\", bh.local.spouseAge);\n/*--------------------------------------\n Rating Age\n--------------------------------------*/\n\nbh.local.ratingAge = Math.max(\n    bh.local.proposerAge,\n    bh.local.spouseAge\n);\n\nconsole.log(\"Rating Age :\", bh.local.ratingAge);",
-        "functionName": "calculateAge",
-        "category": "Function",
-        "x": 720,
-        "y": 140,
-        "wires": [
-            [
-                "sd_j29ciUzzFSKPMVzN"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_0WzZ2IABKHcik2RA",
-        "type": "Script",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "common",
-        "nodeType": "flow",
-        "name": "Prepare_Proposal_Entity",
-        "script": "// const body = bh.input.body;\n\n// bh.local.proposalEntity = {\n\n//     proposal_id: bh.local.proposalId,\n\n//     plan_code: body.plan_code,\n\n//     sum_insured: body.sum_insured,\n\n//     mobile_no: body.mobile_no,\n\n//     email: body.email,\n\n//     rating_age: bh.local.proposerAge,\n\n//     age_band: bh.local.ageBand || \"\",\n\n//     spouse_included: body.spouse_included,\n\n//     base_premium: bh.local.basePremium || 0,\n\n//     loaded_premium: bh.local.loadedPremium || 0,\n\n//     gst_amount: bh.local.gstAmount || 0,\n\n//     final_premium: bh.local.finalPremium || 0,\n\n//     additional_loading_pct: 0,\n\n//     rating_trace: bh.local.ratingTrace || \"\",\n\n//     mu_remarks: null,\n\n//     manager_remarks: null,\n\n//     policy_no: null,\n\n//     status: bh.local.proposalStatus || \"SUBMITTED\",\n\n//     created_at: new Date(),\n\n//     updated_at: new Date()\n\n// };\n\n// console.log(bh.local.proposalEntity);\nconst body = bh.input.body;\n\nbh.local.proposalEntity = {\n\n    proposal_id: bh.local.proposalId,\n\n    plan_code: body.plan_variant,\n\n    sum_insured: body.sum_insured,\n\n    mobile_no: body.mobile_number,\n\n    email: body.email_id,\n\n    rating_age: bh.local.ratingAge,\n\n    age_band: bh.local.ageBand || \"\",\n\n    spouse_included: body.include_spouse,\n\n    base_premium: bh.local.basePremium || 0,\n\n    loaded_premium: bh.local.loadedPremium || 0,\n\n    gst_amount: bh.local.gstAmount || 0,\n\n    final_premium: bh.local.finalPremium || 0,\n\n    additional_loading_pct:\n        bh.local.additionalLoadingPct || 0,\n\n    rating_trace: bh.local.ratingTrace || \"\",\n\n    mu_remarks: null,\n\n    manager_remarks: null,\n\n    policy_no: null,\n\n    status:\n        bh.local.proposalStatus || \"SUBMITTED\",\n\n    created_at: new Date(),\n\n    updated_at: new Date()\n\n};\n\nconsole.log(\"Proposal Entity\");\nconsole.log(JSON.stringify(bh.local.proposalEntity, null, 2));\n/*--------------------------------------\n Prepare Proposal Members Entity\n--------------------------------------*/\n\nbh.local.proposalMembersEntity = [];\n\nconst members = body.members || [];\n\nmembers.forEach((member, index) => {\n\n    bh.local.proposalMembersEntity.push({\n\n        member_id: crypto.randomUUID(),\n\n        proposal_id: bh.local.proposalId,\n\n        relation:\n            member.relationship === \"Self\"\n                ? \"PROPOSER\"\n                : \"SPOUSE\",\n\n        full_name: member.member_name,\n\n        dob: member.member_dob,\n\n        age:\n            member.relationship === \"Self\"\n                ? bh.local.proposerAge\n                : bh.local.spouseAge,\n\n        height_cm:\n            member.relationship === \"Self\"\n                ? member.height_cm\n                : null,\n\n        weight_kg:\n            member.relationship === \"Self\"\n                ? member.weight_kg\n                : null,\n\n        bmi:\n            member.relationship === \"Self\"\n                ? member.bmi\n                : null,\n\n        tobacco_use: body.tobacco_use,\n\n        diabetes_declared:\n            body.diabetes_declared,\n\n        hypertension_declared:\n            body.hypertension_declared\n\n    });\n\n});\n\nconsole.log(\"Proposal Members Entity\");\nconsole.log(\n    JSON.stringify(\n        bh.local.proposalMembersEntity,\n        null,\n        2\n    )\n);",
-        "functionName": "prepareProposalEntity",
-        "category": "Function",
-        "x": 860,
-        "y": 140,
-        "wires": [
-            [
-                "sd_7O9DN8YwiI6L6lcL"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_7O9DN8YwiI6L6lcL",
-        "type": "insert",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "server",
-        "nodeType": "flow",
-        "name": "insert Proposals",
-        "erd": "_DM_zsothgb3r",
-        "entityId": "_EN_hll0abjopf",
-        "_UI_entityName": "proposals",
-        "dbConfigId": "sd_99PeWpSvHx3jjW6m",
-        "insertObject": "bh.local.proposalEntity",
-        "resultMapping": "bh.local.insertProposalResponse",
-        "functionName": "insertProposals",
-        "category": "Data Model",
-        "x": 1005,
-        "y": 140,
-        "wires": [
-            [
-                "sd_SnONJRHwFbCr9yMV",
-                "sd_7e7qZCXF4qjgK10P"
-            ]
-        ],
-        "__ssdTypeInputs__": {
-            "insertObject": {
-                "type": "bh.local",
-                "value": "proposalEntity",
-                "constant": false
-            },
-            "resultMapping": {
-                "type": "bh.local",
-                "value": "insertProposalResponse",
-                "nullable": "true",
-                "nullableValue": "",
-                "constant": false
-            }
-        },
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_lHtlRt9Svq79qj0D",
-        "type": "Script",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "common",
-        "nodeType": "flow",
-        "name": "Validate_Insert",
-        "script": "console.log(\"Insert Response\");\n\nconsole.log(JSON.stringify(bh.local.insertProposalResponse, null, 2));\n\nif (!bh.local.insertProposalResponse) {\n\n    throw new Error(\"Proposal insert failed\");\n\n}\n\nconsole.log(\"Proposal inserted successfully\");\n\n/*--------------------------------------\n Prepare Success Response\n--------------------------------------*/\n\nbh.local.response = {\n\n    success: true,\n\n    message: \"Proposal created successfully\",\n\n    data: {\n\n        proposal_id: bh.local.proposalId,\n\n        status: \"SUBMITTED\"\n\n    }\n\n};\n\nconsole.log(\"Success Response\");\n\nconsole.log(JSON.stringify(bh.local.response, null, 2));",
-        "functionName": "validateInsert",
-        "category": "Function",
-        "x": 1285,
-        "y": 140,
-        "wires": [
-            [
-                "sd_nrh59DE0ROAnn3IR"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
         "id": "sd_EKz6MLSbDrq0rT5y",
         "type": "HttpOut",
         "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
@@ -368,6 +37,7 @@
             "send": "bh.local.response"
         },
         "dataModelIsArray": false,
+        "cookies": [],
         "inputs": 1,
         "outputs": 0,
         "erd": "",
@@ -389,102 +59,6 @@
         "x": 2145,
         "y": 340,
         "wires": [],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_SnONJRHwFbCr9yMV",
-        "type": "ServerLog",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "server",
-        "nodeType": "flow",
-        "name": "savedProposal Log",
-        "outputs": 0,
-        "logObject": "bh.local.insertProposalResponse",
-        "logLevel": "info",
-        "functionName": "savedProposalLog",
-        "category": "General",
-        "x": 1145,
-        "y": 40,
-        "wires": [],
-        "__ssdTypeInputs__": {
-            "logObject": {
-                "type": "bh.local",
-                "value": "insertProposalResponse",
-                "constant": false
-            }
-        },
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_7e7qZCXF4qjgK10P",
-        "type": "insert",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "server",
-        "nodeType": "flow",
-        "name": "insert Proposal Members",
-        "erd": "_DM_zsothgb3r",
-        "entityId": "_EN_0xcbgpnumf",
-        "_UI_entityName": "proposal_members",
-        "dbConfigId": "sd_99PeWpSvHx3jjW6m",
-        "insertObject": "bh.local.proposalMembersEntity",
-        "resultMapping": "bh.local.insertProposalMembersResponse",
-        "functionName": "insertProposalMembers",
-        "category": "Data Model",
-        "x": 1145,
-        "y": 140,
-        "wires": [
-            [
-                "sd_ygKKzT8rNw8Iv81H",
-                "sd_lHtlRt9Svq79qj0D"
-            ]
-        ],
-        "__ssdTypeInputs__": {
-            "insertObject": {
-                "type": "bh.local",
-                "value": "proposalMembersEntity",
-                "constant": false
-            },
-            "resultMapping": {
-                "type": "bh.local",
-                "value": "insertProposalMembersResponse",
-                "nullable": "true",
-                "nullableValue": "",
-                "constant": false
-            }
-        },
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_ygKKzT8rNw8Iv81H",
-        "type": "ServerLog",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "server",
-        "nodeType": "flow",
-        "name": "savedProposalMembers Log",
-        "outputs": 0,
-        "logObject": "bh.local.insertProposalMembersResponse",
-        "logLevel": "info",
-        "functionName": "savedProposalMembersLog",
-        "category": "General",
-        "x": 1285,
-        "y": 40,
-        "wires": [],
-        "__ssdTypeInputs__": {
-            "logObject": {
-                "type": "bh.local",
-                "value": "insertProposalMembersResponse",
-                "constant": false
-            }
-        },
         "__n_excludedFromValidation__": {},
         "generateNext": false,
         "serviceName": "proposals",
@@ -2883,90 +2457,6 @@
         "generated": true
     },
     {
-        "id": "sd_j29ciUzzFSKPMVzN",
-        "type": "CallService",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "common",
-        "nodeType": "flow",
-        "name": "loadRateCard",
-        "outputs": 1,
-        "isValidNode": true,
-        "noerr": 0,
-        "service": {
-            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-            "type": "tab",
-            "createdDate": "2026-08-02T16:33:40.534Z",
-            "label": "proposals",
-            "disabled": false,
-            "info": "",
-            "functionSeq": 0
-        },
-        "flow": {
-            "flowId": "sd_hv0h0PVDxgygZof3",
-            "flowName": "getPlansInternal"
-        },
-        "inputVariables": [
-            {
-                "key": "plansResponse",
-                "map": true,
-                "valueType": "bh.input",
-                "value": ""
-            }
-        ],
-        "bhVariables": [],
-        "outputMapping": [
-            {
-                "mapVarType": "input",
-                "key": "plansResponse",
-                "valueType": "bh.local",
-                "value": "plansResponse",
-                "mapVarName": "plansResponse",
-                "localVar": "bh.local.plansResponse"
-            }
-        ],
-        "callService": "./proposals",
-        "startName": "getPlansInternal",
-        "inputParams": [
-            null
-        ],
-        "accept_bh": false,
-        "functionName": "loadRateCard",
-        "category": "General",
-        "x": 785,
-        "y": 40,
-        "wires": [
-            [
-                "sd_kUFEZepCdW8roykz"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_kUFEZepCdW8roykz",
-        "type": "Script",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "common",
-        "nodeType": "flow",
-        "name": "ResolveAgeBand",
-        "script": "const plans = bh.local.plansResponse.plans;\n\nbh.local.selectedPlan = plans.find(plan => {\n\n    if (plan.plan_code !== bh.input.body.plan_variant) {\n\n        return false;\n\n    }\n\n    const [minAge, maxAge] =\n        plan.age_band\n            .split(\"-\")\n            .map(Number);\n\n    return (\n        bh.local.ratingAge >= minAge &&\n        bh.local.ratingAge <= maxAge\n    );\n\n});\n\nif (!bh.local.selectedPlan) {\n\n    throw new Error(\"Age Band not found in Reels\");\n\n}\n\nbh.local.ageBand =\n    bh.local.selectedPlan.age_band;\n\nconsole.log(\"Selected Reels Plan\");\nconsole.log(JSON.stringify(bh.local.selectedPlan, null, 2));\n\nconsole.log(\"Resolved Age Band :\", bh.local.ageBand);",
-        "functionName": "resolveAgeBand",
-        "category": "Function",
-        "x": 780,
-        "y": 260,
-        "wires": [
-            [
-                "sd_0WzZ2IABKHcik2RA"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
         "id": "sd_NIT1CF1fzTxMN79c",
         "type": "CallService",
         "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
@@ -3197,207 +2687,6 @@
         "generated": true
     },
     {
-        "id": "sd_N5w1JvFBXe132sjc",
-        "type": "Script",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "common",
-        "nodeType": "flow",
-        "name": "Prepare Case Data",
-        "script": "const body = bh.input.body;\n\nconst members = body.members || [];\n\n/*==================================================\n  GET PROPOSAL ID FROM INSERT RESPONSE\n==================================================*/\n\nconst proposalId =\n    bh.local.insertProposalResponse?.proposal_id || \"\";\n\nif (!proposalId) {\n    throw new Error(\n        \"Proposal ID not found in insertProposalResponse\"\n    );\n}\n\nconsole.log(\n    \"Proposal ID:\",\n    proposalId\n);\n\n/*==================================================\n  FIND PROPOSER\n==================================================*/\n\nconst proposerMember = members.find(\n    member =>\n        member.relationship === \"Proposer\" ||\n        member.relationship === \"PROPOSER\" ||\n        member.relationship === \"Self\" ||\n        member.relationship === \"SELF\"\n);\n\n/*==================================================\n  FIND SPOUSE\n==================================================*/\n\nconst spouseMember = members.find(\n    member =>\n        member.relationship === \"Spouse\" ||\n        member.relationship === \"SPOUSE\"\n);\n\n/*==================================================\n  FORMAT DOB\n==================================================*/\n\nfunction formatDOBForCase(dob) {\n\n    if (!dob) {\n        return \"\";\n    }\n\n    /*\n     * Already DD/MM/YYYY\n     */\n    if (\n        /^\\d{2}\\/\\d{2}\\/\\d{4}$/.test(dob)\n    ) {\n        return dob;\n    }\n\n    const date = new Date(dob);\n\n    if (isNaN(date.getTime())) {\n        throw new Error(\n            \"Invalid DOB: \" + dob\n        );\n    }\n\n    const dd =\n        String(\n            date.getDate()\n        ).padStart(2, \"0\");\n\n    const mm =\n        String(\n            date.getMonth() + 1\n        ).padStart(2, \"0\");\n\n    const yyyy =\n        date.getFullYear();\n\n    return `${dd}/${mm}/${yyyy}`;\n}\n\n/*==================================================\n  PROPOSER DOB\n==================================================*/\n\nconst proposerDOB =\n    formatDOBForCase(\n        body.proposer_dob\n    );\n\n/*==================================================\n  SPOUSE DOB\n==================================================*/\n\nlet spouseDOB = \"\";\n\nif (\n    body.include_spouse === true &&\n    spouseMember\n) {\n\n    spouseDOB =\n        formatDOBForCase(\n            spouseMember.member_dob\n        );\n}\n\n/*==================================================\n  PROPOSER DETAILS\n==================================================*/\n\nconst proposerName =\n    body.proposer_name ||\n    proposerMember?.member_name ||\n    \"\";\n\nconst proposerEmail =\n    body.email_id ||\n    body.email ||\n    \"\";\n\nconst proposerMobile =\n    body.mobile_number ||\n    body.mobile_no ||\n    \"\";\n\n/*==================================================\n  SPOUSE NAME\n==================================================*/\n\nconst spouseName =\n    body.include_spouse === true &&\n    spouseMember\n        ? spouseMember.member_name\n        : \"\";\n\n/*==================================================\n  PREPARE CASE DATA\n==================================================*/\n\nconst caseData = {\n\n    proposalId:\n        proposalId,\n\n    full_name:\n        proposerName,\n\n    email:\n        proposerEmail,\n\n    mobile_no:\n        Number(proposerMobile),\n\n    height_cm:\n        Number(body.height_cm || 0),\n\n    weight_kg:\n        Number(body.weight_kg || 0),\n\n    SpouseName:\n        spouseName,\n\n    PlanCode:\n        body.plan_variant,\n\n    SumInsured:\n        Number(body.sum_insured),\n\n    BMI:\n        String(body.bmi),\n\n    ProposerDOB:\n        proposerDOB,\n\n    SpouseDOB:\n        spouseDOB,\n\n    SpouseIncluded:\n        body.include_spouse === true,\n\n    TobaccoUse:\n        body.tobacco_use === true,\n\n    DiabetesDeclared:\n        body.diabetes_declared === true,\n\n    HypertensionDeclared:\n        body.hypertension_declared === true,\n\n    status:\n        body.status || \"SUBMITTED\"\n};\n\n/*==================================================\n  PREPARE WF DATA\n==================================================*/\n\nconst wfData = {\n\n    proposalId:\n        proposalId,\n\n    full_name:\n        proposerName,\n\n    email:\n        proposerEmail,\n\n    mobile_no:\n        Number(proposerMobile),\n\n    height_cm:\n        Number(body.height_cm || 0),\n\n    weight_kg:\n        Number(body.weight_kg || 0),\n\n    SpouseName:\n        spouseName,\n\n    PlanCode:\n        body.plan_variant,\n\n    SumInsured:\n        Number(body.sum_insured),\n\n    BMI:\n        String(body.bmi),\n\n    ProposerDOB:\n        proposerDOB,\n\n    SpouseDOB:\n        spouseDOB,\n\n    SpouseIncluded:\n        body.include_spouse === true,\n\n    TobaccoUse:\n        body.tobacco_use === true,\n\n    DiabetesDeclared:\n        body.diabetes_declared === true,\n\n    HypertensionDeclared:\n        body.hypertension_declared === true\n};\n\n/*==================================================\n  FINAL CASE PAYLOAD\n==================================================*/\n\nbh.local.casePayload = {\n\n    caseType:\n        \"Retail_Health_Proposal\",\n\n    caseData:\n        caseData,\n\n    wfData:\n        wfData\n};\n\n/*==================================================\n  LOG CASE PAYLOAD\n==================================================*/\n\nconsole.log(\n    \"========== CASE PAYLOAD ==========\"\n);\n\nconsole.log(\n    JSON.stringify(\n        bh.local.casePayload,\n        null,\n        2\n    )\n);\n\n/*==================================================\n  ACCESS TOKEN\n==================================================*/\n\n\n   \n\n/*==================================================\n  CASE REQUEST\n==================================================*/\n\nbh.local.caseRequest = {\n\n    url:\n        \"https://alpha-pt.neutrinos-apps.com/caseservice/case/instance/create\",\n\n    method:\n        \"POST\",\n\n    headers: {\n\n        \"accept\":\n            \"application/json\",\n\n        \"Authorization\":\n            `Bearer ${bh.local.accessToken}`,\n\n        \"Content-Type\":\n            \"application/json\"\n    },\n\n    body:\n        bh.local.casePayload\n};\n\n/*==================================================\n  LOG CASE REQUEST\n==================================================*/\n\nconsole.log(\n    \"========== CASE REQUEST ==========\"\n);\n\nconsole.log(\n    \"URL:\",\n    bh.local.caseRequest.url\n);\n\nconsole.log(\n    \"Method:\",\n    bh.local.caseRequest.method\n);\n\nconsole.log(\n    \"Authorization:\",\n    \"Bearer <TOKEN_HIDDEN>\"\n);\n\nconsole.log(\n    \"Body:\",\n    JSON.stringify(\n        bh.local.caseRequest.body,\n        null,\n        2\n    )\n);",
-        "functionName": "prepareCaseData",
-        "category": "Function",
-        "x": 1865,
-        "y": 140,
-        "wires": [
-            [
-                "sd_nZU7sWQhcOLyZMCc"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_nrh59DE0ROAnn3IR",
-        "type": "Script",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "common",
-        "nodeType": "flow",
-        "name": "Prepare_Token_Request",
-        "script": "const tokenUrl =\n    \"https://ids-ctr-pt.neutrinos-apps.com/token\";\n\n/*--------------------------------------\n Prepare OAuth Token Request\n--------------------------------------*/\n\nconst clientId =\n    \"0ddh_euTKkSA682Yy5HuC\";\n\nconst clientSecret =\n    \"e28WZR6ZKyrYILTSKKClFEwNlYoGR2cvISwFCoIXP4S7DJgsaqhHRSNqpoWgYbcx_DUlrSkoA1zS5uFOzP-J9C\";\n\nbh.local.tokenRequest = {\n\n    url:\n        tokenUrl,\n\n    method:\n        \"POST\",\n\n    headers: {\n\n        \"Accept\":\n            \"application/json\",\n\n        \"Content-Type\":\n            \"application/x-www-form-urlencoded\"\n    },\n\n    body:\n        `client_id=${encodeURIComponent(clientId)}` +\n        `&client_secret=${encodeURIComponent(clientSecret)}` +\n        `&grant_type=client_credentials`\n};\n\n/*--------------------------------------\n Logging\n--------------------------------------*/\n\nconsole.log(\n    \"========== TOKEN REQUEST ==========\"\n);\n\nconsole.log(\n    \"URL:\",\n    bh.local.tokenRequest.url\n);\n\nconsole.log(\n    \"Method:\",\n    bh.local.tokenRequest.method\n);\n\nconsole.log(\n    \"Headers:\",\n    JSON.stringify(\n        bh.local.tokenRequest.headers,\n        null,\n        2\n    )\n);\n\nconsole.log(\n    \"Body: client_id=<HIDDEN>&client_secret=<HIDDEN>&grant_type=client_credentials\"\n);",
-        "functionName": "prepareTokenRequest",
-        "category": "Function",
-        "x": 1440,
-        "y": 140,
-        "wires": [
-            [
-                "sd_wuvyWH4Bj47qqOXh"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_wuvyWH4Bj47qqOXh",
-        "type": "ServerHttpRequest",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "server",
-        "nodeType": "flow",
-        "name": "",
-        "method": "post",
-        "methodMapping": "",
-        "methodMappingObj": {},
-        "urlMapping": "bh.local.tokenRequest.url",
-        "urlMappingObj": {
-            "mapVarType": "bh.local",
-            "mapVarValue": "tokenRequest.url"
-        },
-        "ret": "json",
-        "retMapping": "",
-        "retMappingObj": {},
-        "reqBody": "bh.local.tokenRequest.body",
-        "reqBodyObj": {
-            "mapVarType": "bh.local",
-            "mapVarValue": "tokenRequest.body"
-        },
-        "resultMapping": "bh.local.tokenResponse",
-        "resultMappingObj": {
-            "mapVarType": "bh.local",
-            "mapVarValue": "tokenResponse"
-        },
-        "headers": [],
-        "headersObj": {},
-        "headerMapping": "bh.local.tokenRequest.headers",
-        "headerMappingObj": {
-            "mapVarType": "bh.local",
-            "mapVarValue": "tokenRequest.headers"
-        },
-        "params": {},
-        "paramsObj": [],
-        "paramMapping": "",
-        "paramMappingObj": {},
-        "authType": "",
-        "useAuthTypeMappingObj": {},
-        "useAuthTypeMap": {},
-        "useAuthType": "",
-        "useAuthUsername": "",
-        "useAuthUsernameMappingObj": "",
-        "useAuthPassword": "",
-        "useAuthPasswordMappingObj": "",
-        "useAuthToken": "",
-        "useAuthTokenMappingObj": "",
-        "useQueryString": false,
-        "tls": "",
-        "followRedirect": true,
-        "paytoqs": false,
-        "useAuthentication": false,
-        "rejectUnauthorized": false,
-        "proxy": "",
-        "useProxy": false,
-        "usetls": false,
-        "cookies": [],
-        "cookiesMapObj": {},
-        "cookiesList": {},
-        "switchStates": {
-            "cookies": "Map"
-        },
-        "editableListData": {},
-        "timeout": {
-            "type": "num",
-            "value": ""
-        },
-        "functionName": "sd_wuvyWH4Bj47qqOXh",
-        "category": "HTTP",
-        "x": 1580,
-        "y": 140,
-        "wires": [
-            [
-                "sd_qDeN33TJkmZEN7A8"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_qDeN33TJkmZEN7A8",
-        "type": "Script",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "common",
-        "nodeType": "flow",
-        "name": "Validate_Token_Response",
-        "script": "const response =\n    bh.local.tokenResponse.payload;\n\nconsole.log(\"Token Response Received\");\n\nif (!response) {\n    throw new Error(\n        \"Token request failed: Empty response\"\n    );\n}\n\nif (!response.access_token) {\n    console.log(\n        JSON.stringify(\n            response,\n            null,\n            2\n        )\n    );\n\n    throw new Error(\n        \"Token request failed: access_token not received\"\n    );\n}\n\n/*--------------------------------------\n Store Token Details\n--------------------------------------*/\n\nbh.local.accessToken =\n    response.access_token;\n\nbh.local.tokenType =\n    response.token_type || \"Bearer\";\n\nbh.local.tokenExpiresIn =\n    response.expires_in || 0;\n\nconsole.log(\n    \"Token received successfully\"\n);\n\n\nconsole.log(\n    \"Access Token:\",\n    bh.local.accessToken\n);\n\nconsole.log(\n    \"Token Type:\",\n    bh.local.tokenType\n);\n\nconsole.log(\n    \"Token Expires In:\",\n    bh.local.tokenExpiresIn\n);",
-        "functionName": "validateTokenResponse",
-        "category": "Function",
-        "x": 1720,
-        "y": 140,
-        "wires": [
-            [
-                "sd_N5w1JvFBXe132sjc"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_FkD0zP4XKf401lZj",
-        "type": "HttpOut",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "server",
-        "nodeType": "flow",
-        "name": "proposal HTTP Out old",
-        "headers": {},
-        "responseBody": {
-            "type": "bh.local",
-            "value": "response",
-            "ssd_typedInputField": true
-        },
-        "httpcode": {
-            "type": "num",
-            "value": 200,
-            "ssd_typedInputField": true
-        },
-        "responseType": "obj",
-        "swaggerResponse": {},
-        "responseMapping": {
-            "status": 200,
-            "obj": "bh.local.response",
-            "send": "bh.local.response"
-        },
-        "dataModelIsArray": false,
-        "inputs": 1,
-        "outputs": 0,
-        "erd": "",
-        "entity": "",
-        "entityId": "",
-        "ref": "",
-        "editableListData": {
-            "headers": [],
-            "produces": [],
-            "responses": []
-        },
-        "cookiesList": {},
-        "switchStates": {
-            "headers": "Map",
-            "cookies": "Map"
-        },
-        "functionName": "proposalHttpOutOld",
-        "category": "HTTP",
-        "x": 2205,
-        "y": 140,
-        "wires": [],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
         "id": "sd_C284MxVsBp28fNXn",
         "type": "HttpIn",
         "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
@@ -3416,6 +2705,7 @@
         "acceptFileUpload": false,
         "useDataModel": false,
         "dataModelIsArray": false,
+        "uploadFileOptions": "",
         "erd": "",
         "erdName": "",
         "entity": "",
@@ -3467,28 +2757,6 @@
         "wires": [
             [
                 "sd_pqhKSHDFYo2mVbzn"
-            ]
-        ],
-        "__n_excludedFromValidation__": {},
-        "generateNext": false,
-        "serviceName": "proposals",
-        "generated": true
-    },
-    {
-        "id": "sd_tgfCfyfsbxcyHNky",
-        "type": "Script",
-        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
-        "viewType": "common",
-        "nodeType": "flow",
-        "name": "validate and prepare Response",
-        "script": "bh.local.response = {\n\n    success: true,\n\n    message:\n        \"Proposal created and workflow started successfully\",\n\n    data: {\n\n        proposal_id:\n            bh.local.proposalId,\n\n        status:\n            \"SUBMITTED\",\n        case_payload:\n        bh.local.casePayload,\n        case_creation_token:\n            bh.local.tokenResponse.payload\n\n    }\n\n};\n\nconsole.log(\n    \"Final Proposal Response\"\n);\n\nconsole.log(\n    JSON.stringify(\n        bh.local.response,\n        null,\n        2\n    )\n);",
-        "functionName": "validateAndPrepareResponse",
-        "category": "Function",
-        "x": 2025,
-        "y": 140,
-        "wires": [
-            [
-                "sd_FkD0zP4XKf401lZj"
             ]
         ],
         "__n_excludedFromValidation__": {},
@@ -3627,6 +2895,7 @@
             "send": "bh.local.response"
         },
         "dataModelIsArray": false,
+        "cookies": [],
         "inputs": 1,
         "outputs": 0,
         "erd": "",
@@ -3672,6 +2941,7 @@
         "acceptFileUpload": false,
         "useDataModel": false,
         "dataModelIsArray": false,
+        "uploadFileOptions": "",
         "erd": "",
         "erdName": "",
         "entity": "",
@@ -3760,6 +3030,7 @@
         "nodeType": "flow",
         "name": "caseCreates",
         "method": "post",
+        "methodMapping": "",
         "methodMappingObj": {},
         "urlMapping": "bh.local.caseRequest.url",
         "urlMappingObj": {
@@ -3767,6 +3038,7 @@
             "mapVarValue": "caseRequest.url"
         },
         "ret": "json",
+        "retMapping": "",
         "retMappingObj": {},
         "reqBody": "bh.local.caseRequest.body",
         "reqBodyObj": {
@@ -3778,6 +3050,8 @@
             "mapVarType": "bh.local",
             "mapVarValue": "caseResponse"
         },
+        "headers": [],
+        "headersObj": {},
         "headerMapping": "bh.local.caseRequest.headers",
         "headerMappingObj": {
             "mapVarType": "bh.local",
@@ -3785,8 +3059,12 @@
         },
         "params": {},
         "paramsObj": [],
+        "paramMapping": "",
         "paramMappingObj": {},
+        "authType": "",
         "useAuthTypeMappingObj": {},
+        "useAuthTypeMap": {},
+        "useAuthType": "",
         "useAuthUsername": "",
         "useAuthUsernameMappingObj": "",
         "useAuthPassword": "",
@@ -3802,6 +3080,7 @@
         "proxy": "",
         "useProxy": false,
         "usetls": false,
+        "cookies": [],
         "cookiesMapObj": {},
         "cookiesList": {},
         "switchStates": {
@@ -3827,13 +3106,750 @@
         "generated": true
     },
     {
-        "id": "sd_nZU7sWQhcOLyZMCc",
+        "id": "sd_6n5wCegQZmSUr1qV",
+        "type": "HttpIn",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "start",
+        "name": "Proposal_API HTTP In",
+        "path": "/proposal",
+        "uploadpath": "",
+        "summary": "",
+        "description": "",
+        "method": "post",
+        "sequenceId": "IDSAuthroizedAPIs",
+        "consumes": "",
+        "produces": "",
+        "filetype": "path",
+        "acceptFileUpload": false,
+        "useDataModel": false,
+        "dataModelIsArray": true,
+        "uploadFileOptions": "",
+        "erd": "",
+        "erdName": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "responses": [],
+            "params": [],
+            "produces": [],
+            "consumes": []
+        },
+        "inputs": 0,
+        "outputs": 1,
+        "validateRequestUsingSwaggerDocs": false,
+        "category": "HTTP",
+        "x": 185,
+        "y": 160,
+        "wires": [
+            [
+                "sd_iDnWLNgAwl6oVhwo"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "uploadpath": {
+                "type": "str",
+                "value": "",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": true,
+        "serviceName": "proposals",
+        "functionName": "sd_6n5wCegQZmSUr1qV"
+    },
+    {
+        "id": "sd_GiqFLlkS3bcdTmuK",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Validate_Request",
+        "script": "const body = bh.input.body;\n\nconsole.log(\"Proposal Request\");\nconsole.log(JSON.stringify(body, null, 2));\n\n/*--------------------------------------\nMandatory Request\n--------------------------------------*/\n\nif (!body) {\n    throw new Error(\"Request Body is missing\");\n}\n\n/*--------------------------------------\nProposer Name\n--------------------------------------*/\n\nbody.proposer_name = (body.proposer_name || \"\").trim();\n\nif (!body.proposer_name) {\n    throw new Error(\"Proposer Name is required\");\n}\n\nif (body.proposer_name.length < 3 || body.proposer_name.length > 60) {\n    throw new Error(\"Proposer Name must be between 3 and 60 characters\");\n}\n\nif (!/^[A-Za-z ]+$/.test(body.proposer_name)) {\n    throw new Error(\"Only alphabets and spaces are allowed\");\n}\n\n/*--------------------------------------\nProposer DOB\n--------------------------------------*/\n\nif (!body.proposer_dob) {\n    throw new Error(\"Proposer DOB is required\");\n}\n\nif (isNaN(Date.parse(body.proposer_dob))) {\n    throw new Error(\"Invalid Proposer DOB\");\n}\n\n/*--------------------------------------\nMobile Number\n--------------------------------------*/\n\nbody.mobile_number = String(body.mobile_number || \"\").trim();\n\nif (!/^[6-9][0-9]{9}$/.test(body.mobile_number)) {\n    throw new Error(\"Invalid Mobile Number\");\n}\n\n/*--------------------------------------\nEmail\n--------------------------------------*/\n\nbody.email_id = (body.email_id || \"\").trim().toLowerCase();\n\nif (\n    !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$/.test(body.email_id)\n) {\n    throw new Error(\"Invalid Email\");\n}\n\n/*--------------------------------------\nPlan Variant\n--------------------------------------*/\n\nbody.plan_variant = (body.plan_variant || \"\").trim();\n\nif (!body.plan_variant) {\n    throw new Error(\"Plan Variant is required\");\n}\n\n/*--------------------------------------\nSum Insured\n--------------------------------------*/\n\nbody.sum_insured = Number(body.sum_insured);\n\nif (isNaN(body.sum_insured) || body.sum_insured <= 0) {\n    throw new Error(\"Invalid Sum Insured\");\n}\n\n/*--------------------------------------\nHeight\n--------------------------------------*/\n\nbody.height_cm = Number(body.height_cm);\n\nif (isNaN(body.height_cm)) {\n    throw new Error(\"Height is required\");\n}\n\nif (body.height_cm < 100 || body.height_cm > 220) {\n    throw new Error(\"Height must be between 100 and 220 cm\");\n}\n\n/*--------------------------------------\nWeight\n--------------------------------------*/\n\nbody.weight_kg = Number(body.weight_kg);\n\nif (isNaN(body.weight_kg)) {\n    throw new Error(\"Weight is required\");\n}\n\nif (body.weight_kg < 25 || body.weight_kg > 200) {\n    throw new Error(\"Weight must be between 25 and 200 kg\");\n}\n\n/*--------------------------------------\nBMI\n--------------------------------------*/\n\nbody.bmi = Number(body.bmi);\n\nif (isNaN(body.bmi)) {\n    throw new Error(\"BMI is required\");\n}\n\nif (body.bmi < 10 || body.bmi > 60) {\n    throw new Error(\"Invalid BMI\");\n}\n\n/*--------------------------------------\nBoolean Fields\n--------------------------------------*/\n\nif (typeof body.tobacco_use !== \"boolean\") {\n    throw new Error(\"Invalid Tobacco Use\");\n}\n\nif (typeof body.diabetes_declared !== \"boolean\") {\n    throw new Error(\"Invalid Diabetes Declared\");\n}\n\nif (typeof body.hypertension_declared !== \"boolean\") {\n    throw new Error(\"Invalid Hypertension Declared\");\n}\n\nif (typeof body.include_spouse !== \"boolean\") {\n    throw new Error(\"Invalid Include Spouse\");\n}\n\n/*--------------------------------------\nMembers\n--------------------------------------*/\n\nif (!Array.isArray(body.members) || body.members.length === 0) {\n    throw new Error(\"At least one member is required\");\n}\n\nbody.members.forEach((member, index) => {\n\n    member.member_name = (member.member_name || \"\").trim();\n\n    if (!member.member_name) {\n        throw new Error(`Member ${index + 1} Name is required`);\n    }\n\n    if (!member.member_dob) {\n        throw new Error(`Member ${index + 1} DOB is required`);\n    }\n\n    if (isNaN(Date.parse(member.member_dob))) {\n        throw new Error(`Invalid DOB for Member ${index + 1}`);\n    }\n\n    if (!member.relationship) {\n        throw new Error(`Relationship is required for Member ${index + 1}`);\n    }\n\n    if (member.relationship === \"Self\") {\n\n        member.height_cm = Number(member.height_cm);\n        member.weight_kg = Number(member.weight_kg);\n        member.bmi = Number(member.bmi);\n\n        if (isNaN(member.height_cm)) {\n            throw new Error(\"Self Height is required\");\n        }\n\n        if (isNaN(member.weight_kg)) {\n            throw new Error(\"Self Weight is required\");\n        }\n\n        if (isNaN(member.bmi)) {\n            throw new Error(\"Self BMI is required\");\n        }\n    }\n\n    if (member.relationship === \"Spouse\" && body.include_spouse) {\n\n        if (!member.member_name) {\n            throw new Error(\"Spouse Name is required\");\n        }\n\n        if (!member.member_dob) {\n            throw new Error(\"Spouse DOB is required\");\n        }\n\n    }\n\n});\n\nconsole.log(\"Validation Successful\");\n",
+        "functionName": "validateRequest",
+        "category": "Function",
+        "x": 470,
+        "y": 160,
+        "wires": [
+            [
+                "sd_nRVvTbmSa6FeJVEl"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_iDnWLNgAwl6oVhwo",
+        "type": "ServiceVariables",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "client-server",
+        "nodeType": "flow",
+        "name": "Proposal_Service_Variables",
+        "inputs": 1,
+        "outputs": 1,
+        "operation": "set",
+        "globalVariables": [
+            {
+                "textIp": "proposalId",
+                "typedIpValue": {
+                    "type": "bh.local",
+                    "value": "proposalId"
+                }
+            },
+            {
+                "textIp": "proposerAge",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "spouseAge",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "bmi",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "ageBand",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "basePremium",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "loadingPremium",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "gstAmount",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "finalPremium",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "ratingTrace",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalStatus",
+                "typedIpValue": {
+                    "type": "str",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposalEntity",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "proposerMember",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            },
+            {
+                "textIp": "spouseMember",
+                "typedIpValue": {
+                    "type": "literal",
+                    "value": ""
+                }
+            }
+        ],
+        "functionName": "proposalServiceVariables",
+        "category": "Function",
+        "x": 330,
+        "y": 160,
+        "wires": [
+            [
+                "sd_GiqFLlkS3bcdTmuK"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_nRVvTbmSa6FeJVEl",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Generate_Proposal_ID",
+        "script": "const now = new Date();\n\nconst yyyy = now.getFullYear();\n\nconst mm = String(now.getMonth() + 1).padStart(2, \"0\");\n\nconst dd = String(now.getDate()).padStart(2, \"0\");\n\nconst random = Math.floor(Math.random() * 90000) + 10000;\n\nbh.local.proposalId =\n    `PRP-${yyyy}${mm}${dd}-${random}`;\n\nconsole.log(bh.local.proposalId);\n",
+        "functionName": "generateProposalId",
+        "category": "Function",
+        "x": 610,
+        "y": 160,
+        "wires": [
+            [
+                "sd_pTt3sKzYx7Yykksb"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_pTt3sKzYx7Yykksb",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Calculate_Age",
+        "script": "// function calculateAge(dob) {\n\n//     const birth = new Date(dob);\n\n//     const today = new Date();\n\n//     let age = today.getFullYear() - birth.getFullYear();\n\n//     const month =\n//         today.getMonth() - birth.getMonth();\n\n//     if (\n//         month < 0 ||\n//         (month === 0 && today.getDate() < birth.getDate())\n//     ) {\n//         age--;\n//     }\n\n//     return age;\n// }\n\n// bh.local.proposerAge =\n//     calculateAge(bh.input.body.proposer_dob);\n\n// if (bh.input.body.spouse_included) {\n\n//     bh.local.spouseAge =\n//         calculateAge(bh.input.body.spouse_dob);\n\n// }\n// else {\n\n//     bh.local.spouseAge = 0;\n\n// }\n\n// console.log(bh.local.proposerAge);\n// console.log(bh.local.spouseAge);\n\nfunction calculateAge(dob) {\n\n    if (!dob) {\n        return 0;\n    }\n\n    const birth = new Date(dob);\n    const today = new Date();\n\n    let age = today.getFullYear() - birth.getFullYear();\n\n    const monthDiff =\n        today.getMonth() - birth.getMonth();\n\n    if (\n        monthDiff < 0 ||\n        (monthDiff === 0 &&\n            today.getDate() < birth.getDate())\n    ) {\n        age--;\n    }\n\n    return age;\n}\n\n/*--------------------------------------\n Proposer Age\n--------------------------------------*/\n\nbh.local.proposerAge =\n    calculateAge(bh.input.body.proposer_dob);\n\n/*--------------------------------------\n Spouse Age\n--------------------------------------*/\n\nbh.local.spouseAge = 0;\n\nif (bh.input.body.include_spouse === true) {\n\n    const spouseMember =\n        (bh.input.body.members || []).find(\n            member => member.relationship === \"Spouse\"\n        );\n\n    if (spouseMember) {\n\n        bh.local.spouseAge =\n            calculateAge(spouseMember.member_dob);\n\n    }\n\n}\n\nconsole.log(\"Proposer Age :\", bh.local.proposerAge);\nconsole.log(\"Spouse Age :\", bh.local.spouseAge);\n/*--------------------------------------\n Rating Age\n--------------------------------------*/\n\nbh.local.ratingAge = Math.max(\n    bh.local.proposerAge,\n    bh.local.spouseAge\n);\n\nconsole.log(\"Rating Age :\", bh.local.ratingAge);",
+        "functionName": "calculateAge",
+        "category": "Function",
+        "x": 725,
+        "y": 160,
+        "wires": [
+            [
+                "sd_lQYuBSFXkXr8tsEh"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_DQpVBYdkj8nOQLWL",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Prepare_Proposal_Entity",
+        "script": "// const body = bh.input.body;\n\n// bh.local.proposalEntity = {\n\n//     proposal_id: bh.local.proposalId,\n\n//     plan_code: body.plan_code,\n\n//     sum_insured: body.sum_insured,\n\n//     mobile_no: body.mobile_no,\n\n//     email: body.email,\n\n//     rating_age: bh.local.proposerAge,\n\n//     age_band: bh.local.ageBand || \"\",\n\n//     spouse_included: body.spouse_included,\n\n//     base_premium: bh.local.basePremium || 0,\n\n//     loaded_premium: bh.local.loadedPremium || 0,\n\n//     gst_amount: bh.local.gstAmount || 0,\n\n//     final_premium: bh.local.finalPremium || 0,\n\n//     additional_loading_pct: 0,\n\n//     rating_trace: bh.local.ratingTrace || \"\",\n\n//     mu_remarks: null,\n\n//     manager_remarks: null,\n\n//     policy_no: null,\n\n//     status: bh.local.proposalStatus || \"SUBMITTED\",\n\n//     created_at: new Date(),\n\n//     updated_at: new Date()\n\n// };\n\n// console.log(bh.local.proposalEntity);\nconst body = bh.input.body;\n\nbh.local.proposalEntity = {\n\n    proposal_id: bh.local.proposalId,\n\n    plan_code: body.plan_variant,\n\n    sum_insured: body.sum_insured,\n\n    mobile_no: body.mobile_number,\n\n    email: body.email_id,\n\n    rating_age: bh.local.ratingAge,\n\n    age_band: bh.local.ageBand || \"\",\n\n    spouse_included: body.include_spouse,\n\n    base_premium: bh.local.basePremium || 0,\n\n    loaded_premium: bh.local.loadedPremium || 0,\n\n    gst_amount: bh.local.gstAmount || 0,\n\n    final_premium: bh.local.finalPremium || 0,\n\n    additional_loading_pct:\n        bh.local.additionalLoadingPct || 0,\n\n    rating_trace: bh.local.ratingTrace || \"\",\n\n    mu_remarks: null,\n\n    manager_remarks: null,\n\n    policy_no: null,\n\n    status:\n        bh.local.proposalStatus || \"SUBMITTED\",\n\n    created_at: new Date(),\n\n    updated_at: new Date()\n\n};\n\nconsole.log(\"Proposal Entity\");\nconsole.log(JSON.stringify(bh.local.proposalEntity, null, 2));\n/*--------------------------------------\n Prepare Proposal Members Entity\n--------------------------------------*/\n\nbh.local.proposalMembersEntity = [];\n\nconst members = body.members || [];\n\nmembers.forEach((member, index) => {\n\n    bh.local.proposalMembersEntity.push({\n\n        member_id: crypto.randomUUID(),\n\n        proposal_id: bh.local.proposalId,\n\n        relation:\n            member.relationship === \"Self\"\n                ? \"PROPOSER\"\n                : \"SPOUSE\",\n\n        full_name: member.member_name,\n\n        dob: member.member_dob,\n\n        age:\n            member.relationship === \"Self\"\n                ? bh.local.proposerAge\n                : bh.local.spouseAge,\n\n        height_cm:\n            member.relationship === \"Self\"\n                ? member.height_cm\n                : null,\n\n        weight_kg:\n            member.relationship === \"Self\"\n                ? member.weight_kg\n                : null,\n\n        bmi:\n            member.relationship === \"Self\"\n                ? member.bmi\n                : null,\n\n        tobacco_use: body.tobacco_use,\n\n        diabetes_declared:\n            body.diabetes_declared,\n\n        hypertension_declared:\n            body.hypertension_declared\n\n    });\n\n});\n\nconsole.log(\"Proposal Members Entity\");\nconsole.log(\n    JSON.stringify(\n        bh.local.proposalMembersEntity,\n        null,\n        2\n    )\n);",
+        "functionName": "prepareProposalEntity",
+        "category": "Function",
+        "x": 865,
+        "y": 160,
+        "wires": [
+            [
+                "sd_N5TgayTUknrolMue"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_N5TgayTUknrolMue",
+        "type": "insert",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "insert Proposals",
+        "erd": "_DM_zsothgb3r",
+        "entityId": "_EN_hll0abjopf",
+        "_UI_entityName": "proposals",
+        "dbConfigId": "sd_99PeWpSvHx3jjW6m",
+        "insertObject": "bh.local.proposalEntity",
+        "resultMapping": "bh.local.insertProposalResponse",
+        "functionName": "insertProposals",
+        "category": "Data Model",
+        "x": 1010,
+        "y": 160,
+        "wires": [
+            [
+                "sd_heFydvNCyIYKYxEs",
+                "sd_lob9aiIgROcYUoAZ"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "insertObject": {
+                "type": "bh.local",
+                "value": "proposalEntity",
+                "constant": false
+            },
+            "resultMapping": {
+                "type": "bh.local",
+                "value": "insertProposalResponse",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_BVL9QbceGzjVMk48",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Validate_Insert",
+        "script": "console.log(\"Insert Response\");\n\nconsole.log(JSON.stringify(bh.local.insertProposalResponse, null, 2));\n\nif (!bh.local.insertProposalResponse) {\n\n    throw new Error(\"Proposal insert failed\");\n\n}\n\nconsole.log(\"Proposal inserted successfully\");\n\n/*--------------------------------------\n Prepare Success Response\n--------------------------------------*/\n\nbh.local.response = {\n\n    success: true,\n\n    message: \"Proposal created successfully\",\n\n    data: {\n\n        proposal_id: bh.local.proposalId,\n\n        status: \"SUBMITTED\"\n\n    }\n\n};\n\nconsole.log(\"Success Response\");\n\nconsole.log(JSON.stringify(bh.local.response, null, 2));",
+        "functionName": "validateInsert",
+        "category": "Function",
+        "x": 1290,
+        "y": 160,
+        "wires": [
+            [
+                "sd_h3xYruis81nbEDEK"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_heFydvNCyIYKYxEs",
+        "type": "ServerLog",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "savedProposal Log",
+        "outputs": 0,
+        "logObject": "bh.local.insertProposalResponse",
+        "logLevel": "info",
+        "functionName": "savedProposalLog",
+        "category": "General",
+        "x": 1150,
+        "y": 60,
+        "wires": [],
+        "__ssdTypeInputs__": {
+            "logObject": {
+                "type": "bh.local",
+                "value": "insertProposalResponse",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_lob9aiIgROcYUoAZ",
+        "type": "insert",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "insert Proposal Members",
+        "erd": "_DM_zsothgb3r",
+        "entityId": "_EN_0xcbgpnumf",
+        "_UI_entityName": "proposal_members",
+        "dbConfigId": "sd_99PeWpSvHx3jjW6m",
+        "insertObject": "bh.local.proposalMembersEntity",
+        "resultMapping": "bh.local.insertProposalMembersResponse",
+        "functionName": "insertProposalMembers",
+        "category": "Data Model",
+        "x": 1150,
+        "y": 160,
+        "wires": [
+            [
+                "sd_AIq1jZifHiBkuur7",
+                "sd_BVL9QbceGzjVMk48"
+            ]
+        ],
+        "__ssdTypeInputs__": {
+            "insertObject": {
+                "type": "bh.local",
+                "value": "proposalMembersEntity",
+                "constant": false
+            },
+            "resultMapping": {
+                "type": "bh.local",
+                "value": "insertProposalMembersResponse",
+                "nullable": "true",
+                "nullableValue": "",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_AIq1jZifHiBkuur7",
+        "type": "ServerLog",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "savedProposalMembers Log",
+        "outputs": 0,
+        "logObject": "bh.local.insertProposalMembersResponse",
+        "logLevel": "info",
+        "functionName": "savedProposalMembersLog",
+        "category": "General",
+        "x": 1290,
+        "y": 60,
+        "wires": [],
+        "__ssdTypeInputs__": {
+            "logObject": {
+                "type": "bh.local",
+                "value": "insertProposalMembersResponse",
+                "constant": false
+            }
+        },
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_lQYuBSFXkXr8tsEh",
+        "type": "CallService",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "loadRateCard",
+        "outputs": 1,
+        "isValidNode": true,
+        "noerr": 0,
+        "service": {
+            "id": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+            "type": "tab",
+            "createdDate": "2026-08-02T16:33:40.534Z",
+            "label": "proposals",
+            "disabled": false,
+            "info": "",
+            "functionSeq": 0
+        },
+        "flow": {
+            "flowId": "sd_hv0h0PVDxgygZof3",
+            "flowName": "getPlansInternal"
+        },
+        "inputVariables": [
+            {
+                "key": "plansResponse",
+                "map": true,
+                "valueType": "bh.input",
+                "value": ""
+            }
+        ],
+        "bhVariables": [],
+        "outputMapping": [
+            {
+                "mapVarType": "input",
+                "key": "plansResponse",
+                "valueType": "bh.local",
+                "value": "plansResponse",
+                "mapVarName": "plansResponse",
+                "localVar": "bh.local.plansResponse"
+            }
+        ],
+        "callService": "./proposals",
+        "startName": "getPlansInternal",
+        "inputParams": [
+            null
+        ],
+        "accept_bh": false,
+        "functionName": "loadRateCard",
+        "category": "General",
+        "x": 790,
+        "y": 60,
+        "wires": [
+            [
+                "sd_oa0fgWkow5zffgxg"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_oa0fgWkow5zffgxg",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "ResolveAgeBand",
+        "script": "const plans = bh.local.plansResponse.plans;\n\nbh.local.selectedPlan = plans.find(plan => {\n\n    if (plan.plan_code !== bh.input.body.plan_variant) {\n\n        return false;\n\n    }\n\n    const [minAge, maxAge] =\n        plan.age_band\n            .split(\"-\")\n            .map(Number);\n\n    return (\n        bh.local.ratingAge >= minAge &&\n        bh.local.ratingAge <= maxAge\n    );\n\n});\n\nif (!bh.local.selectedPlan) {\n\n    throw new Error(\"Age Band not found in Reels\");\n\n}\n\nbh.local.ageBand =\n    bh.local.selectedPlan.age_band;\n\nconsole.log(\"Selected Reels Plan\");\nconsole.log(JSON.stringify(bh.local.selectedPlan, null, 2));\n\nconsole.log(\"Resolved Age Band :\", bh.local.ageBand);",
+        "functionName": "resolveAgeBand",
+        "category": "Function",
+        "x": 785,
+        "y": 280,
+        "wires": [
+            [
+                "sd_DQpVBYdkj8nOQLWL"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_F6F86ay6rme2KhDD",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Prepare Case Data",
+        "script": "const body = bh.input.body;\n\nconst members = body.members || [];\n\n/*==================================================\n  GET PROPOSAL ID FROM INSERT RESPONSE\n==================================================*/\n\nconst proposalId =\n    bh.local.insertProposalResponse?.proposal_id || \"\";\n\nif (!proposalId) {\n    throw new Error(\n        \"Proposal ID not found in insertProposalResponse\"\n    );\n}\n\nconsole.log(\n    \"Proposal ID:\",\n    proposalId\n);\n\n/*==================================================\n  FIND PROPOSER\n==================================================*/\n\nconst proposerMember = members.find(\n    member =>\n        member.relationship === \"Proposer\" ||\n        member.relationship === \"PROPOSER\" ||\n        member.relationship === \"Self\" ||\n        member.relationship === \"SELF\"\n);\n\n/*==================================================\n  FIND SPOUSE\n==================================================*/\n\nconst spouseMember = members.find(\n    member =>\n        member.relationship === \"Spouse\" ||\n        member.relationship === \"SPOUSE\"\n);\n\n/*==================================================\n  FORMAT DOB\n==================================================*/\n\nfunction formatDOBForCase(dob) {\n\n    if (!dob) {\n        return \"\";\n    }\n\n    /*\n     * Already DD/MM/YYYY\n     */\n    if (\n        /^\\d{2}\\/\\d{2}\\/\\d{4}$/.test(dob)\n    ) {\n        return dob;\n    }\n\n    const date = new Date(dob);\n\n    if (isNaN(date.getTime())) {\n        throw new Error(\n            \"Invalid DOB: \" + dob\n        );\n    }\n\n    const dd =\n        String(\n            date.getDate()\n        ).padStart(2, \"0\");\n\n    const mm =\n        String(\n            date.getMonth() + 1\n        ).padStart(2, \"0\");\n\n    const yyyy =\n        date.getFullYear();\n\n    return `${dd}/${mm}/${yyyy}`;\n}\n\n/*==================================================\n  PROPOSER DOB\n==================================================*/\n\nconst proposerDOB =\n    formatDOBForCase(\n        body.proposer_dob\n    );\n\n/*==================================================\n  SPOUSE DOB\n==================================================*/\n\nlet spouseDOB = \"\";\n\nif (\n    body.include_spouse === true &&\n    spouseMember\n) {\n\n    spouseDOB =\n        formatDOBForCase(\n            spouseMember.member_dob\n        );\n}\n\n/*==================================================\n  PROPOSER DETAILS\n==================================================*/\n\nconst proposerName =\n    body.proposer_name ||\n    proposerMember?.member_name ||\n    \"\";\n\nconst proposerEmail =\n    body.email_id ||\n    body.email ||\n    \"\";\n\nconst proposerMobile =\n    body.mobile_number ||\n    body.mobile_no ||\n    \"\";\n\n/*==================================================\n  SPOUSE NAME\n==================================================*/\n\nconst spouseName =\n    body.include_spouse === true &&\n    spouseMember\n        ? spouseMember.member_name\n        : \"\";\n\n/*==================================================\n  PREPARE CASE DATA\n==================================================*/\n\nconst caseData = {\n\n    proposalId:\n        proposalId,\n\n    full_name:\n        proposerName,\n\n    email:\n        proposerEmail,\n\n    mobile_no:\n        Number(proposerMobile),\n\n    height_cm:\n        Number(body.height_cm || 0),\n\n    weight_kg:\n        Number(body.weight_kg || 0),\n\n    SpouseName:\n        spouseName,\n\n    PlanCode:\n        body.plan_variant,\n\n    SumInsured:\n        Number(body.sum_insured),\n\n    BMI:\n        String(body.bmi),\n\n    ProposerDOB:\n        proposerDOB,\n\n    SpouseDOB:\n        spouseDOB,\n\n    SpouseIncluded:\n        body.include_spouse === true,\n\n    TobaccoUse:\n        body.tobacco_use === true,\n\n    DiabetesDeclared:\n        body.diabetes_declared === true,\n\n    HypertensionDeclared:\n        body.hypertension_declared === true,\n\n    status:\n        body.status || \"SUBMITTED\"\n};\n\n/*==================================================\n  PREPARE WF DATA\n==================================================*/\n\nconst wfData = {\n\n    proposalId:\n        proposalId,\n\n    full_name:\n        proposerName,\n\n    email:\n        proposerEmail,\n\n    mobile_no:\n        Number(proposerMobile),\n\n    height_cm:\n        Number(body.height_cm || 0),\n\n    weight_kg:\n        Number(body.weight_kg || 0),\n\n    SpouseName:\n        spouseName,\n\n    PlanCode:\n        body.plan_variant,\n\n    SumInsured:\n        Number(body.sum_insured),\n\n    BMI:\n        String(body.bmi),\n\n    ProposerDOB:\n        proposerDOB,\n\n    SpouseDOB:\n        spouseDOB,\n\n    SpouseIncluded:\n        body.include_spouse === true,\n\n    TobaccoUse:\n        body.tobacco_use === true,\n\n    DiabetesDeclared:\n        body.diabetes_declared === true,\n\n    HypertensionDeclared:\n        body.hypertension_declared === true\n};\n\n/*==================================================\n  FINAL CASE PAYLOAD\n==================================================*/\n\nbh.local.casePayload = {\n\n    caseType:\n        \"Retail_Health_Proposal\",\n\n    caseData:\n        caseData,\n\n    wfData:\n        wfData\n};\n\n/*==================================================\n  LOG CASE PAYLOAD\n==================================================*/\n\nconsole.log(\n    \"========== CASE PAYLOAD ==========\"\n);\n\nconsole.log(\n    JSON.stringify(\n        bh.local.casePayload,\n        null,\n        2\n    )\n);\n\n/*==================================================\n  ACCESS TOKEN\n==================================================*/\n\n\n   \n\n/*==================================================\n  CASE REQUEST\n==================================================*/\n\nbh.local.caseRequest = {\n\n    url:\n        \"https://alpha-pt.neutrinos-apps.com/caseservice/case/instance/create\",\n\n    method:\n        \"POST\",\n\n    headers: {\n\n        \"accept\":\n            \"application/json\",\n\n        \"Authorization\":\n            `Bearer ${bh.local.accessToken}`,\n\n        \"Content-Type\":\n            \"application/json\"\n    },\n\n    body:\n        bh.local.casePayload\n};\n\n/*==================================================\n  LOG CASE REQUEST\n==================================================*/\n\nconsole.log(\n    \"========== CASE REQUEST ==========\"\n);\n\nconsole.log(\n    \"URL:\",\n    bh.local.caseRequest.url\n);\n\nconsole.log(\n    \"Method:\",\n    bh.local.caseRequest.method\n);\n\nconsole.log(\n    \"Authorization:\",\n    \"Bearer <TOKEN_HIDDEN>\"\n);\n\nconsole.log(\n    \"Body:\",\n    JSON.stringify(\n        bh.local.caseRequest.body,\n        null,\n        2\n    )\n);",
+        "functionName": "prepareCaseData",
+        "category": "Function",
+        "x": 1870,
+        "y": 160,
+        "wires": [
+            [
+                "sd_OA0p4N5yn7bpsxmx"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_h3xYruis81nbEDEK",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Prepare_Token_Request",
+        "script": "const tokenUrl =\n    \"https://ids-ctr-pt.neutrinos-apps.com/token\";\n\n/*--------------------------------------\n Prepare OAuth Token Request\n--------------------------------------*/\n\nconst clientId =\n    \"0ddh_euTKkSA682Yy5HuC\";\n\nconst clientSecret =\n    \"e28WZR6ZKyrYILTSKKClFEwNlYoGR2cvISwFCoIXP4S7DJgsaqhHRSNqpoWgYbcx_DUlrSkoA1zS5uFOzP-J9C\";\n\nbh.local.tokenRequest = {\n\n    url:\n        tokenUrl,\n\n    method:\n        \"POST\",\n\n    headers: {\n\n        \"Accept\":\n            \"application/json\",\n\n        \"Content-Type\":\n            \"application/x-www-form-urlencoded\"\n    },\n\n    body:\n        `client_id=${encodeURIComponent(clientId)}` +\n        `&client_secret=${encodeURIComponent(clientSecret)}` +\n        `&grant_type=client_credentials`\n};\n\n/*--------------------------------------\n Logging\n--------------------------------------*/\n\nconsole.log(\n    \"========== TOKEN REQUEST ==========\"\n);\n\nconsole.log(\n    \"URL:\",\n    bh.local.tokenRequest.url\n);\n\nconsole.log(\n    \"Method:\",\n    bh.local.tokenRequest.method\n);\n\nconsole.log(\n    \"Headers:\",\n    JSON.stringify(\n        bh.local.tokenRequest.headers,\n        null,\n        2\n    )\n);\n\nconsole.log(\n    \"Body: client_id=<HIDDEN>&client_secret=<HIDDEN>&grant_type=client_credentials\"\n);",
+        "functionName": "prepareTokenRequest",
+        "category": "Function",
+        "x": 1445,
+        "y": 160,
+        "wires": [
+            [
+                "sd_EjkUlg1QiVw5MI22"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_EjkUlg1QiVw5MI22",
+        "type": "ServerHttpRequest",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "",
+        "method": "post",
+        "methodMapping": "",
+        "methodMappingObj": {},
+        "urlMapping": "bh.local.tokenRequest.url",
+        "urlMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "tokenRequest.url"
+        },
+        "ret": "json",
+        "retMapping": "",
+        "retMappingObj": {},
+        "reqBody": "bh.local.tokenRequest.body",
+        "reqBodyObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "tokenRequest.body"
+        },
+        "resultMapping": "bh.local.tokenResponse",
+        "resultMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "tokenResponse"
+        },
+        "headers": [],
+        "headersObj": {},
+        "headerMapping": "bh.local.tokenRequest.headers",
+        "headerMappingObj": {
+            "mapVarType": "bh.local",
+            "mapVarValue": "tokenRequest.headers"
+        },
+        "params": {},
+        "paramsObj": [],
+        "paramMapping": "",
+        "paramMappingObj": {},
+        "authType": "",
+        "useAuthTypeMappingObj": {},
+        "useAuthTypeMap": {},
+        "useAuthType": "",
+        "useAuthUsername": "",
+        "useAuthUsernameMappingObj": "",
+        "useAuthPassword": "",
+        "useAuthPasswordMappingObj": "",
+        "useAuthToken": "",
+        "useAuthTokenMappingObj": "",
+        "useQueryString": false,
+        "tls": "",
+        "followRedirect": true,
+        "paytoqs": false,
+        "useAuthentication": false,
+        "rejectUnauthorized": false,
+        "proxy": "",
+        "useProxy": false,
+        "usetls": false,
+        "cookies": [],
+        "cookiesMapObj": {},
+        "cookiesList": {},
+        "switchStates": {
+            "cookies": "Map"
+        },
+        "editableListData": {},
+        "timeout": {
+            "type": "num",
+            "value": ""
+        },
+        "functionName": "sd_EjkUlg1QiVw5MI22",
+        "category": "HTTP",
+        "x": 1585,
+        "y": 160,
+        "wires": [
+            [
+                "sd_piHKIYbxlYWfZNJu"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_piHKIYbxlYWfZNJu",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "Validate_Token_Response",
+        "script": "const response =\n    bh.local.tokenResponse.payload;\n\nconsole.log(\"Token Response Received\");\n\nif (!response) {\n    throw new Error(\n        \"Token request failed: Empty response\"\n    );\n}\n\nif (!response.access_token) {\n    console.log(\n        JSON.stringify(\n            response,\n            null,\n            2\n        )\n    );\n\n    throw new Error(\n        \"Token request failed: access_token not received\"\n    );\n}\n\n/*--------------------------------------\n Store Token Details\n--------------------------------------*/\n\nbh.local.accessToken =\n    response.access_token;\n\nbh.local.tokenType =\n    response.token_type || \"Bearer\";\n\nbh.local.tokenExpiresIn =\n    response.expires_in || 0;\n\nconsole.log(\n    \"Token received successfully\"\n);\n\n\nconsole.log(\n    \"Access Token:\",\n    bh.local.accessToken\n);\n\nconsole.log(\n    \"Token Type:\",\n    bh.local.tokenType\n);\n\nconsole.log(\n    \"Token Expires In:\",\n    bh.local.tokenExpiresIn\n);",
+        "functionName": "validateTokenResponse",
+        "category": "Function",
+        "x": 1725,
+        "y": 160,
+        "wires": [
+            [
+                "sd_F6F86ay6rme2KhDD"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_IQ5401b5DOxndkwk",
+        "type": "HttpOut",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "server",
+        "nodeType": "flow",
+        "name": "proposal HTTP Out old",
+        "headers": {},
+        "responseBody": {
+            "type": "bh.local",
+            "value": "response",
+            "ssd_typedInputField": true
+        },
+        "httpcode": {
+            "type": "num",
+            "value": 200,
+            "ssd_typedInputField": true
+        },
+        "responseType": "obj",
+        "swaggerResponse": {},
+        "responseMapping": {
+            "status": 200,
+            "obj": "bh.local.response",
+            "send": "bh.local.response"
+        },
+        "dataModelIsArray": false,
+        "cookies": [],
+        "inputs": 1,
+        "outputs": 0,
+        "erd": "",
+        "entity": "",
+        "entityId": "",
+        "ref": "",
+        "editableListData": {
+            "headers": [],
+            "produces": [],
+            "responses": []
+        },
+        "cookiesList": {},
+        "switchStates": {
+            "headers": "Map",
+            "cookies": "Map"
+        },
+        "functionName": "proposalHttpOutOld",
+        "category": "HTTP",
+        "x": 2210,
+        "y": 160,
+        "wires": [],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_uqofT7vdLP3lZzJx",
+        "type": "Script",
+        "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
+        "viewType": "common",
+        "nodeType": "flow",
+        "name": "validate and prepare Response",
+        "script": "bh.local.response = {\n\n    success: true,\n\n    message:\n        \"Proposal created and workflow started successfully\",\n\n    data: {\n\n        proposal_id:\n            bh.local.proposalId,\n\n        status:\n            \"SUBMITTED\",\n        case_payload:\n        bh.local.casePayload,\n        case_creation_token:\n            bh.local.tokenResponse.payload,\n            case_response: bh.local.caseResponse\n\n    }\n\n};\n\nconsole.log(\n    \"Final Proposal Response\"\n);\n\nconsole.log(\n    JSON.stringify(\n        bh.local.response,\n        null,\n        2\n    )\n);",
+        "functionName": "validateAndPrepareResponse",
+        "category": "Function",
+        "x": 2030,
+        "y": 160,
+        "wires": [
+            [
+                "sd_IQ5401b5DOxndkwk"
+            ]
+        ],
+        "__n_excludedFromValidation__": {},
+        "generateNext": false,
+        "serviceName": "proposals",
+        "generated": true
+    },
+    {
+        "id": "sd_OA0p4N5yn7bpsxmx",
         "type": "ServerHttpRequest",
         "z": "SSD_SERVICE_ID_sd_1c7sIcjNbJkESKJU",
         "viewType": "server",
         "nodeType": "flow",
         "name": "caseCreatess",
         "method": "post",
+        "methodMapping": "",
         "methodMappingObj": {},
         "urlMapping": "bh.local.caseRequest.url",
         "urlMappingObj": {
@@ -3841,6 +3857,7 @@
             "mapVarValue": "caseRequest.url"
         },
         "ret": "json",
+        "retMapping": "",
         "retMappingObj": {},
         "reqBody": "bh.local.caseRequest.body",
         "reqBodyObj": {
@@ -3852,6 +3869,8 @@
             "mapVarType": "bh.local",
             "mapVarValue": "caseResponse"
         },
+        "headers": [],
+        "headersObj": {},
         "headerMapping": "bh.local.caseRequest.headers",
         "headerMappingObj": {
             "mapVarType": "bh.local",
@@ -3859,8 +3878,12 @@
         },
         "params": {},
         "paramsObj": [],
+        "paramMapping": "",
         "paramMappingObj": {},
+        "authType": "",
         "useAuthTypeMappingObj": {},
+        "useAuthTypeMap": {},
+        "useAuthType": "",
         "useAuthUsername": "",
         "useAuthUsernameMappingObj": "",
         "useAuthPassword": "",
@@ -3876,6 +3899,7 @@
         "proxy": "",
         "useProxy": false,
         "usetls": false,
+        "cookies": [],
         "cookiesMapObj": {},
         "cookiesList": {},
         "switchStates": {
@@ -3888,11 +3912,11 @@
         },
         "functionName": "caseCreatess",
         "category": "HTTP",
-        "x": 1945,
-        "y": 80,
+        "x": 1950,
+        "y": 100,
         "wires": [
             [
-                "sd_tgfCfyfsbxcyHNky"
+                "sd_uqofT7vdLP3lZzJx"
             ]
         ],
         "__n_excludedFromValidation__": {},

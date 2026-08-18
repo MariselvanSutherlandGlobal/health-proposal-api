@@ -17,19 +17,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 export class proposals {
   public proposalId: any;
-  public proposerAge: any;
-  public spouseAge: any;
-  public bmi: any;
-  public ageBand: any;
-  public basePremium: any;
-  public loadingPremium: any;
-  public gstAmount: any;
-  public finalPremium: any;
-  public ratingTrace: any;
-  public proposalStatus: any;
-  public proposalEntity: any;
-  public proposerMember: any;
-  public spouseMember: any;
   public action: any;
   public remark: any;
   public loadingPct: any;
@@ -43,10 +30,23 @@ export class proposals {
   public proposalMembersResponse: any;
   public premiumData: any;
   public ratingAge: any;
+  public ageBand: any;
+  public basePremium: any;
   public loadedPremium: any;
+  public gstAmount: any;
+  public finalPremium: any;
+  public ratingTrace: any;
   public proposalUpdate: any;
   public members: any;
   public updateProposalResponse: any;
+  public proposerAge: any;
+  public spouseAge: any;
+  public bmi: any;
+  public loadingPremium: any;
+  public proposalStatus: any;
+  public proposalEntity: any;
+  public proposerMember: any;
+  public spouseMember: any;
   private sdService = new SDBaseService();
   private tracerService = new TracerService();
   private app;
@@ -116,38 +116,6 @@ export class proposals {
 
   private mountAllPaths() {
     log.debug('mounting all paths for service :: proposals');
-
-    this.app['post'](
-      `${this.serviceBasePath}/proposal`,
-      cookieParser(),
-      this.sdService.getMiddlesWaresBySequenceId(
-        'IDSAuthroizedAPIs',
-        'pre',
-        this.generatedMiddlewares
-      ),
-
-      async (req, res, next) => {
-        let bh: any = {};
-        try {
-          bh = this.sdService.__constructDefault(
-            { local: {}, input: {} },
-            req,
-            res,
-            next
-          );
-          let parentSpanInst = null;
-          bh = await this.proposalServiceVariables(bh, parentSpanInst);
-          //appendnew_next_sd_kBCHgOa7baSSvprZ
-        } catch (e) {
-          return await this.errorHandler(bh, e, 'sd_kBCHgOa7baSSvprZ');
-        }
-      },
-      this.sdService.getMiddlesWaresBySequenceId(
-        'IDSAuthroizedAPIs',
-        'post',
-        this.generatedMiddlewares
-      )
-    );
 
     this.app['post'](
       `${this.serviceBasePath}/proposal/:proposalId/mu-action`,
@@ -340,6 +308,38 @@ export class proposals {
         this.generatedMiddlewares
       )
     );
+
+    this.app['post'](
+      `${this.serviceBasePath}/proposal`,
+      cookieParser(),
+      this.sdService.getMiddlesWaresBySequenceId(
+        'IDSAuthroizedAPIs',
+        'pre',
+        this.generatedMiddlewares
+      ),
+
+      async (req, res, next) => {
+        let bh: any = {};
+        try {
+          bh = this.sdService.__constructDefault(
+            { local: {}, input: {} },
+            req,
+            res,
+            next
+          );
+          let parentSpanInst = null;
+          bh = await this.proposalServiceVariables(bh, parentSpanInst);
+          //appendnew_next_sd_6n5wCegQZmSUr1qV
+        } catch (e) {
+          return await this.errorHandler(bh, e, 'sd_6n5wCegQZmSUr1qV');
+        }
+      },
+      this.sdService.getMiddlesWaresBySequenceId(
+        'IDSAuthroizedAPIs',
+        'post',
+        this.generatedMiddlewares
+      )
+    );
     //appendnew_flow_proposals_HttpIn
   }
   //   service flows_proposals
@@ -470,1328 +470,6 @@ export class proposals {
     }
   }
   //appendnew_flow_proposals_start
-
-  async proposalServiceVariables(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'proposalServiceVariables',
-      parentSpanInst
-    );
-    try {
-      this.proposalId = bh.local.proposalId;
-      this.proposerAge;
-      this.spouseAge;
-      this.bmi;
-      this.ageBand;
-      this.basePremium;
-      this.loadingPremium;
-      this.gstAmount;
-      this.finalPremium;
-      this.ratingTrace;
-      this.proposalStatus;
-      this.proposalEntity;
-      this.proposerMember;
-      this.spouseMember;
-      this.tracerService.sendData(spanInst, bh);
-      bh = await this.validateRequest(bh, parentSpanInst);
-      //appendnew_next_proposalServiceVariables
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_y3vmXSKkuaNE8Mrw',
-        spanInst,
-        'proposalServiceVariables'
-      );
-    }
-  }
-
-  async validateRequest(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'validateRequest',
-      parentSpanInst
-    );
-    try {
-      const body = bh.input.body;
-
-      console.log('Proposal Request');
-      console.log(JSON.stringify(body, null, 2));
-
-      /*--------------------------------------
-Mandatory Request
---------------------------------------*/
-
-      if (!body) {
-        throw new Error('Request Body is missing');
-      }
-
-      /*--------------------------------------
-Proposer Name
---------------------------------------*/
-
-      body.proposer_name = (body.proposer_name || '').trim();
-
-      if (!body.proposer_name) {
-        throw new Error('Proposer Name is required');
-      }
-
-      if (body.proposer_name.length < 3 || body.proposer_name.length > 60) {
-        throw new Error('Proposer Name must be between 3 and 60 characters');
-      }
-
-      if (!/^[A-Za-z ]+$/.test(body.proposer_name)) {
-        throw new Error('Only alphabets and spaces are allowed');
-      }
-
-      /*--------------------------------------
-Proposer DOB
---------------------------------------*/
-
-      if (!body.proposer_dob) {
-        throw new Error('Proposer DOB is required');
-      }
-
-      if (isNaN(Date.parse(body.proposer_dob))) {
-        throw new Error('Invalid Proposer DOB');
-      }
-
-      /*--------------------------------------
-Mobile Number
---------------------------------------*/
-
-      body.mobile_number = String(body.mobile_number || '').trim();
-
-      if (!/^[6-9][0-9]{9}$/.test(body.mobile_number)) {
-        throw new Error('Invalid Mobile Number');
-      }
-
-      /*--------------------------------------
-Email
---------------------------------------*/
-
-      body.email_id = (body.email_id || '').trim().toLowerCase();
-
-      if (
-        !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(body.email_id)
-      ) {
-        throw new Error('Invalid Email');
-      }
-
-      /*--------------------------------------
-Plan Variant
---------------------------------------*/
-
-      body.plan_variant = (body.plan_variant || '').trim();
-
-      if (!body.plan_variant) {
-        throw new Error('Plan Variant is required');
-      }
-
-      /*--------------------------------------
-Sum Insured
---------------------------------------*/
-
-      body.sum_insured = Number(body.sum_insured);
-
-      if (isNaN(body.sum_insured) || body.sum_insured <= 0) {
-        throw new Error('Invalid Sum Insured');
-      }
-
-      /*--------------------------------------
-Height
---------------------------------------*/
-
-      body.height_cm = Number(body.height_cm);
-
-      if (isNaN(body.height_cm)) {
-        throw new Error('Height is required');
-      }
-
-      if (body.height_cm < 100 || body.height_cm > 220) {
-        throw new Error('Height must be between 100 and 220 cm');
-      }
-
-      /*--------------------------------------
-Weight
---------------------------------------*/
-
-      body.weight_kg = Number(body.weight_kg);
-
-      if (isNaN(body.weight_kg)) {
-        throw new Error('Weight is required');
-      }
-
-      if (body.weight_kg < 25 || body.weight_kg > 200) {
-        throw new Error('Weight must be between 25 and 200 kg');
-      }
-
-      /*--------------------------------------
-BMI
---------------------------------------*/
-
-      body.bmi = Number(body.bmi);
-
-      if (isNaN(body.bmi)) {
-        throw new Error('BMI is required');
-      }
-
-      if (body.bmi < 10 || body.bmi > 60) {
-        throw new Error('Invalid BMI');
-      }
-
-      /*--------------------------------------
-Boolean Fields
---------------------------------------*/
-
-      if (typeof body.tobacco_use !== 'boolean') {
-        throw new Error('Invalid Tobacco Use');
-      }
-
-      if (typeof body.diabetes_declared !== 'boolean') {
-        throw new Error('Invalid Diabetes Declared');
-      }
-
-      if (typeof body.hypertension_declared !== 'boolean') {
-        throw new Error('Invalid Hypertension Declared');
-      }
-
-      if (typeof body.include_spouse !== 'boolean') {
-        throw new Error('Invalid Include Spouse');
-      }
-
-      /*--------------------------------------
-Members
---------------------------------------*/
-
-      if (!Array.isArray(body.members) || body.members.length === 0) {
-        throw new Error('At least one member is required');
-      }
-
-      body.members.forEach((member, index) => {
-        member.member_name = (member.member_name || '').trim();
-
-        if (!member.member_name) {
-          throw new Error(`Member ${index + 1} Name is required`);
-        }
-
-        if (!member.member_dob) {
-          throw new Error(`Member ${index + 1} DOB is required`);
-        }
-
-        if (isNaN(Date.parse(member.member_dob))) {
-          throw new Error(`Invalid DOB for Member ${index + 1}`);
-        }
-
-        if (!member.relationship) {
-          throw new Error(`Relationship is required for Member ${index + 1}`);
-        }
-
-        if (member.relationship === 'Self') {
-          member.height_cm = Number(member.height_cm);
-          member.weight_kg = Number(member.weight_kg);
-          member.bmi = Number(member.bmi);
-
-          if (isNaN(member.height_cm)) {
-            throw new Error('Self Height is required');
-          }
-
-          if (isNaN(member.weight_kg)) {
-            throw new Error('Self Weight is required');
-          }
-
-          if (isNaN(member.bmi)) {
-            throw new Error('Self BMI is required');
-          }
-        }
-
-        if (member.relationship === 'Spouse' && body.include_spouse) {
-          if (!member.member_name) {
-            throw new Error('Spouse Name is required');
-          }
-
-          if (!member.member_dob) {
-            throw new Error('Spouse DOB is required');
-          }
-        }
-      });
-
-      console.log('Validation Successful');
-
-      this.tracerService.sendData(spanInst, bh);
-      bh = await this.generateProposalId(bh, parentSpanInst);
-      //appendnew_next_validateRequest
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_4jI9etbqIE7dojyW',
-        spanInst,
-        'validateRequest'
-      );
-    }
-  }
-
-  async generateProposalId(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'generateProposalId',
-      parentSpanInst
-    );
-    try {
-      const now = new Date();
-
-      const yyyy = now.getFullYear();
-
-      const mm = String(now.getMonth() + 1).padStart(2, '0');
-
-      const dd = String(now.getDate()).padStart(2, '0');
-
-      const random = Math.floor(Math.random() * 90000) + 10000;
-
-      bh.local.proposalId = `PRP-${yyyy}${mm}${dd}-${random}`;
-
-      console.log(bh.local.proposalId);
-
-      this.tracerService.sendData(spanInst, bh);
-      bh = await this.calculateAge(bh, parentSpanInst);
-      //appendnew_next_generateProposalId
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_VAvRMYhjL6Mqrd21',
-        spanInst,
-        'generateProposalId'
-      );
-    }
-  }
-
-  async calculateAge(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'calculateAge',
-      parentSpanInst
-    );
-    try {
-      // function calculateAge(dob) {
-
-      //     const birth = new Date(dob);
-
-      //     const today = new Date();
-
-      //     let age = today.getFullYear() - birth.getFullYear();
-
-      //     const month =
-      //         today.getMonth() - birth.getMonth();
-
-      //     if (
-      //         month < 0 ||
-      //         (month === 0 && today.getDate() < birth.getDate())
-      //     ) {
-      //         age--;
-      //     }
-
-      //     return age;
-      // }
-
-      // bh.local.proposerAge =
-      //     calculateAge(bh.input.body.proposer_dob);
-
-      // if (bh.input.body.spouse_included) {
-
-      //     bh.local.spouseAge =
-      //         calculateAge(bh.input.body.spouse_dob);
-
-      // }
-      // else {
-
-      //     bh.local.spouseAge = 0;
-
-      // }
-
-      // console.log(bh.local.proposerAge);
-      // console.log(bh.local.spouseAge);
-
-      function calculateAge(dob) {
-        if (!dob) {
-          return 0;
-        }
-
-        const birth = new Date(dob);
-        const today = new Date();
-
-        let age = today.getFullYear() - birth.getFullYear();
-
-        const monthDiff = today.getMonth() - birth.getMonth();
-
-        if (
-          monthDiff < 0 ||
-          (monthDiff === 0 && today.getDate() < birth.getDate())
-        ) {
-          age--;
-        }
-
-        return age;
-      }
-
-      /*--------------------------------------
- Proposer Age
---------------------------------------*/
-
-      bh.local.proposerAge = calculateAge(bh.input.body.proposer_dob);
-
-      /*--------------------------------------
- Spouse Age
---------------------------------------*/
-
-      bh.local.spouseAge = 0;
-
-      if (bh.input.body.include_spouse === true) {
-        const spouseMember = (bh.input.body.members || []).find(
-          (member) => member.relationship === 'Spouse'
-        );
-
-        if (spouseMember) {
-          bh.local.spouseAge = calculateAge(spouseMember.member_dob);
-        }
-      }
-
-      console.log('Proposer Age :', bh.local.proposerAge);
-      console.log('Spouse Age :', bh.local.spouseAge);
-      /*--------------------------------------
- Rating Age
---------------------------------------*/
-
-      bh.local.ratingAge = Math.max(bh.local.proposerAge, bh.local.spouseAge);
-
-      console.log('Rating Age :', bh.local.ratingAge);
-      this.tracerService.sendData(spanInst, bh);
-      bh = await this.loadRateCard(bh, parentSpanInst);
-      //appendnew_next_calculateAge
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_QATEFXczRrrfrIBT',
-        spanInst,
-        'calculateAge'
-      );
-    }
-  }
-
-  async loadRateCard(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'loadRateCard',
-      parentSpanInst
-    );
-    try {
-      let outputVariables = await this.getPlansInternal(spanInst, undefined);
-      bh.local.plansResponse = outputVariables.input.plansResponse;
-
-      this.tracerService.sendData(spanInst, bh);
-      bh = await this.resolveAgeBand(bh, parentSpanInst);
-      //appendnew_next_loadRateCard
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_j29ciUzzFSKPMVzN',
-        spanInst,
-        'loadRateCard'
-      );
-    }
-  }
-
-  async resolveAgeBand(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'resolveAgeBand',
-      parentSpanInst
-    );
-    try {
-      const plans = bh.local.plansResponse.plans;
-
-      bh.local.selectedPlan = plans.find((plan) => {
-        if (plan.plan_code !== bh.input.body.plan_variant) {
-          return false;
-        }
-
-        const [minAge, maxAge] = plan.age_band.split('-').map(Number);
-
-        return bh.local.ratingAge >= minAge && bh.local.ratingAge <= maxAge;
-      });
-
-      if (!bh.local.selectedPlan) {
-        throw new Error('Age Band not found in Reels');
-      }
-
-      bh.local.ageBand = bh.local.selectedPlan.age_band;
-
-      console.log('Selected Reels Plan');
-      console.log(JSON.stringify(bh.local.selectedPlan, null, 2));
-
-      console.log('Resolved Age Band :', bh.local.ageBand);
-      this.tracerService.sendData(spanInst, bh);
-      bh = await this.prepareProposalEntity(bh, parentSpanInst);
-      //appendnew_next_resolveAgeBand
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_kUFEZepCdW8roykz',
-        spanInst,
-        'resolveAgeBand'
-      );
-    }
-  }
-
-  async prepareProposalEntity(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'prepareProposalEntity',
-      parentSpanInst
-    );
-    try {
-      // const body = bh.input.body;
-
-      // bh.local.proposalEntity = {
-
-      //     proposal_id: bh.local.proposalId,
-
-      //     plan_code: body.plan_code,
-
-      //     sum_insured: body.sum_insured,
-
-      //     mobile_no: body.mobile_no,
-
-      //     email: body.email,
-
-      //     rating_age: bh.local.proposerAge,
-
-      //     age_band: bh.local.ageBand || "",
-
-      //     spouse_included: body.spouse_included,
-
-      //     base_premium: bh.local.basePremium || 0,
-
-      //     loaded_premium: bh.local.loadedPremium || 0,
-
-      //     gst_amount: bh.local.gstAmount || 0,
-
-      //     final_premium: bh.local.finalPremium || 0,
-
-      //     additional_loading_pct: 0,
-
-      //     rating_trace: bh.local.ratingTrace || "",
-
-      //     mu_remarks: null,
-
-      //     manager_remarks: null,
-
-      //     policy_no: null,
-
-      //     status: bh.local.proposalStatus || "SUBMITTED",
-
-      //     created_at: new Date(),
-
-      //     updated_at: new Date()
-
-      // };
-
-      // console.log(bh.local.proposalEntity);
-      const body = bh.input.body;
-
-      bh.local.proposalEntity = {
-        proposal_id: bh.local.proposalId,
-
-        plan_code: body.plan_variant,
-
-        sum_insured: body.sum_insured,
-
-        mobile_no: body.mobile_number,
-
-        email: body.email_id,
-
-        rating_age: bh.local.ratingAge,
-
-        age_band: bh.local.ageBand || '',
-
-        spouse_included: body.include_spouse,
-
-        base_premium: bh.local.basePremium || 0,
-
-        loaded_premium: bh.local.loadedPremium || 0,
-
-        gst_amount: bh.local.gstAmount || 0,
-
-        final_premium: bh.local.finalPremium || 0,
-
-        additional_loading_pct: bh.local.additionalLoadingPct || 0,
-
-        rating_trace: bh.local.ratingTrace || '',
-
-        mu_remarks: null,
-
-        manager_remarks: null,
-
-        policy_no: null,
-
-        status: bh.local.proposalStatus || 'SUBMITTED',
-
-        created_at: new Date(),
-
-        updated_at: new Date(),
-      };
-
-      console.log('Proposal Entity');
-      console.log(JSON.stringify(bh.local.proposalEntity, null, 2));
-      /*--------------------------------------
- Prepare Proposal Members Entity
---------------------------------------*/
-
-      bh.local.proposalMembersEntity = [];
-
-      const members = body.members || [];
-
-      members.forEach((member, index) => {
-        bh.local.proposalMembersEntity.push({
-          member_id: crypto.randomUUID(),
-
-          proposal_id: bh.local.proposalId,
-
-          relation: member.relationship === 'Self' ? 'PROPOSER' : 'SPOUSE',
-
-          full_name: member.member_name,
-
-          dob: member.member_dob,
-
-          age:
-            member.relationship === 'Self'
-              ? bh.local.proposerAge
-              : bh.local.spouseAge,
-
-          height_cm: member.relationship === 'Self' ? member.height_cm : null,
-
-          weight_kg: member.relationship === 'Self' ? member.weight_kg : null,
-
-          bmi: member.relationship === 'Self' ? member.bmi : null,
-
-          tobacco_use: body.tobacco_use,
-
-          diabetes_declared: body.diabetes_declared,
-
-          hypertension_declared: body.hypertension_declared,
-        });
-      });
-
-      console.log('Proposal Members Entity');
-      console.log(JSON.stringify(bh.local.proposalMembersEntity, null, 2));
-      this.tracerService.sendData(spanInst, bh);
-      bh = await this.insertProposals(bh, parentSpanInst);
-      //appendnew_next_prepareProposalEntity
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_0WzZ2IABKHcik2RA',
-        spanInst,
-        'prepareProposalEntity'
-      );
-    }
-  }
-
-  async insertProposals(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'insertProposals',
-      parentSpanInst
-    );
-    try {
-      const dmUtilsInst = new DmUtils('sd_99PeWpSvHx3jjW6m');
-      bh.local.insertProposalResponse = await dmUtilsInst.insert(
-        '_EN_hll0abjopf',
-        bh.local.proposalEntity
-      );
-
-      this.tracerService.sendData(spanInst, bh);
-      this.savedProposalLog(bh, parentSpanInst);
-      bh = await this.insertProposalMembers(bh, parentSpanInst);
-      //appendnew_next_insertProposals
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_7O9DN8YwiI6L6lcL',
-        spanInst,
-        'insertProposals'
-      );
-    }
-  }
-
-  async savedProposalLog(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'savedProposalLog',
-      parentSpanInst
-    );
-    try {
-      let logobj: any = bh.local.insertProposalResponse;
-      if (logobj instanceof Error) {
-        log.info(logobj);
-      } else {
-        log.info(safeStringify.default(logobj));
-      }
-      this.tracerService.sendData(spanInst, bh);
-      //appendnew_next_savedProposalLog
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_SnONJRHwFbCr9yMV',
-        spanInst,
-        'savedProposalLog'
-      );
-    }
-  }
-
-  async insertProposalMembers(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'insertProposalMembers',
-      parentSpanInst
-    );
-    try {
-      const dmUtilsInst = new DmUtils('sd_99PeWpSvHx3jjW6m');
-      bh.local.insertProposalMembersResponse = await dmUtilsInst.insert(
-        '_EN_0xcbgpnumf',
-        bh.local.proposalMembersEntity
-      );
-
-      this.tracerService.sendData(spanInst, bh);
-      this.savedProposalMembersLog(bh, parentSpanInst);
-      bh = await this.validateInsert(bh, parentSpanInst);
-      //appendnew_next_insertProposalMembers
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_7e7qZCXF4qjgK10P',
-        spanInst,
-        'insertProposalMembers'
-      );
-    }
-  }
-
-  async savedProposalMembersLog(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'savedProposalMembersLog',
-      parentSpanInst
-    );
-    try {
-      let logobj: any = bh.local.insertProposalMembersResponse;
-      if (logobj instanceof Error) {
-        log.info(logobj);
-      } else {
-        log.info(safeStringify.default(logobj));
-      }
-      this.tracerService.sendData(spanInst, bh);
-      //appendnew_next_savedProposalMembersLog
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_ygKKzT8rNw8Iv81H',
-        spanInst,
-        'savedProposalMembersLog'
-      );
-    }
-  }
-
-  async validateInsert(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'validateInsert',
-      parentSpanInst
-    );
-    try {
-      console.log('Insert Response');
-
-      console.log(JSON.stringify(bh.local.insertProposalResponse, null, 2));
-
-      if (!bh.local.insertProposalResponse) {
-        throw new Error('Proposal insert failed');
-      }
-
-      console.log('Proposal inserted successfully');
-
-      /*--------------------------------------
- Prepare Success Response
---------------------------------------*/
-
-      bh.local.response = {
-        success: true,
-
-        message: 'Proposal created successfully',
-
-        data: {
-          proposal_id: bh.local.proposalId,
-
-          status: 'SUBMITTED',
-        },
-      };
-
-      console.log('Success Response');
-
-      console.log(JSON.stringify(bh.local.response, null, 2));
-      this.tracerService.sendData(spanInst, bh);
-      bh = await this.prepareTokenRequest(bh, parentSpanInst);
-      //appendnew_next_validateInsert
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_lHtlRt9Svq79qj0D',
-        spanInst,
-        'validateInsert'
-      );
-    }
-  }
-
-  async prepareTokenRequest(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'prepareTokenRequest',
-      parentSpanInst
-    );
-    try {
-      const tokenUrl = 'https://ids-ctr-pt.neutrinos-apps.com/token';
-
-      /*--------------------------------------
- Prepare OAuth Token Request
---------------------------------------*/
-
-      const clientId = '0ddh_euTKkSA682Yy5HuC';
-
-      const clientSecret =
-        'e28WZR6ZKyrYILTSKKClFEwNlYoGR2cvISwFCoIXP4S7DJgsaqhHRSNqpoWgYbcx_DUlrSkoA1zS5uFOzP-J9C';
-
-      bh.local.tokenRequest = {
-        url: tokenUrl,
-
-        method: 'POST',
-
-        headers: {
-          Accept: 'application/json',
-
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-
-        body:
-          `client_id=${encodeURIComponent(clientId)}` +
-          `&client_secret=${encodeURIComponent(clientSecret)}` +
-          `&grant_type=client_credentials`,
-      };
-
-      /*--------------------------------------
- Logging
---------------------------------------*/
-
-      console.log('========== TOKEN REQUEST ==========');
-
-      console.log('URL:', bh.local.tokenRequest.url);
-
-      console.log('Method:', bh.local.tokenRequest.method);
-
-      console.log(
-        'Headers:',
-        JSON.stringify(bh.local.tokenRequest.headers, null, 2)
-      );
-
-      console.log(
-        'Body: client_id=<HIDDEN>&client_secret=<HIDDEN>&grant_type=client_credentials'
-      );
-      this.tracerService.sendData(spanInst, bh);
-      bh = await this.sd_wuvyWH4Bj47qqOXh(bh, parentSpanInst);
-      //appendnew_next_prepareTokenRequest
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_nrh59DE0ROAnn3IR',
-        spanInst,
-        'prepareTokenRequest'
-      );
-    }
-  }
-
-  async sd_wuvyWH4Bj47qqOXh(bh, parentSpanInst) {
-    try {
-      let requestOptions: any = {
-        url: bh.local.tokenRequest.url,
-        timeout: 30000,
-        method: 'post',
-        headers: bh.local.tokenRequest.headers,
-        followRedirects: true,
-        cookies: {},
-        authType: undefined,
-        body: bh.local.tokenRequest.body,
-        paytoqs: false,
-        proxyConfig: undefined,
-        tlsConfig: undefined,
-        ret: 'json',
-        params: {},
-        username: undefined,
-        password: undefined,
-        token: undefined,
-        useQuerystring: false,
-      };
-      requestOptions.rejectUnauthorized = false;
-      requestOptions.tlsConfig = undefined;
-      requestOptions.proxyConfig = undefined;
-      let responseMsg: any = await this.sdService.httpRequest(
-        requestOptions.url,
-        requestOptions.timeout,
-        requestOptions.method,
-        requestOptions.headers,
-        requestOptions.followRedirects,
-        requestOptions.cookies,
-        requestOptions.authType,
-        requestOptions.body,
-        requestOptions.paytoqs,
-        requestOptions.proxyConfig,
-        requestOptions.tlsConfig,
-        requestOptions.ret,
-        requestOptions.params,
-        requestOptions.rejectUnauthorized,
-        requestOptions.username,
-        requestOptions.password,
-        requestOptions.token
-      );
-
-      bh.local.tokenResponse = responseMsg;
-      bh = await this.validateTokenResponse(bh, parentSpanInst);
-      //appendnew_next_sd_wuvyWH4Bj47qqOXh
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(bh, e, 'sd_wuvyWH4Bj47qqOXh');
-    }
-  }
-
-  async validateTokenResponse(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'validateTokenResponse',
-      parentSpanInst
-    );
-    try {
-      const response = bh.local.tokenResponse.payload;
-
-      console.log('Token Response Received');
-
-      if (!response) {
-        throw new Error('Token request failed: Empty response');
-      }
-
-      if (!response.access_token) {
-        console.log(JSON.stringify(response, null, 2));
-
-        throw new Error('Token request failed: access_token not received');
-      }
-
-      /*--------------------------------------
- Store Token Details
---------------------------------------*/
-
-      bh.local.accessToken = response.access_token;
-
-      bh.local.tokenType = response.token_type || 'Bearer';
-
-      bh.local.tokenExpiresIn = response.expires_in || 0;
-
-      console.log('Token received successfully');
-
-      console.log('Access Token:', bh.local.accessToken);
-
-      console.log('Token Type:', bh.local.tokenType);
-
-      console.log('Token Expires In:', bh.local.tokenExpiresIn);
-      this.tracerService.sendData(spanInst, bh);
-      bh = await this.prepareCaseData(bh, parentSpanInst);
-      //appendnew_next_validateTokenResponse
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_qDeN33TJkmZEN7A8',
-        spanInst,
-        'validateTokenResponse'
-      );
-    }
-  }
-
-  async prepareCaseData(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'prepareCaseData',
-      parentSpanInst
-    );
-    try {
-      const body = bh.input.body;
-
-      const members = body.members || [];
-
-      /*==================================================
-  GET PROPOSAL ID FROM INSERT RESPONSE
-==================================================*/
-
-      const proposalId = bh.local.insertProposalResponse?.proposal_id || '';
-
-      if (!proposalId) {
-        throw new Error('Proposal ID not found in insertProposalResponse');
-      }
-
-      console.log('Proposal ID:', proposalId);
-
-      /*==================================================
-  FIND PROPOSER
-==================================================*/
-
-      const proposerMember = members.find(
-        (member) =>
-          member.relationship === 'Proposer' ||
-          member.relationship === 'PROPOSER' ||
-          member.relationship === 'Self' ||
-          member.relationship === 'SELF'
-      );
-
-      /*==================================================
-  FIND SPOUSE
-==================================================*/
-
-      const spouseMember = members.find(
-        (member) =>
-          member.relationship === 'Spouse' || member.relationship === 'SPOUSE'
-      );
-
-      /*==================================================
-  FORMAT DOB
-==================================================*/
-
-      function formatDOBForCase(dob) {
-        if (!dob) {
-          return '';
-        }
-
-        /*
-         * Already DD/MM/YYYY
-         */
-        if (/^\d{2}\/\d{2}\/\d{4}$/.test(dob)) {
-          return dob;
-        }
-
-        const date = new Date(dob);
-
-        if (isNaN(date.getTime())) {
-          throw new Error('Invalid DOB: ' + dob);
-        }
-
-        const dd = String(date.getDate()).padStart(2, '0');
-
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-
-        const yyyy = date.getFullYear();
-
-        return `${dd}/${mm}/${yyyy}`;
-      }
-
-      /*==================================================
-  PROPOSER DOB
-==================================================*/
-
-      const proposerDOB = formatDOBForCase(body.proposer_dob);
-
-      /*==================================================
-  SPOUSE DOB
-==================================================*/
-
-      let spouseDOB = '';
-
-      if (body.include_spouse === true && spouseMember) {
-        spouseDOB = formatDOBForCase(spouseMember.member_dob);
-      }
-
-      /*==================================================
-  PROPOSER DETAILS
-==================================================*/
-
-      const proposerName =
-        body.proposer_name || proposerMember?.member_name || '';
-
-      const proposerEmail = body.email_id || body.email || '';
-
-      const proposerMobile = body.mobile_number || body.mobile_no || '';
-
-      /*==================================================
-  SPOUSE NAME
-==================================================*/
-
-      const spouseName =
-        body.include_spouse === true && spouseMember
-          ? spouseMember.member_name
-          : '';
-
-      /*==================================================
-  PREPARE CASE DATA
-==================================================*/
-
-      const caseData = {
-        proposalId: proposalId,
-
-        full_name: proposerName,
-
-        email: proposerEmail,
-
-        mobile_no: Number(proposerMobile),
-
-        height_cm: Number(body.height_cm || 0),
-
-        weight_kg: Number(body.weight_kg || 0),
-
-        SpouseName: spouseName,
-
-        PlanCode: body.plan_variant,
-
-        SumInsured: Number(body.sum_insured),
-
-        BMI: String(body.bmi),
-
-        ProposerDOB: proposerDOB,
-
-        SpouseDOB: spouseDOB,
-
-        SpouseIncluded: body.include_spouse === true,
-
-        TobaccoUse: body.tobacco_use === true,
-
-        DiabetesDeclared: body.diabetes_declared === true,
-
-        HypertensionDeclared: body.hypertension_declared === true,
-
-        status: body.status || 'SUBMITTED',
-      };
-
-      /*==================================================
-  PREPARE WF DATA
-==================================================*/
-
-      const wfData = {
-        proposalId: proposalId,
-
-        full_name: proposerName,
-
-        email: proposerEmail,
-
-        mobile_no: Number(proposerMobile),
-
-        height_cm: Number(body.height_cm || 0),
-
-        weight_kg: Number(body.weight_kg || 0),
-
-        SpouseName: spouseName,
-
-        PlanCode: body.plan_variant,
-
-        SumInsured: Number(body.sum_insured),
-
-        BMI: String(body.bmi),
-
-        ProposerDOB: proposerDOB,
-
-        SpouseDOB: spouseDOB,
-
-        SpouseIncluded: body.include_spouse === true,
-
-        TobaccoUse: body.tobacco_use === true,
-
-        DiabetesDeclared: body.diabetes_declared === true,
-
-        HypertensionDeclared: body.hypertension_declared === true,
-      };
-
-      /*==================================================
-  FINAL CASE PAYLOAD
-==================================================*/
-
-      bh.local.casePayload = {
-        caseType: 'Retail_Health_Proposal',
-
-        caseData: caseData,
-
-        wfData: wfData,
-      };
-
-      /*==================================================
-  LOG CASE PAYLOAD
-==================================================*/
-
-      console.log('========== CASE PAYLOAD ==========');
-
-      console.log(JSON.stringify(bh.local.casePayload, null, 2));
-
-      /*==================================================
-  ACCESS TOKEN
-==================================================*/
-
-      /*==================================================
-  CASE REQUEST
-==================================================*/
-
-      bh.local.caseRequest = {
-        url: 'https://alpha-pt.neutrinos-apps.com/caseservice/case/instance/create',
-
-        method: 'POST',
-
-        headers: {
-          accept: 'application/json',
-
-          Authorization: `Bearer ${bh.local.accessToken}`,
-
-          'Content-Type': 'application/json',
-        },
-
-        body: bh.local.casePayload,
-      };
-
-      /*==================================================
-  LOG CASE REQUEST
-==================================================*/
-
-      console.log('========== CASE REQUEST ==========');
-
-      console.log('URL:', bh.local.caseRequest.url);
-
-      console.log('Method:', bh.local.caseRequest.method);
-
-      console.log('Authorization:', 'Bearer <TOKEN_HIDDEN>');
-
-      console.log('Body:', JSON.stringify(bh.local.caseRequest.body, null, 2));
-      this.tracerService.sendData(spanInst, bh);
-      bh = await this.caseCreatess(bh, parentSpanInst);
-      //appendnew_next_prepareCaseData
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_N5w1JvFBXe132sjc',
-        spanInst,
-        'prepareCaseData'
-      );
-    }
-  }
-
-  async caseCreatess(bh, parentSpanInst) {
-    try {
-      let requestOptions: any = {
-        url: bh.local.caseRequest.url,
-        timeout: 30000,
-        method: 'post',
-        headers: bh.local.caseRequest.headers,
-        followRedirects: false,
-        cookies: undefined,
-        authType: undefined,
-        body: bh.local.caseRequest.body,
-        paytoqs: false,
-        proxyConfig: undefined,
-        tlsConfig: undefined,
-        ret: 'json',
-        params: {},
-        username: undefined,
-        password: undefined,
-        token: undefined,
-        useQuerystring: false,
-      };
-      requestOptions.rejectUnauthorized = false;
-      requestOptions.tlsConfig = undefined;
-      requestOptions.proxyConfig = undefined;
-      let responseMsg: any = await this.sdService.httpRequest(
-        requestOptions.url,
-        requestOptions.timeout,
-        requestOptions.method,
-        requestOptions.headers,
-        requestOptions.followRedirects,
-        requestOptions.cookies,
-        requestOptions.authType,
-        requestOptions.body,
-        requestOptions.paytoqs,
-        requestOptions.proxyConfig,
-        requestOptions.tlsConfig,
-        requestOptions.ret,
-        requestOptions.params,
-        requestOptions.rejectUnauthorized,
-        requestOptions.username,
-        requestOptions.password,
-        requestOptions.token
-      );
-
-      bh.local.caseResponse = responseMsg;
-      bh = await this.validateAndPrepareResponse(bh, parentSpanInst);
-      //appendnew_next_caseCreatess
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(bh, e, 'sd_nZU7sWQhcOLyZMCc');
-    }
-  }
-
-  async validateAndPrepareResponse(bh, parentSpanInst) {
-    const spanInst = this.tracerService.createSpan(
-      'validateAndPrepareResponse',
-      parentSpanInst
-    );
-    try {
-      bh.local.response = {
-        success: true,
-
-        message: 'Proposal created and workflow started successfully',
-
-        data: {
-          proposal_id: bh.local.proposalId,
-
-          status: 'SUBMITTED',
-          case_payload: bh.local.casePayload,
-          case_creation_token: bh.local.tokenResponse.payload,
-        },
-      };
-
-      console.log('Final Proposal Response');
-
-      console.log(JSON.stringify(bh.local.response, null, 2));
-      this.tracerService.sendData(spanInst, bh);
-      await this.proposalHttpOutOld(bh, parentSpanInst);
-      //appendnew_next_validateAndPrepareResponse
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(
-        bh,
-        e,
-        'sd_tgfCfyfsbxcyHNky',
-        spanInst,
-        'validateAndPrepareResponse'
-      );
-    }
-  }
-
-  async proposalHttpOutOld(bh, parentSpanInst) {
-    try {
-      bh.web.res.status(200).send(bh.local.response);
-
-      return bh;
-    } catch (e) {
-      return await this.errorHandler(bh, e, 'sd_FkD0zP4XKf401lZj');
-    }
-  }
 
   async muActionServiceVariables(bh, parentSpanInst) {
     const spanInst = this.tracerService.createSpan(
@@ -3858,7 +2536,7 @@ Prepare Proposal Data
         method: 'post',
         headers: bh.local.caseRequest.headers,
         followRedirects: false,
-        cookies: undefined,
+        cookies: {},
         authType: undefined,
         body: bh.local.caseRequest.body,
         paytoqs: false,
@@ -3934,6 +2612,1329 @@ Prepare Proposal Data
       return bh;
     } catch (e) {
       return await this.errorHandler(bh, e, 'sd_8qA00hubbLsepzQl');
+    }
+  }
+
+  async proposalServiceVariables(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'proposalServiceVariables',
+      parentSpanInst
+    );
+    try {
+      this.proposalId = bh.local.proposalId;
+      this.proposerAge;
+      this.spouseAge;
+      this.bmi;
+      this.ageBand;
+      this.basePremium;
+      this.loadingPremium;
+      this.gstAmount;
+      this.finalPremium;
+      this.ratingTrace;
+      this.proposalStatus;
+      this.proposalEntity;
+      this.proposerMember;
+      this.spouseMember;
+      this.tracerService.sendData(spanInst, bh);
+      bh = await this.validateRequest(bh, parentSpanInst);
+      //appendnew_next_proposalServiceVariables
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_iDnWLNgAwl6oVhwo',
+        spanInst,
+        'proposalServiceVariables'
+      );
+    }
+  }
+
+  async validateRequest(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'validateRequest',
+      parentSpanInst
+    );
+    try {
+      const body = bh.input.body;
+
+      console.log('Proposal Request');
+      console.log(JSON.stringify(body, null, 2));
+
+      /*--------------------------------------
+Mandatory Request
+--------------------------------------*/
+
+      if (!body) {
+        throw new Error('Request Body is missing');
+      }
+
+      /*--------------------------------------
+Proposer Name
+--------------------------------------*/
+
+      body.proposer_name = (body.proposer_name || '').trim();
+
+      if (!body.proposer_name) {
+        throw new Error('Proposer Name is required');
+      }
+
+      if (body.proposer_name.length < 3 || body.proposer_name.length > 60) {
+        throw new Error('Proposer Name must be between 3 and 60 characters');
+      }
+
+      if (!/^[A-Za-z ]+$/.test(body.proposer_name)) {
+        throw new Error('Only alphabets and spaces are allowed');
+      }
+
+      /*--------------------------------------
+Proposer DOB
+--------------------------------------*/
+
+      if (!body.proposer_dob) {
+        throw new Error('Proposer DOB is required');
+      }
+
+      if (isNaN(Date.parse(body.proposer_dob))) {
+        throw new Error('Invalid Proposer DOB');
+      }
+
+      /*--------------------------------------
+Mobile Number
+--------------------------------------*/
+
+      body.mobile_number = String(body.mobile_number || '').trim();
+
+      if (!/^[6-9][0-9]{9}$/.test(body.mobile_number)) {
+        throw new Error('Invalid Mobile Number');
+      }
+
+      /*--------------------------------------
+Email
+--------------------------------------*/
+
+      body.email_id = (body.email_id || '').trim().toLowerCase();
+
+      if (
+        !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(body.email_id)
+      ) {
+        throw new Error('Invalid Email');
+      }
+
+      /*--------------------------------------
+Plan Variant
+--------------------------------------*/
+
+      body.plan_variant = (body.plan_variant || '').trim();
+
+      if (!body.plan_variant) {
+        throw new Error('Plan Variant is required');
+      }
+
+      /*--------------------------------------
+Sum Insured
+--------------------------------------*/
+
+      body.sum_insured = Number(body.sum_insured);
+
+      if (isNaN(body.sum_insured) || body.sum_insured <= 0) {
+        throw new Error('Invalid Sum Insured');
+      }
+
+      /*--------------------------------------
+Height
+--------------------------------------*/
+
+      body.height_cm = Number(body.height_cm);
+
+      if (isNaN(body.height_cm)) {
+        throw new Error('Height is required');
+      }
+
+      if (body.height_cm < 100 || body.height_cm > 220) {
+        throw new Error('Height must be between 100 and 220 cm');
+      }
+
+      /*--------------------------------------
+Weight
+--------------------------------------*/
+
+      body.weight_kg = Number(body.weight_kg);
+
+      if (isNaN(body.weight_kg)) {
+        throw new Error('Weight is required');
+      }
+
+      if (body.weight_kg < 25 || body.weight_kg > 200) {
+        throw new Error('Weight must be between 25 and 200 kg');
+      }
+
+      /*--------------------------------------
+BMI
+--------------------------------------*/
+
+      body.bmi = Number(body.bmi);
+
+      if (isNaN(body.bmi)) {
+        throw new Error('BMI is required');
+      }
+
+      if (body.bmi < 10 || body.bmi > 60) {
+        throw new Error('Invalid BMI');
+      }
+
+      /*--------------------------------------
+Boolean Fields
+--------------------------------------*/
+
+      if (typeof body.tobacco_use !== 'boolean') {
+        throw new Error('Invalid Tobacco Use');
+      }
+
+      if (typeof body.diabetes_declared !== 'boolean') {
+        throw new Error('Invalid Diabetes Declared');
+      }
+
+      if (typeof body.hypertension_declared !== 'boolean') {
+        throw new Error('Invalid Hypertension Declared');
+      }
+
+      if (typeof body.include_spouse !== 'boolean') {
+        throw new Error('Invalid Include Spouse');
+      }
+
+      /*--------------------------------------
+Members
+--------------------------------------*/
+
+      if (!Array.isArray(body.members) || body.members.length === 0) {
+        throw new Error('At least one member is required');
+      }
+
+      body.members.forEach((member, index) => {
+        member.member_name = (member.member_name || '').trim();
+
+        if (!member.member_name) {
+          throw new Error(`Member ${index + 1} Name is required`);
+        }
+
+        if (!member.member_dob) {
+          throw new Error(`Member ${index + 1} DOB is required`);
+        }
+
+        if (isNaN(Date.parse(member.member_dob))) {
+          throw new Error(`Invalid DOB for Member ${index + 1}`);
+        }
+
+        if (!member.relationship) {
+          throw new Error(`Relationship is required for Member ${index + 1}`);
+        }
+
+        if (member.relationship === 'Self') {
+          member.height_cm = Number(member.height_cm);
+          member.weight_kg = Number(member.weight_kg);
+          member.bmi = Number(member.bmi);
+
+          if (isNaN(member.height_cm)) {
+            throw new Error('Self Height is required');
+          }
+
+          if (isNaN(member.weight_kg)) {
+            throw new Error('Self Weight is required');
+          }
+
+          if (isNaN(member.bmi)) {
+            throw new Error('Self BMI is required');
+          }
+        }
+
+        if (member.relationship === 'Spouse' && body.include_spouse) {
+          if (!member.member_name) {
+            throw new Error('Spouse Name is required');
+          }
+
+          if (!member.member_dob) {
+            throw new Error('Spouse DOB is required');
+          }
+        }
+      });
+
+      console.log('Validation Successful');
+
+      this.tracerService.sendData(spanInst, bh);
+      bh = await this.generateProposalId(bh, parentSpanInst);
+      //appendnew_next_validateRequest
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_GiqFLlkS3bcdTmuK',
+        spanInst,
+        'validateRequest'
+      );
+    }
+  }
+
+  async generateProposalId(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'generateProposalId',
+      parentSpanInst
+    );
+    try {
+      const now = new Date();
+
+      const yyyy = now.getFullYear();
+
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+
+      const dd = String(now.getDate()).padStart(2, '0');
+
+      const random = Math.floor(Math.random() * 90000) + 10000;
+
+      bh.local.proposalId = `PRP-${yyyy}${mm}${dd}-${random}`;
+
+      console.log(bh.local.proposalId);
+
+      this.tracerService.sendData(spanInst, bh);
+      bh = await this.calculateAge(bh, parentSpanInst);
+      //appendnew_next_generateProposalId
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_nRVvTbmSa6FeJVEl',
+        spanInst,
+        'generateProposalId'
+      );
+    }
+  }
+
+  async calculateAge(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'calculateAge',
+      parentSpanInst
+    );
+    try {
+      // function calculateAge(dob) {
+
+      //     const birth = new Date(dob);
+
+      //     const today = new Date();
+
+      //     let age = today.getFullYear() - birth.getFullYear();
+
+      //     const month =
+      //         today.getMonth() - birth.getMonth();
+
+      //     if (
+      //         month < 0 ||
+      //         (month === 0 && today.getDate() < birth.getDate())
+      //     ) {
+      //         age--;
+      //     }
+
+      //     return age;
+      // }
+
+      // bh.local.proposerAge =
+      //     calculateAge(bh.input.body.proposer_dob);
+
+      // if (bh.input.body.spouse_included) {
+
+      //     bh.local.spouseAge =
+      //         calculateAge(bh.input.body.spouse_dob);
+
+      // }
+      // else {
+
+      //     bh.local.spouseAge = 0;
+
+      // }
+
+      // console.log(bh.local.proposerAge);
+      // console.log(bh.local.spouseAge);
+
+      function calculateAge(dob) {
+        if (!dob) {
+          return 0;
+        }
+
+        const birth = new Date(dob);
+        const today = new Date();
+
+        let age = today.getFullYear() - birth.getFullYear();
+
+        const monthDiff = today.getMonth() - birth.getMonth();
+
+        if (
+          monthDiff < 0 ||
+          (monthDiff === 0 && today.getDate() < birth.getDate())
+        ) {
+          age--;
+        }
+
+        return age;
+      }
+
+      /*--------------------------------------
+ Proposer Age
+--------------------------------------*/
+
+      bh.local.proposerAge = calculateAge(bh.input.body.proposer_dob);
+
+      /*--------------------------------------
+ Spouse Age
+--------------------------------------*/
+
+      bh.local.spouseAge = 0;
+
+      if (bh.input.body.include_spouse === true) {
+        const spouseMember = (bh.input.body.members || []).find(
+          (member) => member.relationship === 'Spouse'
+        );
+
+        if (spouseMember) {
+          bh.local.spouseAge = calculateAge(spouseMember.member_dob);
+        }
+      }
+
+      console.log('Proposer Age :', bh.local.proposerAge);
+      console.log('Spouse Age :', bh.local.spouseAge);
+      /*--------------------------------------
+ Rating Age
+--------------------------------------*/
+
+      bh.local.ratingAge = Math.max(bh.local.proposerAge, bh.local.spouseAge);
+
+      console.log('Rating Age :', bh.local.ratingAge);
+      this.tracerService.sendData(spanInst, bh);
+      bh = await this.loadRateCard(bh, parentSpanInst);
+      //appendnew_next_calculateAge
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_pTt3sKzYx7Yykksb',
+        spanInst,
+        'calculateAge'
+      );
+    }
+  }
+
+  async loadRateCard(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'loadRateCard',
+      parentSpanInst
+    );
+    try {
+      let outputVariables = await this.getPlansInternal(spanInst, undefined);
+      bh.local.plansResponse = outputVariables.input.plansResponse;
+
+      this.tracerService.sendData(spanInst, bh);
+      bh = await this.resolveAgeBand(bh, parentSpanInst);
+      //appendnew_next_loadRateCard
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_lQYuBSFXkXr8tsEh',
+        spanInst,
+        'loadRateCard'
+      );
+    }
+  }
+
+  async resolveAgeBand(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'resolveAgeBand',
+      parentSpanInst
+    );
+    try {
+      const plans = bh.local.plansResponse.plans;
+
+      bh.local.selectedPlan = plans.find((plan) => {
+        if (plan.plan_code !== bh.input.body.plan_variant) {
+          return false;
+        }
+
+        const [minAge, maxAge] = plan.age_band.split('-').map(Number);
+
+        return bh.local.ratingAge >= minAge && bh.local.ratingAge <= maxAge;
+      });
+
+      if (!bh.local.selectedPlan) {
+        throw new Error('Age Band not found in Reels');
+      }
+
+      bh.local.ageBand = bh.local.selectedPlan.age_band;
+
+      console.log('Selected Reels Plan');
+      console.log(JSON.stringify(bh.local.selectedPlan, null, 2));
+
+      console.log('Resolved Age Band :', bh.local.ageBand);
+      this.tracerService.sendData(spanInst, bh);
+      bh = await this.prepareProposalEntity(bh, parentSpanInst);
+      //appendnew_next_resolveAgeBand
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_oa0fgWkow5zffgxg',
+        spanInst,
+        'resolveAgeBand'
+      );
+    }
+  }
+
+  async prepareProposalEntity(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'prepareProposalEntity',
+      parentSpanInst
+    );
+    try {
+      // const body = bh.input.body;
+
+      // bh.local.proposalEntity = {
+
+      //     proposal_id: bh.local.proposalId,
+
+      //     plan_code: body.plan_code,
+
+      //     sum_insured: body.sum_insured,
+
+      //     mobile_no: body.mobile_no,
+
+      //     email: body.email,
+
+      //     rating_age: bh.local.proposerAge,
+
+      //     age_band: bh.local.ageBand || "",
+
+      //     spouse_included: body.spouse_included,
+
+      //     base_premium: bh.local.basePremium || 0,
+
+      //     loaded_premium: bh.local.loadedPremium || 0,
+
+      //     gst_amount: bh.local.gstAmount || 0,
+
+      //     final_premium: bh.local.finalPremium || 0,
+
+      //     additional_loading_pct: 0,
+
+      //     rating_trace: bh.local.ratingTrace || "",
+
+      //     mu_remarks: null,
+
+      //     manager_remarks: null,
+
+      //     policy_no: null,
+
+      //     status: bh.local.proposalStatus || "SUBMITTED",
+
+      //     created_at: new Date(),
+
+      //     updated_at: new Date()
+
+      // };
+
+      // console.log(bh.local.proposalEntity);
+      const body = bh.input.body;
+
+      bh.local.proposalEntity = {
+        proposal_id: bh.local.proposalId,
+
+        plan_code: body.plan_variant,
+
+        sum_insured: body.sum_insured,
+
+        mobile_no: body.mobile_number,
+
+        email: body.email_id,
+
+        rating_age: bh.local.ratingAge,
+
+        age_band: bh.local.ageBand || '',
+
+        spouse_included: body.include_spouse,
+
+        base_premium: bh.local.basePremium || 0,
+
+        loaded_premium: bh.local.loadedPremium || 0,
+
+        gst_amount: bh.local.gstAmount || 0,
+
+        final_premium: bh.local.finalPremium || 0,
+
+        additional_loading_pct: bh.local.additionalLoadingPct || 0,
+
+        rating_trace: bh.local.ratingTrace || '',
+
+        mu_remarks: null,
+
+        manager_remarks: null,
+
+        policy_no: null,
+
+        status: bh.local.proposalStatus || 'SUBMITTED',
+
+        created_at: new Date(),
+
+        updated_at: new Date(),
+      };
+
+      console.log('Proposal Entity');
+      console.log(JSON.stringify(bh.local.proposalEntity, null, 2));
+      /*--------------------------------------
+ Prepare Proposal Members Entity
+--------------------------------------*/
+
+      bh.local.proposalMembersEntity = [];
+
+      const members = body.members || [];
+
+      members.forEach((member, index) => {
+        bh.local.proposalMembersEntity.push({
+          member_id: crypto.randomUUID(),
+
+          proposal_id: bh.local.proposalId,
+
+          relation: member.relationship === 'Self' ? 'PROPOSER' : 'SPOUSE',
+
+          full_name: member.member_name,
+
+          dob: member.member_dob,
+
+          age:
+            member.relationship === 'Self'
+              ? bh.local.proposerAge
+              : bh.local.spouseAge,
+
+          height_cm: member.relationship === 'Self' ? member.height_cm : null,
+
+          weight_kg: member.relationship === 'Self' ? member.weight_kg : null,
+
+          bmi: member.relationship === 'Self' ? member.bmi : null,
+
+          tobacco_use: body.tobacco_use,
+
+          diabetes_declared: body.diabetes_declared,
+
+          hypertension_declared: body.hypertension_declared,
+        });
+      });
+
+      console.log('Proposal Members Entity');
+      console.log(JSON.stringify(bh.local.proposalMembersEntity, null, 2));
+      this.tracerService.sendData(spanInst, bh);
+      bh = await this.insertProposals(bh, parentSpanInst);
+      //appendnew_next_prepareProposalEntity
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_DQpVBYdkj8nOQLWL',
+        spanInst,
+        'prepareProposalEntity'
+      );
+    }
+  }
+
+  async insertProposals(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'insertProposals',
+      parentSpanInst
+    );
+    try {
+      const dmUtilsInst = new DmUtils('sd_99PeWpSvHx3jjW6m');
+      bh.local.insertProposalResponse = await dmUtilsInst.insert(
+        '_EN_hll0abjopf',
+        bh.local.proposalEntity
+      );
+
+      this.tracerService.sendData(spanInst, bh);
+      this.savedProposalLog(bh, parentSpanInst);
+      bh = await this.insertProposalMembers(bh, parentSpanInst);
+      //appendnew_next_insertProposals
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_N5TgayTUknrolMue',
+        spanInst,
+        'insertProposals'
+      );
+    }
+  }
+
+  async savedProposalLog(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'savedProposalLog',
+      parentSpanInst
+    );
+    try {
+      let logobj: any = bh.local.insertProposalResponse;
+      if (logobj instanceof Error) {
+        log.info(logobj);
+      } else {
+        log.info(safeStringify.default(logobj));
+      }
+      this.tracerService.sendData(spanInst, bh);
+      //appendnew_next_savedProposalLog
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_heFydvNCyIYKYxEs',
+        spanInst,
+        'savedProposalLog'
+      );
+    }
+  }
+
+  async insertProposalMembers(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'insertProposalMembers',
+      parentSpanInst
+    );
+    try {
+      const dmUtilsInst = new DmUtils('sd_99PeWpSvHx3jjW6m');
+      bh.local.insertProposalMembersResponse = await dmUtilsInst.insert(
+        '_EN_0xcbgpnumf',
+        bh.local.proposalMembersEntity
+      );
+
+      this.tracerService.sendData(spanInst, bh);
+      this.savedProposalMembersLog(bh, parentSpanInst);
+      bh = await this.validateInsert(bh, parentSpanInst);
+      //appendnew_next_insertProposalMembers
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_lob9aiIgROcYUoAZ',
+        spanInst,
+        'insertProposalMembers'
+      );
+    }
+  }
+
+  async savedProposalMembersLog(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'savedProposalMembersLog',
+      parentSpanInst
+    );
+    try {
+      let logobj: any = bh.local.insertProposalMembersResponse;
+      if (logobj instanceof Error) {
+        log.info(logobj);
+      } else {
+        log.info(safeStringify.default(logobj));
+      }
+      this.tracerService.sendData(spanInst, bh);
+      //appendnew_next_savedProposalMembersLog
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_AIq1jZifHiBkuur7',
+        spanInst,
+        'savedProposalMembersLog'
+      );
+    }
+  }
+
+  async validateInsert(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'validateInsert',
+      parentSpanInst
+    );
+    try {
+      console.log('Insert Response');
+
+      console.log(JSON.stringify(bh.local.insertProposalResponse, null, 2));
+
+      if (!bh.local.insertProposalResponse) {
+        throw new Error('Proposal insert failed');
+      }
+
+      console.log('Proposal inserted successfully');
+
+      /*--------------------------------------
+ Prepare Success Response
+--------------------------------------*/
+
+      bh.local.response = {
+        success: true,
+
+        message: 'Proposal created successfully',
+
+        data: {
+          proposal_id: bh.local.proposalId,
+
+          status: 'SUBMITTED',
+        },
+      };
+
+      console.log('Success Response');
+
+      console.log(JSON.stringify(bh.local.response, null, 2));
+      this.tracerService.sendData(spanInst, bh);
+      bh = await this.prepareTokenRequest(bh, parentSpanInst);
+      //appendnew_next_validateInsert
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_BVL9QbceGzjVMk48',
+        spanInst,
+        'validateInsert'
+      );
+    }
+  }
+
+  async prepareTokenRequest(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'prepareTokenRequest',
+      parentSpanInst
+    );
+    try {
+      const tokenUrl = 'https://ids-ctr-pt.neutrinos-apps.com/token';
+
+      /*--------------------------------------
+ Prepare OAuth Token Request
+--------------------------------------*/
+
+      const clientId = '0ddh_euTKkSA682Yy5HuC';
+
+      const clientSecret =
+        'e28WZR6ZKyrYILTSKKClFEwNlYoGR2cvISwFCoIXP4S7DJgsaqhHRSNqpoWgYbcx_DUlrSkoA1zS5uFOzP-J9C';
+
+      bh.local.tokenRequest = {
+        url: tokenUrl,
+
+        method: 'POST',
+
+        headers: {
+          Accept: 'application/json',
+
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+
+        body:
+          `client_id=${encodeURIComponent(clientId)}` +
+          `&client_secret=${encodeURIComponent(clientSecret)}` +
+          `&grant_type=client_credentials`,
+      };
+
+      /*--------------------------------------
+ Logging
+--------------------------------------*/
+
+      console.log('========== TOKEN REQUEST ==========');
+
+      console.log('URL:', bh.local.tokenRequest.url);
+
+      console.log('Method:', bh.local.tokenRequest.method);
+
+      console.log(
+        'Headers:',
+        JSON.stringify(bh.local.tokenRequest.headers, null, 2)
+      );
+
+      console.log(
+        'Body: client_id=<HIDDEN>&client_secret=<HIDDEN>&grant_type=client_credentials'
+      );
+      this.tracerService.sendData(spanInst, bh);
+      bh = await this.sd_EjkUlg1QiVw5MI22(bh, parentSpanInst);
+      //appendnew_next_prepareTokenRequest
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_h3xYruis81nbEDEK',
+        spanInst,
+        'prepareTokenRequest'
+      );
+    }
+  }
+
+  async sd_EjkUlg1QiVw5MI22(bh, parentSpanInst) {
+    try {
+      let requestOptions: any = {
+        url: bh.local.tokenRequest.url,
+        timeout: 30000,
+        method: 'post',
+        headers: bh.local.tokenRequest.headers,
+        followRedirects: true,
+        cookies: {},
+        authType: undefined,
+        body: bh.local.tokenRequest.body,
+        paytoqs: false,
+        proxyConfig: undefined,
+        tlsConfig: undefined,
+        ret: 'json',
+        params: {},
+        username: undefined,
+        password: undefined,
+        token: undefined,
+        useQuerystring: false,
+      };
+      requestOptions.rejectUnauthorized = false;
+      requestOptions.tlsConfig = undefined;
+      requestOptions.proxyConfig = undefined;
+      let responseMsg: any = await this.sdService.httpRequest(
+        requestOptions.url,
+        requestOptions.timeout,
+        requestOptions.method,
+        requestOptions.headers,
+        requestOptions.followRedirects,
+        requestOptions.cookies,
+        requestOptions.authType,
+        requestOptions.body,
+        requestOptions.paytoqs,
+        requestOptions.proxyConfig,
+        requestOptions.tlsConfig,
+        requestOptions.ret,
+        requestOptions.params,
+        requestOptions.rejectUnauthorized,
+        requestOptions.username,
+        requestOptions.password,
+        requestOptions.token
+      );
+
+      bh.local.tokenResponse = responseMsg;
+      bh = await this.validateTokenResponse(bh, parentSpanInst);
+      //appendnew_next_sd_EjkUlg1QiVw5MI22
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(bh, e, 'sd_EjkUlg1QiVw5MI22');
+    }
+  }
+
+  async validateTokenResponse(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'validateTokenResponse',
+      parentSpanInst
+    );
+    try {
+      const response = bh.local.tokenResponse.payload;
+
+      console.log('Token Response Received');
+
+      if (!response) {
+        throw new Error('Token request failed: Empty response');
+      }
+
+      if (!response.access_token) {
+        console.log(JSON.stringify(response, null, 2));
+
+        throw new Error('Token request failed: access_token not received');
+      }
+
+      /*--------------------------------------
+ Store Token Details
+--------------------------------------*/
+
+      bh.local.accessToken = response.access_token;
+
+      bh.local.tokenType = response.token_type || 'Bearer';
+
+      bh.local.tokenExpiresIn = response.expires_in || 0;
+
+      console.log('Token received successfully');
+
+      console.log('Access Token:', bh.local.accessToken);
+
+      console.log('Token Type:', bh.local.tokenType);
+
+      console.log('Token Expires In:', bh.local.tokenExpiresIn);
+      this.tracerService.sendData(spanInst, bh);
+      bh = await this.prepareCaseData(bh, parentSpanInst);
+      //appendnew_next_validateTokenResponse
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_piHKIYbxlYWfZNJu',
+        spanInst,
+        'validateTokenResponse'
+      );
+    }
+  }
+
+  async prepareCaseData(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'prepareCaseData',
+      parentSpanInst
+    );
+    try {
+      const body = bh.input.body;
+
+      const members = body.members || [];
+
+      /*==================================================
+  GET PROPOSAL ID FROM INSERT RESPONSE
+==================================================*/
+
+      const proposalId = bh.local.insertProposalResponse?.proposal_id || '';
+
+      if (!proposalId) {
+        throw new Error('Proposal ID not found in insertProposalResponse');
+      }
+
+      console.log('Proposal ID:', proposalId);
+
+      /*==================================================
+  FIND PROPOSER
+==================================================*/
+
+      const proposerMember = members.find(
+        (member) =>
+          member.relationship === 'Proposer' ||
+          member.relationship === 'PROPOSER' ||
+          member.relationship === 'Self' ||
+          member.relationship === 'SELF'
+      );
+
+      /*==================================================
+  FIND SPOUSE
+==================================================*/
+
+      const spouseMember = members.find(
+        (member) =>
+          member.relationship === 'Spouse' || member.relationship === 'SPOUSE'
+      );
+
+      /*==================================================
+  FORMAT DOB
+==================================================*/
+
+      function formatDOBForCase(dob) {
+        if (!dob) {
+          return '';
+        }
+
+        /*
+         * Already DD/MM/YYYY
+         */
+        if (/^\d{2}\/\d{2}\/\d{4}$/.test(dob)) {
+          return dob;
+        }
+
+        const date = new Date(dob);
+
+        if (isNaN(date.getTime())) {
+          throw new Error('Invalid DOB: ' + dob);
+        }
+
+        const dd = String(date.getDate()).padStart(2, '0');
+
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+
+        const yyyy = date.getFullYear();
+
+        return `${dd}/${mm}/${yyyy}`;
+      }
+
+      /*==================================================
+  PROPOSER DOB
+==================================================*/
+
+      const proposerDOB = formatDOBForCase(body.proposer_dob);
+
+      /*==================================================
+  SPOUSE DOB
+==================================================*/
+
+      let spouseDOB = '';
+
+      if (body.include_spouse === true && spouseMember) {
+        spouseDOB = formatDOBForCase(spouseMember.member_dob);
+      }
+
+      /*==================================================
+  PROPOSER DETAILS
+==================================================*/
+
+      const proposerName =
+        body.proposer_name || proposerMember?.member_name || '';
+
+      const proposerEmail = body.email_id || body.email || '';
+
+      const proposerMobile = body.mobile_number || body.mobile_no || '';
+
+      /*==================================================
+  SPOUSE NAME
+==================================================*/
+
+      const spouseName =
+        body.include_spouse === true && spouseMember
+          ? spouseMember.member_name
+          : '';
+
+      /*==================================================
+  PREPARE CASE DATA
+==================================================*/
+
+      const caseData = {
+        proposalId: proposalId,
+
+        full_name: proposerName,
+
+        email: proposerEmail,
+
+        mobile_no: Number(proposerMobile),
+
+        height_cm: Number(body.height_cm || 0),
+
+        weight_kg: Number(body.weight_kg || 0),
+
+        SpouseName: spouseName,
+
+        PlanCode: body.plan_variant,
+
+        SumInsured: Number(body.sum_insured),
+
+        BMI: String(body.bmi),
+
+        ProposerDOB: proposerDOB,
+
+        SpouseDOB: spouseDOB,
+
+        SpouseIncluded: body.include_spouse === true,
+
+        TobaccoUse: body.tobacco_use === true,
+
+        DiabetesDeclared: body.diabetes_declared === true,
+
+        HypertensionDeclared: body.hypertension_declared === true,
+
+        status: body.status || 'SUBMITTED',
+      };
+
+      /*==================================================
+  PREPARE WF DATA
+==================================================*/
+
+      const wfData = {
+        proposalId: proposalId,
+
+        full_name: proposerName,
+
+        email: proposerEmail,
+
+        mobile_no: Number(proposerMobile),
+
+        height_cm: Number(body.height_cm || 0),
+
+        weight_kg: Number(body.weight_kg || 0),
+
+        SpouseName: spouseName,
+
+        PlanCode: body.plan_variant,
+
+        SumInsured: Number(body.sum_insured),
+
+        BMI: String(body.bmi),
+
+        ProposerDOB: proposerDOB,
+
+        SpouseDOB: spouseDOB,
+
+        SpouseIncluded: body.include_spouse === true,
+
+        TobaccoUse: body.tobacco_use === true,
+
+        DiabetesDeclared: body.diabetes_declared === true,
+
+        HypertensionDeclared: body.hypertension_declared === true,
+      };
+
+      /*==================================================
+  FINAL CASE PAYLOAD
+==================================================*/
+
+      bh.local.casePayload = {
+        caseType: 'Retail_Health_Proposal',
+
+        caseData: caseData,
+
+        wfData: wfData,
+      };
+
+      /*==================================================
+  LOG CASE PAYLOAD
+==================================================*/
+
+      console.log('========== CASE PAYLOAD ==========');
+
+      console.log(JSON.stringify(bh.local.casePayload, null, 2));
+
+      /*==================================================
+  ACCESS TOKEN
+==================================================*/
+
+      /*==================================================
+  CASE REQUEST
+==================================================*/
+
+      bh.local.caseRequest = {
+        url: 'https://alpha-pt.neutrinos-apps.com/caseservice/case/instance/create',
+
+        method: 'POST',
+
+        headers: {
+          accept: 'application/json',
+
+          Authorization: `Bearer ${bh.local.accessToken}`,
+
+          'Content-Type': 'application/json',
+        },
+
+        body: bh.local.casePayload,
+      };
+
+      /*==================================================
+  LOG CASE REQUEST
+==================================================*/
+
+      console.log('========== CASE REQUEST ==========');
+
+      console.log('URL:', bh.local.caseRequest.url);
+
+      console.log('Method:', bh.local.caseRequest.method);
+
+      console.log('Authorization:', 'Bearer <TOKEN_HIDDEN>');
+
+      console.log('Body:', JSON.stringify(bh.local.caseRequest.body, null, 2));
+      this.tracerService.sendData(spanInst, bh);
+      bh = await this.caseCreatess(bh, parentSpanInst);
+      //appendnew_next_prepareCaseData
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_F6F86ay6rme2KhDD',
+        spanInst,
+        'prepareCaseData'
+      );
+    }
+  }
+
+  async caseCreatess(bh, parentSpanInst) {
+    try {
+      let requestOptions: any = {
+        url: bh.local.caseRequest.url,
+        timeout: 30000,
+        method: 'post',
+        headers: bh.local.caseRequest.headers,
+        followRedirects: false,
+        cookies: {},
+        authType: undefined,
+        body: bh.local.caseRequest.body,
+        paytoqs: false,
+        proxyConfig: undefined,
+        tlsConfig: undefined,
+        ret: 'json',
+        params: {},
+        username: undefined,
+        password: undefined,
+        token: undefined,
+        useQuerystring: false,
+      };
+      requestOptions.rejectUnauthorized = false;
+      requestOptions.tlsConfig = undefined;
+      requestOptions.proxyConfig = undefined;
+      let responseMsg: any = await this.sdService.httpRequest(
+        requestOptions.url,
+        requestOptions.timeout,
+        requestOptions.method,
+        requestOptions.headers,
+        requestOptions.followRedirects,
+        requestOptions.cookies,
+        requestOptions.authType,
+        requestOptions.body,
+        requestOptions.paytoqs,
+        requestOptions.proxyConfig,
+        requestOptions.tlsConfig,
+        requestOptions.ret,
+        requestOptions.params,
+        requestOptions.rejectUnauthorized,
+        requestOptions.username,
+        requestOptions.password,
+        requestOptions.token
+      );
+
+      bh.local.caseResponse = responseMsg;
+      bh = await this.validateAndPrepareResponse(bh, parentSpanInst);
+      //appendnew_next_caseCreatess
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(bh, e, 'sd_OA0p4N5yn7bpsxmx');
+    }
+  }
+
+  async validateAndPrepareResponse(bh, parentSpanInst) {
+    const spanInst = this.tracerService.createSpan(
+      'validateAndPrepareResponse',
+      parentSpanInst
+    );
+    try {
+      bh.local.response = {
+        success: true,
+
+        message: 'Proposal created and workflow started successfully',
+
+        data: {
+          proposal_id: bh.local.proposalId,
+
+          status: 'SUBMITTED',
+          case_payload: bh.local.casePayload,
+          case_creation_token: bh.local.tokenResponse.payload,
+          case_response: bh.local.caseResponse,
+        },
+      };
+
+      console.log('Final Proposal Response');
+
+      console.log(JSON.stringify(bh.local.response, null, 2));
+      this.tracerService.sendData(spanInst, bh);
+      await this.proposalHttpOutOld(bh, parentSpanInst);
+      //appendnew_next_validateAndPrepareResponse
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(
+        bh,
+        e,
+        'sd_uqofT7vdLP3lZzJx',
+        spanInst,
+        'validateAndPrepareResponse'
+      );
+    }
+  }
+
+  async proposalHttpOutOld(bh, parentSpanInst) {
+    try {
+      bh.web.res.status(200).send(bh.local.response);
+
+      return bh;
+    } catch (e) {
+      return await this.errorHandler(bh, e, 'sd_IQ5401b5DOxndkwk');
     }
   }
 
